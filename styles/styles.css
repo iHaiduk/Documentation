@@ -1024,49 +1024,50 @@ img {
     font-size: 13px;
     line-height: 24px; }
 
-.view .section {
+.view .section-wrap {
   margin-bottom: 30px;
   background: #fff;
-  border-bottom: 1px dashed #ccc;
-  position: relative; }
-  .view .section *:hover .btn-edit {
-    opacity: 1;
-    visibility: visible; }
-  .view .section .btn-edit {
-    position: absolute;
-    top: 0;
-    right: 0;
-    visibility: hidden;
-    opacity: 0;
-    -webkit-transition: all 0.2s ease;
-    -moz-transition: all 0.2s ease;
-    -ms-transition: all 0.2s ease;
-    transition: all 0.2s ease; }
-  .view .section .sub-section {
+  border-bottom: 1px dashed #ccc; }
+  .view .section-wrap .section {
     position: relative; }
-    .view .section .sub-section .section-h1, .view .section .sub-section .section-h2, .view .section .sub-section .section-h3 {
-      margin-bottom: 8px; }
-    .view .section .sub-section .section-h2, .view .section .sub-section .section-h3 {
-      margin-bottom: 4px; }
-    .view .section .sub-section .section-h3 {
-      margin-bottom: 2px; }
-  .view .section .section-h1, .view .section .section-h2, .view .section .section-h3 {
-    margin-bottom: 30px;
-    color: rgba(0, 0, 0, 0.8);
-    font-size: 60px;
-    font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
-    position: relative; }
-  .view .section .section-h2, .view .section .section-h3 {
-    font-size: 36px;
-    line-height: 1.2; }
-  .view .section .section-h3 {
-    color: rgba(0, 0, 0, 0.44);
-    font-size: 32px; }
-  .view .section .section-p {
-    margin-bottom: 30px;
-    font-size: 22px;
-    line-height: 1.5;
-    color: rgba(0, 0, 0, 0.95);
-    font-family: "freight-text-pro",Georgia,Cambria,"Times New Roman",Times,serif; }
+    .view .section-wrap .section .btn-edit {
+      position: absolute;
+      top: 0;
+      right: 0;
+      visibility: hidden;
+      opacity: 0;
+      z-index: 1;
+      -webkit-transition: all 0.2s ease;
+      -moz-transition: all 0.2s ease;
+      -ms-transition: all 0.2s ease;
+      transition: all 0.2s ease; }
+    .view .section-wrap .section:hover .btn-edit {
+      visibility: visible;
+      opacity: 1; }
+    .view .section-wrap .section .sub-section h1, .view .section-wrap .section .sub-section h2, .view .section-wrap .section .sub-section h3 {
+      margin-bottom: 8px;
+      color: rgba(0, 0, 0, 0.8);
+      font-size: 60px;
+      font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
+      position: relative;
+      line-height: 1;
+      font-weight: bold; }
+    .view .section-wrap .section .sub-section h2, .view .section-wrap .section .sub-section h3 {
+      margin-bottom: 4px;
+      font-size: 36px;
+      line-height: 1.2; }
+    .view .section-wrap .section .sub-section h3 {
+      margin-bottom: 2px;
+      color: rgba(0, 0, 0, 0.44);
+      font-size: 32px; }
+    .view .section-wrap .section .sub-section p {
+      margin-bottom: 30px;
+      font-size: 22px;
+      line-height: 1.5;
+      color: rgba(0, 0, 0, 0.95);
+      font-family: "freight-text-pro",Georgia,Cambria,"Times New Roman",Times,serif; }
+    .view .section-wrap .section .sub-section:hover .btn-edit {
+      opacity: 1;
+      visibility: visible; }
 
 /*# sourceMappingURL=styles.css.map */
