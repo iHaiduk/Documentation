@@ -6,6 +6,9 @@
 
     <link rel="stylesheet" href="styles/reset.css"/>
     <link rel="stylesheet" href="styles/styles.css"/>
+    <link rel="stylesheet" href="styles/tomorrow-night-bright.css">
+    <link rel="stylesheet" href="styles/redactor.css">
+    <link rel="stylesheet" href="styles/taggd.css" />
 
 </head>
 <body>
@@ -58,9 +61,13 @@
             <div class="xlarge12">
                 <div class="view">
                     <div class="section">
-                        <h1 class="section-h1"><a href="javascript:void(0)" name="doc1"></a>Theme number 1 <span class="btn btn-edit">Edit</span></h1>
+
                         <div class="sub-section">
-                            <h1 class="section-h1"><a href="javascript:void(0)" name="doc1"></a>Sub theme 1</h1>
+                            <h1 class="section-h1">Theme number 1</h1>
+                        </div>
+                        <span class="btn btn-edit">Edit</span>
+
+                        <div class="sub-section">
                             <p class="section-p">
                                 Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
                                 Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
@@ -71,50 +78,8 @@
                                 Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
                                 Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
                             </p>
-                            <span class="btn btn-edit">Edit</span>
                         </div>
-                        <div class="sub-section">
-                            <h1 class="section-h2"><a href="javascript:void(0)" name="doc1"></a>Sub theme 2</h1>
-                            <p class="section-p">
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                            </p>
-                            <span class="btn btn-edit">Edit</span>
-                        </div>
-                        <div class="sub-section">
-                            <h1 class="section-h3"><a href="javascript:void(0)" name="doc1"></a>Sub theme 3</h1>
-                            <p class="section-p">
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                            </p>
-                            <span class="btn btn-edit">Edit</span>
-                        </div>
-                        <div class="sub-section">
-                            <h1 class="section-h1"><a href="javascript:void(0)" name="doc1"></a>Sub theme 4</h1>
-                            <p class="section-p">
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                                Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
-                            </p>
-                            <span class="btn btn-edit">Edit</span>
-                        </div>
+                        <span class="btn btn-edit">Edit</span>
                         <div class="btn-plus-wrap">
                             <a href="javascript:void(0)" class="btn btn-plus">Add</a>
                         </div>
@@ -204,7 +169,11 @@
         </div>
     </div>
 
-<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script src="js/redactor.js"></script>
+    <script src="js/jquery.taggd.min.js"></script>
+    <script src="js/jquery.selection.js"></script>
 
 <!--for me))-->
 <script>
@@ -219,7 +188,126 @@
         }
 
         $('.nav').css({ "margin-top" : top + "px" });
-    })
+    });
+    $.Redactor.prototype.highlight = function()
+    {
+        return {
+            save: function()
+            {
+                var html = this.code.get();
+                console.log(html);
+            },
+            init: function()
+            {
+                var button = this.button.add('bold', 'Insert Code');
+                this.button.addCallback(button, this.highlight.code);
+            },
+            code: function()
+            {
+                this.inline.format('pre', 'class', 'code');
+            }
+        };
+    };
+    var obj = null;
+    $(document).ready(function() {
+        $('.btn-edit').on('click', function(){
+
+            loadRedactor($(this).prev()[0]);
+
+/*
+            if($(this).parent(".redactor-box").length || $(this).hasClass("redactor-box") || $(this).find(".redactor").length){
+                return;
+            }
+
+            var selObj = window.getSelection();
+            var position = window.getSelection().getRangeAt(0);
+            $(this).html($(this).text());
+
+            //console.log(this, selObj.toString());
+            /!*var str = selObj.toString();
+            var re1 = "(.*?)" + "("+str+")" +"(.*?)";
+            var p = new RegExp(re1,["i"]);
+            var m = p.exec($(this).html());
+            console.log(m)*!/
+            if((position.endOffset - position.startOffset) > 0) {
+                obj = $(this);
+                var html = $(this).html();
+                var dd = $(this).html(
+                        html.substr(0, position.startOffset)
+                        + "<span class='redactor'>"
+                        + selObj.toString()
+                        + "</span>"
+                        + html.substr(position.endOffset, html.length)
+                );
+                loadRedactor(dd.find("span.redactor")[0])
+            }*/
+            /*if(!$(this).parent(".redactor-box").length && !$(this).hasClass("redactor-box"))
+                loadRedactor(this)*/
+        });
+        var options = {
+            align: {
+                y: 'top'
+            },
+
+            offset: {
+                top: 15
+            },
+
+            handlers: {
+                click: 'toggle'
+            }
+        };
+
+        var data = [
+            { x: 0.62, y: 0.7, text: 'Rope'             },
+            { x: 0.51, y: 0.5, text: 'Bird'             },
+            { x: 0.40, y: 0.3, text: 'Water, obviously' }
+        ];
+    });
+    function loadRedactor(element)
+    {
+        $(element).redactor({
+            iframe: true,
+            cleanStyleOnEnter: false,
+            startCallback: function()
+            {
+                var marker = this.selection.getMarker();
+                this.insert.node(marker);
+            },
+            initCallback: function()
+            {
+                this.selection.restore();
+                $(element).off('click', loadRedactor);
+
+                $('#btn-save').show();
+            },
+            blurCallback: function()
+            {
+                var html =  $(element).redactor('code.get');
+                console.log('destroy');
+                $(element).redactor('core.destroy');
+                obj.html(html);
+            }
+        });
+    }
+
+    function saveRedactor()
+    {
+        // save content if you need
+        var html = $('#redactor').redactor('code.get');
+
+        // destroy editor
+        $('#redactor').redactor('core.destroy');
+        $('#btn-save').hide();
+    }
+    function escapeHtml(unsafe) {
+        return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+    }
 </script>
 <!--end-->
 </body>
