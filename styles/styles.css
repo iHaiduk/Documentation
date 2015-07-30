@@ -936,7 +936,7 @@ img {
   vertical-align: top;
   position: relative;
   height: 40px;
-  padding: 0 16px;
+  padding: 0 20px;
   color: rgba(0, 0, 0, 0.44);
   background-color: #fff;
   font-size: 14px;
@@ -951,7 +951,7 @@ img {
   user-select: none;
   border-radius: 20px;
   font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
-  line-height: 38px;
+  line-height: 40px;
   -webkkit-transition: all 0.2s ease;
   -moz-transition: all 0.2s ease;
   -ms-transition: all 0.2s ease;
@@ -959,10 +959,6 @@ img {
   .btn.btn-product {
     margin-top: 10px;
     width: 100%; }
-  .btn.btn-plus {
-    width: 100px;
-    background: #fff url("../img/plus.svg") center no-repeat;
-    background-size: 30px; }
   .btn:hover {
     color: rgba(0, 0, 0, 0.6);
     border-color: rgba(0, 0, 0, 0.3); }
@@ -1031,18 +1027,35 @@ img {
 .view .section {
   margin-bottom: 30px;
   background: #fff;
-  border-bottom: 1px dashed #ccc; }
-  .view .section .sub-section .section-h1, .view .section .sub-section .section-h2, .view .section .sub-section .section-h3 {
-    margin-bottom: 8px; }
-  .view .section .sub-section .section-h2, .view .section .sub-section .section-h3 {
-    margin-bottom: 4px; }
-  .view .section .sub-section .section-h3 {
-    margin-bottom: 2px; }
+  border-bottom: 1px dashed #ccc;
+  position: relative; }
+  .view .section *:hover .btn-edit {
+    opacity: 1;
+    visibility: visible; }
+  .view .section .btn-edit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    -ms-transition: all 0.2s ease;
+    transition: all 0.2s ease; }
+  .view .section .sub-section {
+    position: relative; }
+    .view .section .sub-section .section-h1, .view .section .sub-section .section-h2, .view .section .sub-section .section-h3 {
+      margin-bottom: 8px; }
+    .view .section .sub-section .section-h2, .view .section .sub-section .section-h3 {
+      margin-bottom: 4px; }
+    .view .section .sub-section .section-h3 {
+      margin-bottom: 2px; }
   .view .section .section-h1, .view .section .section-h2, .view .section .section-h3 {
     margin-bottom: 30px;
     color: rgba(0, 0, 0, 0.8);
     font-size: 60px;
-    font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; }
+    font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
+    position: relative; }
   .view .section .section-h2, .view .section .section-h3 {
     font-size: 36px;
     line-height: 1.2; }

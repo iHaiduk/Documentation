@@ -41,13 +41,13 @@ img { vertical-align: top; max-width: 100%; }
 
 .btn-plus-wrap { margin: 30px 0; text-align: center; }
 
-.btn { display: inline-block; vertical-align: top; position: relative; height: 40px; padding: 0 16px; color: rgba(0,0,0,0.44); background-color: #fff; font-size: 14px; text-align: center; text-decoration: none; cursor: pointer; border: 1px solid rgba(0,0,0,0.15); white-space: nowrap; @include prefix(( user-select: none ), webkit moz ms ); border-radius: 20px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; line-height: 38px;
+.btn { display: inline-block; vertical-align: top; position: relative; height: 40px; padding: 0 20px; color: rgba(0,0,0,0.44); background-color: #fff; font-size: 14px; text-align: center; text-decoration: none; cursor: pointer; border: 1px solid rgba(0,0,0,0.15); white-space: nowrap; @include prefix(( user-select: none ), webkit moz ms ); border-radius: 20px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; line-height: 40px;
 
     @include prefix(( transition: all .2s ease ), webkkit moz ms );
 
     &.btn-product { margin-top: 10px; width: 100%; }
 
-    &.btn-plus { width: 100px; background: #fff url("../img/plus.svg") center no-repeat; background-size:  30px; }
+    //&.btn-plus  {  }
 
     &:hover { color: rgba(0,0,0,0.6); border-color: rgba(0,0,0,0.3); }
 
@@ -104,9 +104,17 @@ img { vertical-align: top; max-width: 100%; }
 
 .view {
 
-    .section { margin-bottom: 30px; background: #fff; border-bottom: 1px dashed #ccc;
+    .section { margin-bottom: 30px; background: #fff; border-bottom: 1px dashed #ccc; position: relative;
 
-        .sub-section {
+        *:hover .btn-edit { opacity: 1; visibility: visible; }
+
+        .btn-edit { position: absolute; top: 0; right: 0; visibility: hidden; opacity: 0;
+
+            @include prefix(( transition: all .2s ease ), webkit moz ms);
+
+        }
+
+        .sub-section { position: relative;
 
             .section-h1 { margin-bottom: 8px; }
 
@@ -116,7 +124,7 @@ img { vertical-align: top; max-width: 100%; }
 
         }
 
-        .section-h1 { margin-bottom: 30px; color: rgba(0,0,0,0.8); font-size: 60px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; }
+        .section-h1 { margin-bottom: 30px; color: rgba(0,0,0,0.8); font-size: 60px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; position: relative }
 
         .section-h2 { @extend .section-h1; font-size: 36px; line-height: 1.2; }
 
