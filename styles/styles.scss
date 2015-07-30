@@ -1,3 +1,5 @@
+@import "_variables.scss";
+@import "_mixin.scss";
 @import "_grid.scss";
 
 .cf:before,
@@ -17,9 +19,7 @@ body { padding-top: 60px; font-family: "Open Sans", "Helvetica Neue", Helvetica,
 
 img { vertical-align: top; max-width: 100%; }
 
-.wrap { min-height: 100%; max-width: 1200px; min-width: 290px; margin: 0 auto -40px;
-
-    @include prefix( ( flex: 1), webkit ms );
+.wrap { min-height: 100%; max-width: 1200px; min-width: 290px; margin: 0 auto -40px; padding: 15px;
 
     &:after { content: ''; display: block; height: 40px; }
 
@@ -27,34 +27,86 @@ img { vertical-align: top; max-width: 100%; }
 
 .header { position: fixed; top: 0; left: 0; right: 0; height: 60px; background: #f2f2f2;
 
-    .header-wrap { max-width: 1200px; margin: 0 auto; }
+    @include prefix(( transition: all .1s linear ), webkkit moz ms );
 
-    .subject { position: absolute; top: 0; left: 0; }
+    &.shadow { box-shadow: 0 1px 3px rgba(0,0,0,.2); }
 
-    .user { @extend .subject; left: auto; right: 0; }
+    .header-wrap { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+
+    .subject { position: absolute; top: 0; left: 10px; font-size: 15px; color: #484848; text-decoration: none; margin: 22px 0 0 10px; }
+
+    .user { @extend .subject; left: auto; right: 10px; top: 10px; margin: 0; width: 40px; height: 40px; border: 1px solid #DEDEDE; border-radius: 100%; overflow: hidden; }
 
 }
-.footer { height: 40px; background: #f2f2f2;
 
-    .footer-wrap { max-width: 1200px; margin: 0 auto; }
+.btn { display: inline-block; vertical-align: top; position: relative; height: 40px; padding: 0 16px; color: rgba(0,0,0,0.44); background: #fff; font-size: 14px; text-align: center; text-decoration: none; cursor: pointer; border: 1px solid rgba(0,0,0,0.15); white-space: nowrap; @include prefix(( user-select: none ), webkit moz ms ); border-radius: 20px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; line-height: 38px;
+
+    &.btn-product { margin-top: 10px; width: 100%; }
+
+    &:hover { color: rgba(0,0,0,0.6); border-color: rgba(0,0,0,0.3); }
+
+    &:active { color: rgba(0,0,0,0.8); border-color: rgba(0,0,0,0.6); }
+
+}
+
+.search { padding-top: 10px;
+
+    .search-wrap { overflow: hidden; border-radius: 20px; position: relative;
+
+        .search-submit { position: absolute; top: 0; left: 0; width: 38px; height: 38px; background: url("../img/search.svg") center no-repeat; background-size: 22px; text-indent: -9999px; border: none; outline: none; cursor: pointer; }
+
+        .search-text { width: 100%; outline: none; height: 38px; padding: 0 5px 0 35px; border: 1px solid rgba(0,0,0,0.15);
+
+            &:hover { border-color: rgba(0,0,0,0.3); }
+
+            &:focus { border-color: rgba(0,0,0,0.6); }
+
+        }
+
+    }
+
+}
+
+.footer { height: 40px; padding-top: 5px; background: #f2f2f2; color: #484848;
+
+    .footer-wrap { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
 
 }
 
 .nav {
 
-    .nav-list {
+    .nav-item { display: block; padding: 0 20px; color: #36556e; text-decoration: none; line-height: 30px;
 
-        .nav-item { display: block; padding: 0 20px; color: #36556e; text-decoration: none; line-height: 30px;
+        &:hover { background: #e8ebee; border-right: 1px solid #d8dde2; }
 
-            &:hover { background: #e8ebee; border-right: 1px solid #d8dde2; }
+    }
 
-        }
+    li.active {
 
-        &.active {
+      > .nav-item { background: transparent; border-right: 1px solid #1d365d; font-weight: bold; }
 
-          .nav-item { background: transparent; border-right: 1px solid #1d365d; font-weight: bold; }
+    }
 
-        }
+
+    .sub-nav { margin-bottom: 8px;
+
+        .nav-item { padding: 0 30px; font-size: 13px; line-height: 24px; }
+
+    }
+
+}
+
+.view {
+
+    .section { background: #fff;
+
+        .section-h1 { margin-bottom: 8px; color: rgba(0,0,0,0.8); font-size: 60px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; }
+
+        .section-h2 { @extend .section-h1; margin-bottom: 4px; font-size: 36px; line-height: 1.2; }
+
+        .section-h3 { @extend .section-h2; margin-bottom: 2px; color: rgba(0,0,0,0.44); font-size: 32px; }
+
+        .section-p { margin-bottom: 30px; font-size: 22px; line-height: 1.5; color: rgba(0,0,0,0.95); font-family: "freight-text-pro",Georgia,Cambria,"Times New Roman",Times,serif; }
 
     }
 

@@ -1,0 +1,45 @@
+@mixin prefix($declarations, $prefixes: ()) {
+  @each $property, $value in $declarations {
+    @each $prefix in $prefixes {
+      #{'-' + $prefix + '-' + $property}: $value;
+    }
+
+    #{$property}: $value;
+  }
+}
+
+@mixin breakpoint($class) {
+  @if $class == 320 {
+    @media (max-width: 320px) { @content; }
+  }
+
+  @if $class == 480 {
+    @media (max-width: 480px) { @content; }
+  }
+
+  @else if $class == 768 {
+    @media (max-width: 768px) { @content; }
+  }
+
+  @else if $class == 1024 {
+    @media (max-width: 1024px) { @content; }
+  }
+
+  @else if $class == 1200 {
+    @media (max-width: 1200px) { @content; }
+  }
+
+  @else if $class == 1680 {
+    @media (max-width: 1680px) { @content; }
+  }
+
+  @else {
+    @warn "Breakpoint mixin supports: 320, 480, 768, 1024, 1200, 1680";
+  }
+}
+
+@mixin custom_breakpoint($value) {
+
+  @media (max-width: $value+'px') { @content; }
+
+}
