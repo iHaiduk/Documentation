@@ -22,8 +22,8 @@
                 </div>
                 <div class="xlarge4 x_offset8">
                     <form action="" class="search">
-                        <div class="search-wrap">
-                            <input class="search-submit" type="submit"/>
+                        <div class="search-wrap"> ь
+9                            <input class="search-submit" type="submit"/>
                             <input class="search-text" type="text" placeholder="Search..." />
                         </div>
                     </form>
@@ -195,41 +195,12 @@
             }
         };
     };
-    var obj = null;
+    var obj = null,
+        lastElement = null;
     $(document).ready(function() {
         $('.btn-edit').on('click', function(){
-
             loadRedactor($(this).prev());
-
-/*
-            if($(this).parent(".redactor-box").length || $(this).hasClass("redactor-box") || $(this).find(".redactor").length){
-                return;
-            }
-
-            var selObj = window.getSelection();
-            var position = window.getSelection().getRangeAt(0);
-            $(this).html($(this).text());
-
-            //console.log(this, selObj.toString());
-            /!*var str = selObj.toString();
-            var re1 = "(.*?)" + "("+str+")" +"(.*?)";
-            var p = new RegExp(re1,["i"]);
-            var m = p.exec($(this).html());
-            console.log(m)*!/
-            if((position.endOffset - position.startOffset) > 0) {
-                obj = $(this);
-                var html = $(this).html();
-                var dd = $(this).html(
-                        html.substr(0, position.startOffset)
-                        + "<span class='redactor'>"
-                        + selObj.toString()
-                        + "</span>"
-                        + html.substr(position.endOffset, html.length)
-                );
-                loadRedactor(dd.find("span.redactor")[0])
-            }*/
-            /*if(!$(this).parent(".redactor-box").length && !$(this).hasClass("redactor-box"))
-                loadRedactor(this)*/
+            lastElement = $(this).prev();
         });
         var options = {
             align: {
@@ -254,19 +225,20 @@
     function loadRedactor(element)
     {
         var positionCaret = 0;
+
         element.redactor({
             iframe: true,
             cleanStyleOnEnter: false,
             plugins: ["highlight"],
-            startCallback: function()
-            {
-                /*var marker = this.selection.getMarker();
-                this.insert.node(marker);*/
-            },
             initCallback: function()
             {
                 this.selection.restore();
                 element.off('click', loadRedactor);
+
+                if(lastElement != null) {
+                    console.log(lastElement.redactor('core'))
+                    lastElement.redactor('core.destroy');
+                }
 
                 $('#btn-save').show();
             },
@@ -276,6 +248,7 @@
             },
             destroyCallback: function(e)
             {
+                lastElement = null;
                 setTimeout(function() {
                     element.find("pre.code").each(function () {
                         hljs.highlightBlock(this);
