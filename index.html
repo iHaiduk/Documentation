@@ -98,8 +98,17 @@
                         </div>
 
                     </div>
-                    <div class="btn-plus-wrap">
-                        <a href="javascript:void(0)" class="btn btn-plus">Add</a>
+
+                    <div class="section-wrap">
+
+                        <div class="section">
+
+                            <div class="btn-plus-wrap">
+                                <a href="javascript:void(0)" class="btn btn-plus">Add</a>
+                            </div>
+
+                        </div>
+
                     </div>
 
                 </div>
@@ -114,14 +123,18 @@
         </div>
     </div>
 
-    <!--<div class="overlay"></div>-->
-    <!--<div class="popup">-->
-        <!--<span class="close"></span>-->
-        <!--<div class="popup-title">Product</div>-->
-        <!--<div class="product-list">-->
-
-        <!--</div>-->
-    <!--</div>-->
+    <div class="overlay"></div>
+    <div class="popup">
+        <span class="close"></span>
+        <div class="popup-title">Products</div>
+        <div class="product-list">
+            <a href="javascript:void(0)" class="product-item">
+                <img src="http://placecreature.com/100/40" alt=""/>
+                <span class="product-name">Product 1</span>
+                <span class="product-data">12.12.12</span>
+            </a>
+        </div>
+    </div>
 
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="js/highlight.pack.js"></script>
@@ -151,6 +164,15 @@
         });
         $('.section').mouseleave(function() {
             $(this).find('span.btn-edit').removeClass('visible');
+        });
+
+        $('.btn-product').click(function() {
+            $('body').addClass('noScroll');
+            $('.overlay').addClass('visible');
+        });
+        $('.overlay').click(function() {
+            $('body').removeClass('noScroll');
+            $('.overlay').removeClass('visible');
         })
     });
 
