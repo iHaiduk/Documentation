@@ -121,18 +121,17 @@ body .redactor-box-fullscreen {
 
   position: absolute !important;
 
-
-  position: relative;
-  /*top: 0;*/
-  /*left: 0;*/
-  margin: 0 !important;
-  padding: 0 !important;
+  top: -40px !important;
+  left: 50% !important;
+  margin: 0 0 0 -226px !important;
+  padding: 0 5px !important;
   list-style: none !important;
-  font-size: 14px !important;
+  font-size: 16px !important;
   line-height: 1 !important;
-  background: #fff;
+  background: #000;
   border: none;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+
 }
 .redactor-toolbar:after {
   content: "";
@@ -162,7 +161,7 @@ body .redactor-box-fullscreen {
 }
 .redactor-toolbar li a {
   display: block;
-  color: #333;
+  color: #fff;
   text-align: center;
   padding: 9px 10px;
   outline: none;
@@ -176,8 +175,8 @@ body .redactor-box-fullscreen {
 }
 .redactor-toolbar li a:hover {
   outline: none;
-  background-color: #1f78d8;
-  color: #fff;
+  /*background-color: #1f78d8;*/
+  /*color: #fff;*/
 }
 .redactor-toolbar li a:hover i:before {
   color: #fff;
@@ -185,8 +184,8 @@ body .redactor-box-fullscreen {
 .redactor-toolbar li a:active,
 .redactor-toolbar li a.redactor-act {
   outline: none;
-  background-color: #ccc;
-  color: #444;
+  /*background-color: #ccc;*/
+  color: #64E055;
 }
 .redactor-toolbar li a.redactor-btn-image {
   width: 14px;

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Redactor</title>
 
-    <link rel="stylesheet" href="styles/reset.css"/>
+    <!--<link rel="stylesheet" href="styles/reset.css"/>-->
     <link rel="stylesheet" href="styles/styles.css"/>
     <link rel="stylesheet" href="styles/tomorrow-night-bright.css">
     <link rel="stylesheet" href="styles/redactor.css">
@@ -38,7 +38,7 @@
             <div class="xlarge4">
                 <ul class="nav">
                     <li class="nav-list active">
-                        <a class="nav-item" href="#doc1">Theme number 1</a>
+                        <a class="nav-item" href="#">Theme number 1</a>
                         <ul class="sub-nav">
                             <li class="nav-list"><a href="#" class="nav-item">Sub theme 1</a></li>
                             <li class="nav-list active"><a href="#" class="nav-item">Sub theme 2</a></li>
@@ -46,16 +46,16 @@
                             <li class="nav-list"><a href="#" class="nav-item">Sub theme 4</a></li>
                         </ul>
                     </li>
-                    <li class="nav-list"><a class="nav-item" href="#doc2">Theme number 2</a></li>
+                    <li class="nav-list"><a class="nav-item" href="#">Theme number 2</a></li>
                     <li class="nav-list">
-                        <a class="nav-item" href="#doc3">Theme number 3</a>
+                        <a class="nav-item" href="#">Theme number 3</a>
                         <ul class="sub-nav">
                             <li class="nav-list"><a href="#" class="nav-item">Sub theme 1</a></li>
                             <li class="nav-list"><a href="#" class="nav-item">Sub theme 2</a></li>
                             <li class="nav-list"><a href="#" class="nav-item">Sub theme 3</a></li>
                         </ul>
                     </li>
-                    <li class="nav-list"><a class="nav-item" href="#doc4">Theme number 4</a></li>
+                    <li class="nav-list"><a class="nav-item" href="#">Theme number 4</a></li>
                 </ul>
             </div>
             <div class="xlarge12">
@@ -68,7 +68,7 @@
                             <div class="sub-section" id="redactor">
                                 <h1>Theme number 1</h1>
                             </div>
-                            <span class="btn btn-edit">Edit</span>
+                            <span class="btn-edit"></span>
 
                             <div class="btn-plus-wrap">
                                 <a href="javascript:void(0)" class="btn btn-plus">Add</a>
@@ -90,7 +90,7 @@
                                     Less runs inside Node, in the browser and inside Rhino. There are also many 3rd party tools that allow you to compile your files and watch for changes.
                                 </p>
                             </div>
-                            <span class="btn btn-edit">Edit</span>
+                            <span class="btn-edit"></span>
 
                             <div class="btn-plus-wrap">
                                 <a href="javascript:void(0)" class="btn btn-plus">Add</a>
@@ -109,8 +109,8 @@
 
     <div class="footer">
         <div class="footer-wrap">
-            <p class="last-update">Last update by Alex</p>
-            <p>lorem ipsum sit amet lorem ipsum sit amet lorem ipsum sit amet lorem ipsum sit amet lorem ipsum sit amet</p>
+            <p class="footer-text">Last update by Alex</p>
+            <p class="footer-text">lorem ipsum sit amet lorem ipsum sit amet lorem ipsum sit amet lorem ipsum sit amet lorem ipsum sit amet</p>
         </div>
     </div>
 
@@ -131,18 +131,29 @@
 
 <!--for me))-->
 <script>
-    $(window).scroll(function() {
 
-        var top = $(window).scrollTop();
+    $(function() {
+        $(window).scroll(function() {
 
-        if ( top > 0 ) {
-            $('.header').addClass('shadow');
-        } else {
-            $('.header').removeClass('shadow');
-        }
+            var top = $(window).scrollTop();
 
-        $('.nav').css({ "margin-top" : top + "px" });
+            if ( top > 0 ) {
+                $('.header').addClass('shadow');
+            } else {
+                $('.header').removeClass('shadow');
+            }
+
+            $('.nav').css({ "margin-top" : top + "px" });
+        });
+
+        $('.section').mouseenter(function() {
+            $(this).find('span.btn-edit').addClass('visible');
+        });
+        $('.section').mouseleave(function() {
+            $(this).find('span.btn-edit').removeClass('visible');
+        })
     });
+
     $.Redactor.prototype.highlight = function()
     {
         return {
