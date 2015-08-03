@@ -123,15 +123,33 @@
         </div>
     </div>
 
-    <div class="overlay"></div>
     <div class="popup">
-        <span class="close"></span>
+        <span class="close">&times;</span>
         <div class="popup-title">Products</div>
         <div class="product-list">
             <a href="javascript:void(0)" class="product-item">
-                <img src="http://placecreature.com/100/40" alt=""/>
                 <span class="product-name">Product 1</span>
-                <span class="product-data">12.12.12</span>
+                <span class="product-data">31 July 2015</span>
+            </a>
+            <a href="javascript:void(0)" class="product-item">
+                <span class="product-name">Product 1</span>
+                <span class="product-data">31 July 2015</span>
+            </a>
+            <a href="javascript:void(0)" class="product-item">
+                <span class="product-name">Product 1</span>
+                <span class="product-data">31 July 2015</span>
+            </a>
+            <a href="javascript:void(0)" class="product-item">
+                <span class="product-name">Product 1</span>
+                <span class="product-data">31 July 2015</span>
+            </a>
+            <a href="javascript:void(0)" class="product-item">
+                <span class="product-name">Product 1</span>
+                <span class="product-data">31 July 2015</span>
+            </a>
+            <a href="javascript:void(0)" class="product-item">
+                <span class="product-name">Product 1</span>
+                <span class="product-data">31 July 2015</span>
             </a>
         </div>
     </div>
@@ -168,12 +186,24 @@
 
         $('.btn-product').click(function() {
             $('body').addClass('noScroll');
-            $('.overlay').addClass('visible');
+            $('.popup').addClass('visible');
         });
-        $('.overlay').click(function() {
+        $('.close').click(function() {
             $('body').removeClass('noScroll');
-            $('.overlay').removeClass('visible');
-        })
+            $('.popup').removeClass('visible');
+        });
+
+        $('.nav > .nav-list > .nav-item').click(function() {
+            $(this).next().slideToggle(200);
+        });
+        $('.nav > .nav-list').click(function() {
+            $(this).addClass("active");
+            $(this).siblings().removeClass("active");
+        });
+        $('.sub-nav > .nav-list').click(function() {
+            $(this).addClass("active");
+            $(this).siblings().removeClass("active");
+        });
     });
 
     $.Redactor.prototype.highlight = function()
