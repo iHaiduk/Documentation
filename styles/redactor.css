@@ -121,7 +121,7 @@ body .redactor-box-fullscreen {
 
   display: none !important;
 
-  position: relative;
+  position: fixed !important;
   overflow: auto;
   margin: 0 !important;
   padding: 20px;
