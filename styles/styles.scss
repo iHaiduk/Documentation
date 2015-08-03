@@ -11,6 +11,8 @@
   clear: both;
 }
 
+@include scrollbars(8px, #ccc);
+
 html * { @include prefix( ( box-sizing: border-box ), webkit moz );}
 
 html, body { height: 100%; }
@@ -160,12 +162,50 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-.overlay { visibility: hidden; position: fixed; top: 0; left: 0; bottom: 0; right: 0; background: rgba(0,0,0,.5); z-index: 9999; opacity: 0;
+.popup { visibility: hidden; position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0; z-index: 10000; background: #fff; overflow: auto;
 
-    @include prefix(( transition: all .3s ease ), webkit moz ms);
+    @include prefix(( transition: all .5s ease ), webkit moz ms);
 
     &.visible { visibility: visible; opacity: 1; }
 
-}
+    .close { position: absolute; top: 20px; right: 20px; cursor: pointer; width: 30px; height: 30px; color: #000; border-radius: 100%; border: 1px solid #000; font-size: 28px; text-align: center; line-height: 28px; opacity: .5;
 
-.popup { visibility: hidden; position: fixed; }
+        @include prefix(( transition: all .3s ease ), webkit moz ms);
+
+        &:hover { opacity: 1; }
+
+    }
+
+    .popup-title { margin: 30px 0 15px; font-size: 30px; text-align: center; }
+
+    .product-list { padding: 0 20px; font-size: 0;
+
+        .product-item { display: inline-block; width: 21%; height: 200px; margin: 2%; position: relative; text-decoration: none; overflow: hidden; background: url("http://placecreature.com/300/200") center no-repeat; background-size: cover; vertical-align: top;
+
+            @include prefix(( flex: 1 ), webkit moz ms);
+
+            .product-name { position: absolute; top: 20px; left: 0; font-size: 20px; background: #000; color: #fff; padding: 4px 12px; max-width: 100%; white-space: nowrap; text-overflow: ellipsis;
+
+                &:hover { text-shadow: 0 0 1px #fff; }
+
+                @include prefix(( transform: translate3d(-100%, 0, 0) ), webkit moz ms);
+
+                @include prefix(( transition: all .3s ease ), webkit moz ms);
+
+            }
+
+            .product-data { @extend .product-name; top: auto; bottom: 0; font-size: 16px;
+
+                @include prefix(( transform: translate3d(0, 100%, 0) ), webkit moz ms);
+
+            }
+
+            &:hover .product-name { @include prefix(( transform: translate3d(0, 0, 0) ), webkit moz ms); }
+
+            &:hover .product-data { @include prefix(( transform: translate3d(0, -20px, 0) ), webkit moz ms); }
+
+        }
+
+    }
+
+}

@@ -861,6 +861,24 @@
 .cf:after {
   clear: both; }
 
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px; }
+
+::-webkit-scrollbar-thumb {
+  background: #ccc; }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #b8b8b8; }
+  ::-webkit-scrollbar-thumb:active {
+    background: #999999; }
+
+::-webkit-scrollbar-track {
+  background: #e6e6e6; }
+
+body {
+  scrollbar-face-color: #ccc;
+  scrollbar-track-color: #e6e6e6; }
+
 html * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -1112,26 +1130,104 @@ img {
       opacity: 1;
       top: 0; }
 
-.overlay {
+.popup {
   visibility: hidden;
   position: fixed;
   top: 0;
   left: 0;
-  bottom: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 9999;
+  bottom: 0;
   opacity: 0;
-  -webkit-transition: all 0.3s ease;
-  -moz-transition: all 0.3s ease;
-  -ms-transition: all 0.3s ease;
-  transition: all 0.3s ease; }
-  .overlay.visible {
+  z-index: 10000;
+  background: #fff;
+  overflow: auto;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -ms-transition: all 0.5s ease;
+  transition: all 0.5s ease; }
+  .popup.visible {
     visibility: visible;
     opacity: 1; }
-
-.popup {
-  visibility: hidden;
-  position: fixed; }
+  .popup .close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    color: #000;
+    border-radius: 100%;
+    border: 1px solid #000;
+    font-size: 28px;
+    text-align: center;
+    line-height: 28px;
+    opacity: .5;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    transition: all 0.3s ease; }
+    .popup .close:hover {
+      opacity: 1; }
+  .popup .popup-title {
+    margin: 30px 0 15px;
+    font-size: 30px;
+    text-align: center; }
+  .popup .product-list {
+    padding: 0 20px;
+    font-size: 0; }
+    .popup .product-list .product-item {
+      display: inline-block;
+      width: 21%;
+      height: 200px;
+      margin: 2%;
+      position: relative;
+      text-decoration: none;
+      overflow: hidden;
+      background: url("http://placecreature.com/300/200") center no-repeat;
+      background-size: cover;
+      vertical-align: top;
+      -webkit-flex: 1;
+      -moz-flex: 1;
+      -ms-flex: 1;
+      flex: 1; }
+      .popup .product-list .product-item .product-name, .popup .product-list .product-item .product-data {
+        position: absolute;
+        top: 20px;
+        left: 0;
+        font-size: 20px;
+        background: #000;
+        color: #fff;
+        padding: 4px 12px;
+        max-width: 100%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        -webkit-transform: translate3d(-100%, 0, 0);
+        -moz-transform: translate3d(-100%, 0, 0);
+        -ms-transform: translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, 0, 0);
+        -webkit-transition: all 0.3s ease;
+        -moz-transition: all 0.3s ease;
+        -ms-transition: all 0.3s ease;
+        transition: all 0.3s ease; }
+        .popup .product-list .product-item .product-name:hover, .popup .product-list .product-item .product-data:hover {
+          text-shadow: 0 0 1px #fff; }
+      .popup .product-list .product-item .product-data {
+        top: auto;
+        bottom: 0;
+        font-size: 16px;
+        -webkit-transform: translate3d(0, 100%, 0);
+        -moz-transform: translate3d(0, 100%, 0);
+        -ms-transform: translate3d(0, 100%, 0);
+        transform: translate3d(0, 100%, 0); }
+      .popup .product-list .product-item:hover .product-name, .popup .product-list .product-item:hover .product-data {
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0); }
+      .popup .product-list .product-item:hover .product-data {
+        -webkit-transform: translate3d(0, -20px, 0);
+        -moz-transform: translate3d(0, -20px, 0);
+        -ms-transform: translate3d(0, -20px, 0);
+        transform: translate3d(0, -20px, 0); }
 
 /*# sourceMappingURL=styles.css.map */
