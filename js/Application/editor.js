@@ -4,10 +4,28 @@
 define(['jquery', 'hljs', 'redactor'],function($, hljs) {
     $(document).ready(function() {
     var obj = null,
-        lastElement = null;
-    $('.btn-edit').on('click', function(){
-        loadRedactor($(this).prev());
-        lastElement = $(this).prev();
+        lastElement = null,
+        position = {start:{x:0, y:0}, end:{x:0, y:0}};
+    $('.sub-section').each(function(){
+        loadRedactor($(this));
+    }).on("mousedown mouseup", function(event){
+        if(event.type ==  "mousedown"){
+            position.start.y = event.pageY;
+            position.start.x = event.pageX;
+        }else{
+            position.end.y = event.pageY;
+            position.end.x = event.pageX;
+        }
+    }).on('click', function(){
+        if(window.getSelection().type === "Range"){
+            var toolbar = $(this).prev();
+            toolbar.show().css({
+                top: (position.start.y - 50)+"px",
+                left: ((position.start.x + position.end.x)/2)+"px"
+            });
+        }else{
+            $('.sub-section').parent().find(".redactor-toolbar").hide();
+        }
     });
     $.Redactor.prototype.highlight = function()
     {
@@ -38,28 +56,13 @@ define(['jquery', 'hljs', 'redactor'],function($, hljs) {
             plugins: ["highlight"],
             initCallback: function()
             {
-                this.selection.restore();
                 element.off('click', loadRedactor);
 
                 if(lastElement != null) {
-                    console.log(lastElement.redactor('core'))
                     lastElement.redactor('core.destroy');
                 }
 
                 $('#btn-save').show();
-            },
-            blurCallback: function()
-            {
-                element.redactor('core.destroy');
-            },
-            destroyCallback: function(e)
-            {
-                lastElement = null;
-                setTimeout(function() {
-                    element.find("pre.code").each(function () {
-                        hljs.highlightBlock(this);
-                    });
-                },1);
             }
         });
     }
