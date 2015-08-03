@@ -1,6 +1,5 @@
 @import "_variables.scss";
 @import "_mixin.scss";
-@import "_grid.scss";
 
 .cf:before,
 .cf:after {
@@ -17,7 +16,7 @@ html * { @include prefix( ( box-sizing: border-box ), webkit moz );}
 
 html, body { height: 100%; }
 
-body { padding-top: 60px; margin: 0; font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 14px; background: #fff;
+body { padding-top: 80px; margin: 0; font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 14px; background: #fff;
 
     &.noScroll { overflow: hidden; }
 
@@ -25,19 +24,23 @@ body { padding-top: 60px; margin: 0; font-family: "Open Sans", "Helvetica Neue",
 
 img { vertical-align: top; max-width: 100%; }
 
-.wrap { min-height: 100%; max-width: 1200px; min-width: 290px; margin: 0 auto -50px; padding: 15px;
+.wrap { max-width: 1200px; min-width: 800px; margin: 0 auto; padding: 0 15px; }
+
+.main { min-height: 100%; margin-bottom: -50px; font-size: 0;
+
+    .left-side { display: inline-block; width: 25%; padding-right: 30px; vertical-align: top; }
+
+    .right-side { display: inline-block; width: 75%; vertical-align: top; }
 
     &:after { content: ''; display: block; height: 50px; }
 
 }
 
-.header { position: fixed; top: 0; left: 0; right: 0; height: 60px; background: #f2f2f2; z-index: 99;
+.header { position: fixed; top: 0; left: 0; right: 0; height: 60px; padding-top: 10px; background: #f2f2f2; z-index: 99;
 
     @include prefix(( transition: all .1s linear ), webkkit moz ms );
 
     &.shadow { box-shadow: 0 1px 3px rgba(0,0,0,.2); }
-
-    .header-wrap { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
 
     .subject { position: absolute; top: 0; left: 10px; font-size: 15px; color: #484848; text-decoration: none; margin: 22px 0 0 10px; }
 
@@ -51,7 +54,7 @@ img { vertical-align: top; max-width: 100%; }
 
     @include prefix(( transition: all .2s ease ), webkkit moz ms );
 
-    &.btn-product { margin-top: 10px; width: 100%; }
+    &.btn-product { float: left; width: 25%; width: calc( 25% - 30px ); }
 
     &.btn-plus { visibility: hidden; opacity: 0; position: relative; top: 30px; }
 
@@ -61,7 +64,7 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-.search { padding-top: 10px;
+.search { float: right; width: 25%; padding-left: 30px;
 
     .search-wrap { position: relative;
 
@@ -83,15 +86,13 @@ img { vertical-align: top; max-width: 100%; }
 
 .footer { height: 50px; padding-top: 5px; background: #f2f2f2; color: #484848;
 
-    .footer-wrap { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
-
     .footer-text { margin: 0; line-height: 20px; }
 
 }
 
 .nav { padding: 0; margin: 0; list-style-type: none;
 
-    .nav-item { display: block; padding: 0 20px; color: #36556e; text-decoration: none; line-height: 30px;
+    .nav-item { display: block; padding: 0 20px; color: #36556e; text-decoration: none; line-height: 30px; font-size: 14px;
 
         @include prefix(( transition: all .1s ease ), webkit moz ms );
 
@@ -184,11 +185,9 @@ img { vertical-align: top; max-width: 100%; }
 
             @include prefix(( flex: 1 ), webkit moz ms);
 
-            .product-name { position: absolute; top: 20px; left: 0; font-size: 20px; background: #000; color: #fff; padding: 4px 12px; max-width: 100%; white-space: nowrap; text-overflow: ellipsis;
+            .product-name { position: absolute; top: 20px; left: 0; font-size: 20px; background: #000; color: #fff; padding: 4px 12px; max-width: 100%; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;
 
                 &:hover { text-shadow: 0 0 1px #fff; }
-
-                @include prefix(( transform: translate3d(-100%, 0, 0) ), webkit moz ms);
 
                 @include prefix(( transition: all .3s ease ), webkit moz ms);
 
@@ -199,8 +198,6 @@ img { vertical-align: top; max-width: 100%; }
                 @include prefix(( transform: translate3d(0, 100%, 0) ), webkit moz ms);
 
             }
-
-            &:hover .product-name { @include prefix(( transform: translate3d(0, 0, 0) ), webkit moz ms); }
 
             &:hover .product-data { @include prefix(( transform: translate3d(0, -20px, 0) ), webkit moz ms); }
 
