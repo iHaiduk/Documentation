@@ -121,18 +121,17 @@ body .redactor-box-fullscreen {
 
   display: none !important;
 
-  position: absolute !important;
-
-  top: -40px !important;
-  left: 50% !important;
-  margin: 0 0 0 -226px !important;
-  padding: 0 5px !important;
-  list-style: none !important;
-  font-size: 16px !important;
-  line-height: 1 !important;
-  background: #000;
-  border: none;
-  border-radius: 5px;
+  position: relative;
+  overflow: auto;
+  margin: 0 !important;
+  padding: 20px;
+  min-height: 80px;
+  outline: none;
+  white-space: normal;
+  border: 1px solid #eee;
+  font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif !important;
+  font-size: 14px;
+  line-height: 1.6em;
 
 }
 .redactor-toolbar:after {
