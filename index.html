@@ -154,6 +154,7 @@
         </div>
     </div>
 
+<<<<<<< HEAD
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="js/highlight.pack.js"></script>
     <script src="js/redactor.js"></script>
@@ -292,20 +293,9 @@
     {
         // save content if you need
         var html = $('#redactor').redactor('code.get');
+=======
+    <script data-main="js/main.js" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.20/require.min.js"></script>
+>>>>>>> origin/pr/6
 
-        // destroy editor
-        $('#redactor').redactor('core.destroy');
-        $('#btn-save').hide();
-    }
-    function escapeHtml(unsafe) {
-        return unsafe
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-    }
-</script>
-<!--end-->
 </body>
 </html>
