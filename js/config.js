@@ -1,31 +1,32 @@
+
 /**
  * Created by Igor on 02.08.2015.
  */
 var app;
 
 app = {
-    path: '../'
+  path: "../"
 };
 
 require.config({
-    paths: {
-        'jquery': 'Library/jquery.min',
-        'hljs': 'Library/highlight.pack',
-        'redactor': 'Library/redactor',
+  paths: {
+    "jquery": "Library/jquery.min",
+    "hljs": "Library/highlight.pack",
+    "redactor": "Library/redactor"
+  },
+  shim: {
+    "jquery": {
+      exports: "$"
     },
-    shim: {
-        'jquery': {
-            exports: '$'
-        },
-        'redactor':{
-            deps: ['jquery']
-        }
+    "redactor": {
+      deps: ["jquery"]
     }
+  }
 });
 
 this.loadApplication = function(name) {
-    requirejs(['jquery', 'hljs', 'redactor'], function( $, hljs ) {
-        require(["Application/app"]);
-        require(["Application/editor"]);
-    });
+  requirejs(["jquery", "hljs", "redactor"], function($, hljs) {
+    require(["Application/app"]);
+    require(["Application/editor"]);
+  });
 };
