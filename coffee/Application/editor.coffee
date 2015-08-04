@@ -30,6 +30,7 @@ define [
             `var Redactor`
 
             Redactor = (document, nameElement) ->
+                Redactor::redactor = null
                 Redactor::document = document
                 Redactor::nameElement = nameElement
                 Redactor::elements = document.find(nameElement)
@@ -45,9 +46,6 @@ define [
 
             Redactor::init = ->
 
-                $(window).on "resize", ->
-
-
                 Redactor::document.find("#initRedactor").off('click').on 'click', ->
                     if $(this).hasClass("btn-edit")
                         $(this).removeClass("btn-edit").addClass "btn-save"
@@ -62,7 +60,8 @@ define [
                                 Redactor::position.end.x = event.pageX
                             return
                         ).off('click').on 'click', ->
-                            if window.getSelection().type is 'Range'
+                            selection = if not window.getSelection? then window.getSelection() else document.getSelection()
+                            if selection.type is 'Range'
                                 toolbar = $(this).prev()
                                 Redactor::toolbarPosition(toolbar)
                             else
@@ -92,8 +91,10 @@ define [
                         plugins: ['formatting', 'bold', 'italic', 'deleted',
                                   'unorderedlist', 'orderedlist', 'link', 'alignment']
                         initCallback: ->
+                            Redactor::redactor = this
                             element.off 'click'
                             Redactor::activeElement = element
+                            this.caret.setOffset(10);
                             return
                         blurCallback: (e) ->
                             _elements.parent().find('.redactor-toolbar').stop().fadeOut 400
@@ -114,19 +115,41 @@ define [
 
             Redactor::toolbarPosition = (toolbar)->
                 readTop = if Redactor::position.start.y < Redactor::position.end.y then 'start' else 'end'
+
+                top = Redactor::position[readTop].y - (toolbar.next().offset().top) - toolbar.height()*2+ 'px'
+                left = Math.abs(Redactor::position.start.x + Redactor::position.end.x) / 2 - (toolbar.next().offset().left) - (toolbar.width() / 2) + 'px'
+
+                if ((Math.abs(Redactor::position.start.x + Redactor::position.end.x) / 2 + (toolbar.next().offset().left) - (toolbar.width() / 2)) >= $(window).width() )
+                    left = $(window).width() - 5 - toolbar.width() - toolbar.next().offset().left + "px"
+
                 if toolbar.is(':visible') and toolbar.next().offset()?
                     toolbar.stop().animate {
-                        top: Redactor::position[readTop].y - (toolbar.next().offset().top) - toolbar.height - 15 + 'px'
-                        left: Math.abs(Redactor::position.start.x + Redactor::position.end.x) / 2 - (toolbar.next().offset().left) - (toolbar.width() / 2) + 'px'
+                        top
+                        left
                         opacity: 1
                     }, 150
                     return
                 else
                     if toolbar.next().offset()?
-                        toolbar.stop().fadeIn(400).css
-                            top: Redactor::position[readTop].y - (toolbar.next().offset().top) - 60 + 'px'
-                            left: Math.abs(Redactor::position.start.x + Redactor::position.end.x) / 2 - (toolbar.next().offset().left) - (toolbar.width() / 2) + 'px'
-                        return
+                        toolbar.stop().fadeIn(400).css({
+                            top
+                            left
+                        })
+
+            ###Redactor::viewBox = ()->
+                selection = if not window.getSelection? then window.getSelection() else document.getSelection()
+                console.log(selection.type)
+                if selection.type is 'Range'
+                    range = selection.getRangeAt(0)
+                    container = $(range.commonAncestorContainer.parentElement)
+                    text = container.text()
+                    startText = text.substring(0, range.startOffset)
+                    endText = text.substring(range.endOffset, text.length)
+                    container.html(startText + "<span class='range'>" + selection + "</span>" + endText)
+                    setTimeout ->
+                        Redactor::redactor.caret.setOffset(40)
+                    , 20###
+
 
             Redactor
         redactor = new Redactor(_docum, '.sub-section')

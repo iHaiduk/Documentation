@@ -47,7 +47,7 @@ module.exports = function(grunt) {
                 files: ['coffee/Application/*.coffee', 'coffee/*.coffee'],
                 tasks: ['newer:coffee:Application','newer:coffee:main']
             }
-        },
+        }
     });
 
     grunt.loadNpmTasks('grunt-contrib-coffee');

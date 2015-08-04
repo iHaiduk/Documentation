@@ -27,6 +27,7 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
     Redactor = (function() {
       var Redactor;
       Redactor = function(document, nameElement) {
+        Redactor.prototype.redactor = null;
         Redactor.prototype.document = document;
         Redactor.prototype.nameElement = nameElement;
         Redactor.prototype.elements = document.find(nameElement);
@@ -43,7 +44,6 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
         };
       };
       Redactor.prototype.init = function() {
-        $(window).on("resize", function() {});
         Redactor.prototype.document.find("#initRedactor").off('click').on('click', function() {
           var _elements;
           if ($(this).hasClass("btn-edit")) {
@@ -59,8 +59,9 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
                 Redactor.prototype.position.end.x = event.pageX;
               }
             }).off('click').on('click', function() {
-              var toolbar;
-              if (window.getSelection().type === 'Range') {
+              var selection, toolbar;
+              selection = window.getSelection == null ? window.getSelection() : document.getSelection();
+              if (selection.type === 'Range') {
                 toolbar = $(this).prev();
                 Redactor.prototype.toolbarPosition(toolbar);
               } else {
@@ -90,8 +91,10 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
             buttons: ['formatting', 'bold', 'italic', 'deleted', 'link', 'alignment'],
             plugins: ['formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist', 'link', 'alignment'],
             initCallback: function() {
+              Redactor.prototype.redactor = this;
               element.off('click');
               Redactor.prototype.activeElement = element;
+              this.caret.setOffset(10);
             },
             blurCallback: function(e) {
               _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
@@ -115,23 +118,43 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
         return Redactor.prototype.elements.redactor("core.destroy");
       };
       Redactor.prototype.toolbarPosition = function(toolbar) {
-        var readTop;
+        var left, readTop, top;
         readTop = Redactor.prototype.position.start.y < Redactor.prototype.position.end.y ? 'start' : 'end';
+        top = Redactor.prototype.position[readTop].y - (toolbar.next().offset().top) - toolbar.height() * 2 + 'px';
+        left = Math.abs(Redactor.prototype.position.start.x + Redactor.prototype.position.end.x) / 2 - (toolbar.next().offset().left) - (toolbar.width() / 2) + 'px';
+        if ((Math.abs(Redactor.prototype.position.start.x + Redactor.prototype.position.end.x) / 2 + (toolbar.next().offset().left) - (toolbar.width() / 2)) >= $(window).width()) {
+          left = $(window).width() - 5 - toolbar.width() - toolbar.next().offset().left + "px";
+        }
         if (toolbar.is(':visible') && (toolbar.next().offset() != null)) {
           toolbar.stop().animate({
-            top: Redactor.prototype.position[readTop].y - (toolbar.next().offset().top) - toolbar.height - 15 + 'px',
-            left: Math.abs(Redactor.prototype.position.start.x + Redactor.prototype.position.end.x) / 2 - (toolbar.next().offset().left) - (toolbar.width() / 2) + 'px',
+            top: top,
+            left: left,
             opacity: 1
           }, 150);
         } else {
           if (toolbar.next().offset() != null) {
-            toolbar.stop().fadeIn(400).css({
-              top: Redactor.prototype.position[readTop].y - (toolbar.next().offset().top) - 60 + 'px',
-              left: Math.abs(Redactor.prototype.position.start.x + Redactor.prototype.position.end.x) / 2 - (toolbar.next().offset().left) - (toolbar.width() / 2) + 'px'
+            return toolbar.stop().fadeIn(400).css({
+              top: top,
+              left: left
             });
           }
         }
       };
+
+      /*Redactor::viewBox = ()->
+          selection = if not window.getSelection? then window.getSelection() else document.getSelection()
+          console.log(selection.type)
+          if selection.type is 'Range'
+              range = selection.getRangeAt(0)
+              container = $(range.commonAncestorContainer.parentElement)
+              text = container.text()
+              startText = text.substring(0, range.startOffset)
+              endText = text.substring(range.endOffset, text.length)
+              container.html(startText + "<span class='range'>" + selection + "</span>" + endText)
+              setTimeout ->
+                  Redactor::redactor.caret.setOffset(40)
+              , 20
+       */
       return Redactor;
     })();
     redactor = new Redactor(_docum, '.sub-section');
