@@ -87,11 +87,14 @@ img {
   .header .subject, .header .user {
     position: absolute;
     top: 0;
-    left: 10px;
+    left: 20px;
     font-size: 15px;
     color: #484848;
     text-decoration: none;
-    margin: 22px 0 0 10px; }
+    line-height: 60px; }
+    @media (max-width: 1385px) {
+      .header .subject, .header .user {
+        line-height: 40px; } }
   .header .user {
     left: auto;
     right: 10px;
@@ -102,6 +105,14 @@ img {
     border: 1px solid #DEDEDE;
     border-radius: 100%;
     overflow: hidden; }
+    @media (max-width: 1385px) {
+      .header .user {
+        top: 0; } }
+  @media (max-width: 1385px) {
+    .header .wrap {
+      max-width: 100%;
+      padding: 0 65px 0 104px;
+      position: relative; } }
 
 .btn-plus-wrap {
   min-height: 40px;
@@ -142,6 +153,9 @@ img {
     opacity: 0;
     position: relative;
     top: 30px; }
+  .btn.btn-accept {
+    float: right;
+    margin-right: -15px; }
   .btn:hover {
     color: rgba(0, 0, 0, 0.6);
     border-color: rgba(0, 0, 0, 0.3); }
