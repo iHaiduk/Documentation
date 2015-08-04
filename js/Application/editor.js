@@ -85,6 +85,7 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
           element.redactor({
             iframe: true,
             cleanStyleOnEnter: false,
+            linebreaks: true,
             formatting: ['p', 'blockquote', 'h1', 'h2'],
             buttons: ['formatting', 'bold', 'italic', 'deleted', 'link', 'alignment'],
             plugins: ['formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist', 'link', 'alignment'],

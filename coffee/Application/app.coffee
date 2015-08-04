@@ -22,5 +22,8 @@ define [ 'jquery' ], ($) ->
             $(this).parents(".nav").find(".active").removeClass 'active'
             $(this).parent().addClass('active').parents(".nav-list").addClass('active')
             return
+        $('.btn-toggle').click ->
+            $(this).toggleClass 'open'
+            return
         return
     return
