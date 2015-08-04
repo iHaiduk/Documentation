@@ -225,6 +225,8 @@ img { vertical-align: top; max-width: 100%; }
 
             .sub-section { min-height: 40px; margin-bottom: 30px; margin-top: 0; font-size: 22px; line-height: 1.5; color: rgba(0,0,0,0.95); font-family: "freight-text-pro",Georgia,Cambria,"Times New Roman",Times,serif;
 
+                &:empty:after { content: 'Enter text'; opacity: .3; }
+
                 h1 { margin-bottom: 8px; margin-top: 0; color: rgba(0,0,0,0.8); font-size: 60px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; position: relative; line-height: 1; }
 
                 h2 { @extend h1; margin-bottom: 4px; font-size: 36px; line-height: 1.2; }
