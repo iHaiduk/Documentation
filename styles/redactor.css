@@ -119,7 +119,7 @@ body .redactor-box-fullscreen {
 */
 .redactor-toolbar {
   display: none;
-  position: fixed !important;
+  position: absolute !important;
   margin: 0 !important;
   padding: 0 !important;
   list-style: none !important;
