@@ -66,7 +66,7 @@ img { vertical-align: top; max-width: 100%; }
 
 .btn-plus-wrap { min-height: 40px; margin: 30px 0; text-align: center; }
 
-.btn { display: inline-block; vertical-align: top; position: relative; height: 40px; padding: 0 20px; color: rgba(0,0,0,0.44); background-color: $white; font-size: 14px; text-align: center; text-decoration: none; cursor: pointer; border: 1px solid rgba(0,0,0,0.15); white-space: nowrap; @include prefix(( user-select: none ), webkit moz ms ); border-radius: 20px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; line-height: 40px;
+.btn { display: inline-block; vertical-align: top; position: relative; height: 40px; padding: 0 19px; color: rgba(0,0,0,0.44); background-color: $white; font-size: 14px; text-align: center; text-decoration: none; cursor: pointer; border: 1px solid rgba(0,0,0,0.15); white-space: nowrap; @include prefix(( user-select: none ), webkit moz ms ); border-radius: 20px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; line-height: 40px;
 
     @include prefix(( transition: all .2s ease ), webkkit moz ms );
 
@@ -74,7 +74,7 @@ img { vertical-align: top; max-width: 100%; }
 
     &.btn-plus { visibility: hidden; opacity: 0; position: relative; top: 30px; }
 
-    &.btn-accept { float: right; margin-right: -15px;
+    &.btn-accept { float: right; width: 80px; margin-right: -15px;
 
         &.btn-edit {
 
@@ -93,6 +93,52 @@ img { vertical-align: top; max-width: 100%; }
     &:hover { color: rgba(0,0,0,0.6); border-color: rgba(0,0,0,0.3); }
 
     &:active { color: rgba(0,0,0,0.8); border-color: rgba(0,0,0,0.6); }
+
+}
+
+.media-toolbar { margin-bottom: 30px; white-space: nowrap;
+
+    .btn-toggle { display: inline-block; background: url("../img/plus.svg") center no-repeat; background-size: 32px; vertical-align: top;
+
+        @include prefix(( transition: all 250ms ease ), webkit ms);
+
+        &.open {
+
+            @include prefix(( transform: rotate(45deg)), webkit ms);
+
+        }
+
+        &.open + .menu-toolbar { visibility: visible;
+
+            .btn {
+
+                @include prefix(( transform: scale(1), transition: all 250ms ease ), webkit ms);
+
+            }
+
+        }
+
+    }
+
+    .menu-toolbar { visibility: hidden; display: inline-block; vertical-align: top; padding-left: 20px;
+
+        .btn { margin-right: 10px;
+
+            @include prefix((transform: scale(0), transition: none), webkit ms);
+
+            &:last-child { margin: 0; }
+
+            &:nth-child(2) { @include prefix((transition-delay: $delay !important), webkit ms); }
+
+            &:nth-child(3) { @include prefix((transition-delay: $delay+30 !important), webkit ms); }
+
+            &:nth-child(4) { @include prefix((transition-delay: $delay+60 !important), webkit ms); }
+
+            &:nth-child(5) { @include prefix((transition-delay: $delay+90 !important), webkit ms); }
+
+        }
+
+    }
 
 }
 
