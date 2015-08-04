@@ -49,28 +49,31 @@ define [
                 Redactor::document.find("#initRedactor").off('click').on 'click', ->
                     if $(this).hasClass("btn-edit")
                         $(this).removeClass("btn-edit").addClass "btn-save"
-                        _elements = Redactor::elements
-                        Redactor::loadRedactors()
-                        _elements.off('mousedown mouseup').on('mousedown mouseup', (event) ->
-                            if event.type == 'mousedown'
-                                Redactor::position.start.y = event.pageY
-                                Redactor::position.start.x = event.pageX
-                            else
-                                Redactor::position.end.y = event.pageY
-                                Redactor::position.end.x = event.pageX
-                            return
-                        ).off('click').on 'click', ->
-                            selection = if not window.getSelection? then window.getSelection() else document.getSelection()
-                            if selection.type is 'Range'
-                                toolbar = $(this).prev()
-                                Redactor::toolbarPosition(toolbar)
-                            else
-                                _elements.parent().find('.redactor-toolbar').hide()
-                            return
-                        return
+                        Redactor::initialize()
                     else
                         $(this).removeClass("btn-save").addClass "btn-edit"
                         Redactor::save()
+                return
+
+            Redactor::initialize = () ->
+                _elements = Redactor::elements
+                Redactor::loadRedactors()
+                _elements.off('mousedown mouseup').on('mousedown mouseup', (event) ->
+                    if event.type == 'mousedown'
+                        Redactor::position.start.y = event.pageY
+                        Redactor::position.start.x = event.pageX
+                    else
+                        Redactor::position.end.y = event.pageY
+                        Redactor::position.end.x = event.pageX
+                    return
+                ).off('click').on 'click', ->
+                    selection = if not window.getSelection? then window.getSelection() else document.getSelection()
+                    if selection.type is 'Range'
+                        toolbar = $(this).prev()
+                        Redactor::toolbarPosition(toolbar)
+                    else
+                        _elements.parent().find('.redactor-toolbar').hide()
+                    return
                 return
 
             Redactor::loadRedactors = ->
@@ -94,7 +97,6 @@ define [
                             Redactor::redactor = this
                             element.off 'click'
                             Redactor::activeElement = element
-                            this.caret.setOffset(10);
                             return
                         blurCallback: (e) ->
                             _elements.parent().find('.redactor-toolbar').stop().fadeOut 400

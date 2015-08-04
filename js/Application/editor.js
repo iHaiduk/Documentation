@@ -45,32 +45,35 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
       };
       Redactor.prototype.init = function() {
         Redactor.prototype.document.find("#initRedactor").off('click').on('click', function() {
-          var _elements;
           if ($(this).hasClass("btn-edit")) {
             $(this).removeClass("btn-edit").addClass("btn-save");
-            _elements = Redactor.prototype.elements;
-            Redactor.prototype.loadRedactors();
-            _elements.off('mousedown mouseup').on('mousedown mouseup', function(event) {
-              if (event.type === 'mousedown') {
-                Redactor.prototype.position.start.y = event.pageY;
-                Redactor.prototype.position.start.x = event.pageX;
-              } else {
-                Redactor.prototype.position.end.y = event.pageY;
-                Redactor.prototype.position.end.x = event.pageX;
-              }
-            }).off('click').on('click', function() {
-              var selection, toolbar;
-              selection = window.getSelection == null ? window.getSelection() : document.getSelection();
-              if (selection.type === 'Range') {
-                toolbar = $(this).prev();
-                Redactor.prototype.toolbarPosition(toolbar);
-              } else {
-                _elements.parent().find('.redactor-toolbar').hide();
-              }
-            });
+            return Redactor.prototype.initialize();
           } else {
             $(this).removeClass("btn-save").addClass("btn-edit");
             return Redactor.prototype.save();
+          }
+        });
+      };
+      Redactor.prototype.initialize = function() {
+        var _elements;
+        _elements = Redactor.prototype.elements;
+        Redactor.prototype.loadRedactors();
+        _elements.off('mousedown mouseup').on('mousedown mouseup', function(event) {
+          if (event.type === 'mousedown') {
+            Redactor.prototype.position.start.y = event.pageY;
+            Redactor.prototype.position.start.x = event.pageX;
+          } else {
+            Redactor.prototype.position.end.y = event.pageY;
+            Redactor.prototype.position.end.x = event.pageX;
+          }
+        }).off('click').on('click', function() {
+          var selection, toolbar;
+          selection = window.getSelection == null ? window.getSelection() : document.getSelection();
+          if (selection.type === 'Range') {
+            toolbar = $(this).prev();
+            Redactor.prototype.toolbarPosition(toolbar);
+          } else {
+            _elements.parent().find('.redactor-toolbar').hide();
           }
         });
       };
@@ -94,7 +97,6 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
               Redactor.prototype.redactor = this;
               element.off('click');
               Redactor.prototype.activeElement = element;
-              this.caret.setOffset(10);
             },
             blurCallback: function(e) {
               _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
