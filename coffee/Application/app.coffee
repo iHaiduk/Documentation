@@ -18,9 +18,12 @@ define [ 'jquery' ], ($) ->
             return
 
         $('.nav').find(".nav-item").off('click').on 'click', ->
-            (this).next().slideToggle 200 if $(this).hasClass("parent")
+            $(this).next().slideToggle 200 if $(this).hasClass("parent")
             $(this).parents(".nav").find(".active").removeClass 'active'
             $(this).parent().addClass('active').parents(".nav-list").addClass('active')
+            return
+        $('.btn-toggle').click ->
+            $(this).toggleClass 'open'
             return
         return
     return
