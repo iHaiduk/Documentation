@@ -21,7 +21,7 @@ define(['jquery'], function($) {
     });
     $('.nav').find(".nav-item").off('click').on('click', function() {
       if ($(this).hasClass("parent")) {
-        this.next().slideToggle(200);
+        $(this).next().slideToggle(200);
       }
       $(this).parents(".nav").find(".active").removeClass('active');
       $(this).parent().addClass('active').parents(".nav-list").addClass('active');
