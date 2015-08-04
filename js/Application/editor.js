@@ -12,7 +12,6 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
         save: function() {
           var html;
           html = this.code.get();
-          console.log(html);
         },
         init: function() {
           var button;
@@ -53,12 +52,73 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
             return Redactor.prototype.save();
           }
         });
+        Redactor.prototype.addListen();
+      };
+      Redactor.prototype.addListen = function() {
+        return Redactor.prototype.document.find(".btn-plus").off('click').on('click', function() {
+          return Redactor.prototype.addSection($(this).parents(".section"));
+        });
+      };
+      Redactor.prototype.addSection = function(block) {
+        var newBlock;
+        newBlock = $("<div class=\"section\">\n    <div class=\"sub-section\"></div>\n    <div class=\"media-toolbar\">\n        <span class=\"btn btn-toggle\"></span>\n        <div class=\"menu-toolbar\">\n            <span class=\"btn btn-image\"></span>\n            <span class=\"btn btn-code\"></span>\n        </div>\n    </div>\n\n    <div class=\"btn-plus-wrap\">\n        <span class=\"btn btn-plus\">Add</span>\n    </div>\n</div>");
+        block.after(newBlock);
+        Redactor.prototype.elements = Redactor.prototype.document.find(Redactor.prototype.nameElement);
+        Redactor.prototype.addRedactor(newBlock.find(".sub-section"), true);
+        return Redactor.prototype.addListen();
       };
       Redactor.prototype.initialize = function() {
-        var _elements;
-        _elements = Redactor.prototype.elements;
         Redactor.prototype.loadRedactors();
-        _elements.off('mousedown mouseup').on('mousedown mouseup', function(event) {
+      };
+      Redactor.prototype.loadRedactors = function() {
+        Redactor.prototype.elements.each(function() {
+          Redactor.prototype.addRedactor($(this));
+        });
+      };
+      Redactor.prototype.addRedactor = function(element, focus) {
+        var _elements;
+        if (focus == null) {
+          focus = false;
+        }
+        if (element != null) {
+          _elements = Redactor.prototype.elements;
+          element.redactor({
+            iframe: true,
+            cleanStyleOnEnter: false,
+            linebreaks: true,
+            focus: focus,
+            formatting: ['p', 'blockquote', 'h1', 'h2'],
+            buttons: ['formatting', 'bold', 'italic', 'deleted', 'link', 'alignment'],
+            plugins: ['formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist', 'link', 'alignment'],
+            initCallback: function() {
+              Redactor.prototype.redactor = this;
+              element.off('click');
+              Redactor.prototype.activeElement = element;
+              Redactor.prototype.listenEvent(element);
+            },
+            blurCallback: function(e) {
+              _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
+              this.$element.parents(".section").find(".media-toolbar").removeClass("active");
+            },
+            keydownCallback: function(e) {
+              if (e.keyCode === 8 && $.trim(this.code.get()) === "") {
+                return Redactor.prototype.removeRedactor(this.$element);
+              }
+
+              /*e.preventDefault()
+              false
+               */
+            },
+            focusCallback: function(e) {
+              if ($.trim(this.code.get()) === "") {
+                return this.$element.parents(".section").find(".media-toolbar").addClass("active");
+              }
+            }
+          });
+        }
+      };
+      Redactor.prototype.listenEvent = function(element) {
+        element.off('mousedown mouseup').on('mousedown mouseup', function(event) {
           if (event.type === 'mousedown') {
             Redactor.prototype.position.start.y = event.pageY;
             Redactor.prototype.position.start.x = event.pageX;
@@ -73,47 +133,14 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
             toolbar = $(this).prev();
             Redactor.prototype.toolbarPosition(toolbar);
           } else {
-            _elements.parent().find('.redactor-toolbar').hide();
+            element.parent().find('.redactor-toolbar').hide();
           }
         });
-      };
-      Redactor.prototype.loadRedactors = function() {
-        Redactor.prototype.elements.each(function() {
-          Redactor.prototype.addRedactor($(this));
-        });
-      };
-      Redactor.prototype.addRedactor = function(element) {
-        var _elements;
-        if (element != null) {
-          _elements = Redactor.prototype.elements;
-          element.redactor({
-            iframe: true,
-            cleanStyleOnEnter: false,
-            linebreaks: true,
-            formatting: ['p', 'blockquote', 'h1', 'h2'],
-            buttons: ['formatting', 'bold', 'italic', 'deleted', 'link', 'alignment'],
-            plugins: ['formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist', 'link', 'alignment'],
-            initCallback: function() {
-              Redactor.prototype.redactor = this;
-              element.off('click');
-              Redactor.prototype.activeElement = element;
-            },
-            blurCallback: function(e) {
-              _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
-            },
-            keydownCallback: function(e) {
-
-              /*e.preventDefault()
-              console.log e.keyCode
-              false
-               */
-            }
-          });
-        }
       };
       Redactor.prototype.removeRedactor = function(element) {
         if (element != null) {
           element.redactor('core.destroy');
+          element.parents(".section").remove();
         }
       };
       Redactor.prototype.save = function(element) {

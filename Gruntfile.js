@@ -54,6 +54,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-newer');
 
-    grunt.registerTask('default', ['coffee:Application','coffee:main']);
+    grunt.registerTask('default', ['coffee:Application','coffee:main','watch']);
 
 };

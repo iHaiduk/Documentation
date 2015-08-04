@@ -14,7 +14,6 @@ define [
             {
             save: ->
                 html = @code.get()
-                console.log html
                 return
             init: ->
                 button = @button.add('bold', 'Insert Code')
@@ -53,12 +52,80 @@ define [
                     else
                         $(this).removeClass("btn-save").addClass "btn-edit"
                         Redactor::save()
+                Redactor::addListen()
                 return
 
+            Redactor::addListen = ()->
+                Redactor::document.find(".btn-plus").off('click').on 'click', ->
+                    Redactor::addSection($(this).parents(".section"))
+
+
+            Redactor::addSection = (block)->
+                newBlock = $("""
+                        <div class="section">
+                            <div class="sub-section"></div>
+                            <div class="media-toolbar">
+                                <span class="btn btn-toggle"></span>
+                                <div class="menu-toolbar">
+                                    <span class="btn btn-image"></span>
+                                    <span class="btn btn-code"></span>
+                                </div>
+                            </div>
+
+                            <div class="btn-plus-wrap">
+                                <span class="btn btn-plus">Add</span>
+                            </div>
+                        </div>
+                        """)
+                block.after newBlock
+                Redactor::elements = Redactor::document.find(Redactor::nameElement)
+                Redactor::addRedactor newBlock.find(".sub-section"), true
+                Redactor::addListen()
+
             Redactor::initialize = () ->
-                _elements = Redactor::elements
                 Redactor::loadRedactors()
-                _elements.off('mousedown mouseup').on('mousedown mouseup', (event) ->
+                return
+
+            Redactor::loadRedactors = ->
+                Redactor::elements.each ->
+                    Redactor::addRedactor $(this)
+                    return
+                return
+
+            Redactor::addRedactor = (element, focus = false) ->
+                if element?
+                    _elements = Redactor::elements
+                    element.redactor
+                        iframe: true
+                        cleanStyleOnEnter: false
+                        linebreaks: true
+                        focus: focus
+                        formatting: ['p', 'blockquote', 'h1', 'h2']
+                        buttons: ['formatting', 'bold', 'italic', 'deleted', 'link', 'alignment']
+                        plugins: ['formatting', 'bold', 'italic', 'deleted',
+                                  'unorderedlist', 'orderedlist', 'link', 'alignment']
+                        initCallback: ->
+                            Redactor::redactor = this
+                            element.off 'click'
+                            Redactor::activeElement = element
+                            Redactor::listenEvent element
+                            return
+                        blurCallback: (e) ->
+                            _elements.parent().find('.redactor-toolbar').stop().fadeOut 400
+                            this.$element.parents(".section").find(".media-toolbar").removeClass("active")
+                            return
+                        keydownCallback: (e) ->
+                            Redactor::removeRedactor(this.$element) if e.keyCode is 8 and $.trim(this.code.get()) is ""
+                            ###e.preventDefault()
+                            false###
+                        focusCallback: (e)->
+                            if $.trim(this.code.get()) is ""
+                                this.$element.parents(".section").find(".media-toolbar").addClass("active")
+
+                    return
+
+            Redactor::listenEvent = (element)->
+                element.off('mousedown mouseup').on('mousedown mouseup', (event) ->
                     if event.type == 'mousedown'
                         Redactor::position.start.y = event.pageY
                         Redactor::position.start.x = event.pageX
@@ -72,45 +139,15 @@ define [
                         toolbar = $(this).prev()
                         Redactor::toolbarPosition(toolbar)
                     else
-                        _elements.parent().find('.redactor-toolbar').hide()
+                        element.parent().find('.redactor-toolbar').hide()
                     return
                 return
-
-            Redactor::loadRedactors = ->
-                Redactor::elements.each ->
-                    Redactor::addRedactor $(this)
-                    return
-                return
-
-            Redactor::addRedactor = (element) ->
-                if element?
-                    _elements = Redactor::elements
-                    element.redactor
-                        iframe: true
-                        cleanStyleOnEnter: false
-                        linebreaks: true
-                        formatting: ['p', 'blockquote', 'h1', 'h2']
-                        buttons: ['formatting', 'bold', 'italic', 'deleted', 'link', 'alignment']
-                        plugins: ['formatting', 'bold', 'italic', 'deleted',
-                                  'unorderedlist', 'orderedlist', 'link', 'alignment']
-                        initCallback: ->
-                            Redactor::redactor = this
-                            element.off 'click'
-                            Redactor::activeElement = element
-                            return
-                        blurCallback: (e) ->
-                            _elements.parent().find('.redactor-toolbar').stop().fadeOut 400
-                            return
-                        keydownCallback: (e) ->
-                            ###e.preventDefault()
-                            console.log e.keyCode
-                            false###
-                    return
 
             Redactor::removeRedactor = (element)->
                 if element?
                     element.redactor 'core.destroy'
-                return
+                    element.parents(".section").remove()
+                    return
 
             Redactor::save = (element)->
                 Redactor::elements.redactor("core.destroy")
