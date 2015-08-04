@@ -1,6 +1,7 @@
 @import "_variables.scss";
 @import "_mixin.scss";
 
+/*clear fix*/
 .cf:before,
 .cf:after {
   content: '';
@@ -9,6 +10,7 @@
 .cf:after {
   clear: both;
 }
+/*clear fix*/
 
 @include scrollbars(8px, #ccc);
 
@@ -16,7 +18,7 @@ html * { @include prefix( ( box-sizing: border-box ), webkit moz );}
 
 html, body { height: 100%; }
 
-body { padding-top: 80px; margin: 0; font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 14px; background: #fff;
+body { padding-top: 80px; margin: 0; font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 14px; background: $white;
 
     &.noScroll { overflow: hidden; }
 
@@ -64,7 +66,7 @@ img { vertical-align: top; max-width: 100%; }
 
 .btn-plus-wrap { min-height: 40px; margin: 30px 0; text-align: center; }
 
-.btn { display: inline-block; vertical-align: top; position: relative; height: 40px; padding: 0 20px; color: rgba(0,0,0,0.44); background-color: #fff; font-size: 14px; text-align: center; text-decoration: none; cursor: pointer; border: 1px solid rgba(0,0,0,0.15); white-space: nowrap; @include prefix(( user-select: none ), webkit moz ms ); border-radius: 20px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; line-height: 40px;
+.btn { display: inline-block; vertical-align: top; position: relative; height: 40px; padding: 0 20px; color: rgba(0,0,0,0.44); background-color: $white; font-size: 14px; text-align: center; text-decoration: none; cursor: pointer; border: 1px solid rgba(0,0,0,0.15); white-space: nowrap; @include prefix(( user-select: none ), webkit moz ms ); border-radius: 20px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; line-height: 40px;
 
     @include prefix(( transition: all .2s ease ), webkkit moz ms );
 
@@ -72,7 +74,21 @@ img { vertical-align: top; max-width: 100%; }
 
     &.btn-plus { visibility: hidden; opacity: 0; position: relative; top: 30px; }
 
-    &.btn-accept { float: right; margin-right: -15px; }
+    &.btn-accept { float: right; margin-right: -15px;
+
+        &.btn-edit {
+
+            &:after { content: 'Edit'; }
+
+        }
+
+        &.btn-save {
+
+            &:after { content: 'Save'; }
+
+        }
+
+    }
 
     &:hover { color: rgba(0,0,0,0.6); border-color: rgba(0,0,0,0.3); }
 
@@ -133,7 +149,7 @@ img { vertical-align: top; max-width: 100%; }
 
 .view {
 
-    .section-wrap { margin-bottom: 30px; background: #fff; border-bottom: 1px dashed #ccc;
+    .section-wrap { margin-bottom: 30px; background: $white; border-bottom: 1px dashed #ccc;
 
         &:last-of-type { border: none; }
 
@@ -145,9 +161,9 @@ img { vertical-align: top; max-width: 100%; }
 
                 &.visible { visibility: visible; opacity: .3;
 
-                    &:hover { opacity: .5 }
+                    &:hover { opacity: .5; }
 
-                    &:active { opacity: .8 }
+                    &:active { opacity: .8; }
 
                 }
 
@@ -179,13 +195,13 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-.popup { visibility: hidden; position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0; z-index: 10000; background: #fff; overflow: auto;
+.popup { visibility: hidden; position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0; z-index: -1; background: $white; overflow: auto;
 
     @include prefix(( transition: all .5s ease ), webkit moz ms);
 
-    &.visible { visibility: visible; opacity: 1; }
+    &.visible { visibility: visible; opacity: 1; z-index: 10000; }
 
-    .close { position: absolute; top: 20px; right: 20px; cursor: pointer; width: 30px; height: 30px; color: #000; border-radius: 100%; border: 1px solid #000; font-size: 28px; text-align: center; line-height: 28px; opacity: .5;
+    .close { position: absolute; top: 20px; right: 20px; cursor: pointer; width: 30px; height: 30px; color: $black; border-radius: 100%; border: 1px solid $black; font-size: 28px; text-align: center; line-height: 28px; opacity: .5;
 
         @include prefix(( transition: all .3s ease ), webkit moz ms);
 
@@ -201,9 +217,9 @@ img { vertical-align: top; max-width: 100%; }
 
             @include prefix(( flex: 1 ), webkit moz ms);
 
-            .product-name { position: absolute; top: 20px; left: 0; font-size: 20px; background: #000; color: #fff; padding: 4px 12px; max-width: 100%; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;
+            .product-name { position: absolute; top: 20px; left: 0; font-size: 20px; background: $black; color: $white; padding: 4px 12px; max-width: 100%; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;
 
-                &:hover { text-shadow: 0 0 1px #fff; }
+                &:hover { text-shadow: 0 0 1px $white; }
 
                 @include prefix(( transition: all .3s ease ), webkit moz ms);
 

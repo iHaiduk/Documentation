@@ -1,3 +1,4 @@
+/*clear fix*/
 .cf:before,
 .cf:after {
   content: '';
@@ -6,6 +7,7 @@
 .cf:after {
   clear: both; }
 
+/*clear fix*/
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px; }
@@ -156,6 +158,10 @@ img {
   .btn.btn-accept {
     float: right;
     margin-right: -15px; }
+    .btn.btn-accept.btn-edit:after {
+      content: 'Edit'; }
+    .btn.btn-accept.btn-save:after {
+      content: 'Save'; }
   .btn:hover {
     color: rgba(0, 0, 0, 0.6);
     border-color: rgba(0, 0, 0, 0.3); }
@@ -265,9 +271,9 @@ img {
         visibility: visible;
         opacity: .3; }
         .view .section-wrap .section .btn-edit.visible:hover {
-          opacity: 0.5; }
+          opacity: .5; }
         .view .section-wrap .section .btn-edit.visible:active {
-          opacity: 0.8; }
+          opacity: .8; }
     .view .section-wrap .section .sub-section h1, .view .section-wrap .section .sub-section h2, .view .section-wrap .section .sub-section h3 {
       margin-bottom: 8px;
       margin-top: 0;
@@ -307,7 +313,7 @@ img {
   right: 0;
   bottom: 0;
   opacity: 0;
-  z-index: 10000;
+  z-index: -1;
   background: #fff;
   overflow: auto;
   -webkit-transition: all 0.5s ease;
@@ -316,7 +322,8 @@ img {
   transition: all 0.5s ease; }
   .popup.visible {
     visibility: visible;
-    opacity: 1; }
+    opacity: 1;
+    z-index: 10000; }
   .popup .close {
     position: absolute;
     top: 20px;
