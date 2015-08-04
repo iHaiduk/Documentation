@@ -38,19 +38,19 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-.header { position: fixed; top: 0; left: 0; right: 0; height: 60px; padding-top: 10px; background: #f2f2f2; z-index: 99;
+.header { position: fixed; top: 0; left: 0; right: 0; height: 52px; padding-top: 10px; background: #f2f2f2; z-index: 99;
 
     @include prefix(( transition: all .1s linear ), webkkit moz ms );
 
     &.shadow { box-shadow: 0 1px 3px rgba(0,0,0,.2); }
 
-    .subject { position: absolute; top: 0; left: 20px; font-size: 15px; color: #484848; text-decoration: none; line-height: 60px;
+    .subject { position: absolute; top: 0; left: 20px; font-size: 15px; color: #484848; text-decoration: none; line-height: 52px;
 
-        @include custom_breakpoint(1385) { line-height: 40px; }
+        @include custom_breakpoint(1385) { line-height: 32px; }
 
     }
 
-    .user { @extend .subject; left: auto; right: 10px; top: 10px; margin: 0; width: 40px; height: 40px; border: 1px solid #DEDEDE; border-radius: 100%; overflow: hidden;
+    .user { @extend .subject; left: auto; right: 10px; top: 10px; margin: 0; width: 32px; height: 32px; border: 1px solid #DEDEDE; border-radius: 100%; overflow: hidden;
 
         @include custom_breakpoint(1385) { top: 0; }
 
@@ -58,7 +58,27 @@ img { vertical-align: top; max-width: 100%; }
 
     .wrap {
 
-        @include custom_breakpoint(1385) { max-width: 100%; padding: 0 65px 0 104px; position: relative; }
+        @include custom_breakpoint(1385) { max-width: 100%; padding: 0 57px 0 104px; position: relative; }
+
+    }
+
+}
+
+.search { float: right; width: 25%; padding-left: 30px;
+
+    .search-wrap { position: relative;
+
+        .search-submit { position: absolute; top: 0; left: 0; width: 38px; height: 32px; background: url("../img/search.svg") center no-repeat; background-size: 22px; text-indent: -9999px; border: none; outline: none; cursor: pointer; }
+
+        .search-text { width: 100%; outline: none; height: 32px; padding: 0 5px 0 35px; border: 1px solid rgba(0,0,0,0.15); border-radius: 20px;
+
+            @include prefix(( transition: all .2s ease ), webkit moz ms);
+
+            &:hover { border-color: rgba(0,0,0,0.3); }
+
+            &:focus { border-color: rgba(0,0,0,0.6); }
+
+        }
 
     }
 
@@ -66,7 +86,7 @@ img { vertical-align: top; max-width: 100%; }
 
 .btn-plus-wrap { min-height: 40px; margin: 30px 0; text-align: center; }
 
-.btn { display: inline-block; vertical-align: top; position: relative; height: 40px; padding: 0 19px; color: rgba(0,0,0,0.44); background-color: $white; font-size: 14px; text-align: center; text-decoration: none; cursor: pointer; border: 1px solid rgba(0,0,0,0.15); white-space: nowrap; @include prefix(( user-select: none ), webkit moz ms ); border-radius: 20px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; line-height: 40px;
+.btn { display: inline-block; vertical-align: top; min-width: 80px; position: relative; height: 32px; padding: 0 10px; color: rgba(0,0,0,0.44); background-color: $white; font-size: 14px; text-align: center; text-decoration: none; cursor: pointer; border: 1px solid rgba(0,0,0,0.15); white-space: nowrap; @include prefix(( user-select: none ), webkit moz ms ); border-radius: 20px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; line-height: 32px;
 
     @include prefix(( transition: all .2s ease ), webkkit moz ms );
 
@@ -96,9 +116,13 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-.media-toolbar { margin: 30px 0; white-space: nowrap;
+.media-toolbar { display: none; position: absolute; top: 0; left: -45px;
 
-    .btn-toggle { display: inline-block; background: url("../img/plus.svg") center no-repeat; background-size: 32px; vertical-align: top;
+    .btn { width: 32px; min-width: 32px; background-position: center; background-repeat: no-repeat; background-color: $white; }
+
+    &.active { display: block; }
+
+    .btn-toggle { background-image: url("../img/plus.svg"); background-size: 24px;
 
         @include prefix(( transition: all 250ms ease ), webkit ms);
 
@@ -120,7 +144,7 @@ img { vertical-align: top; max-width: 100%; }
 
     }
 
-    .menu-toolbar { visibility: hidden; display: inline-block; vertical-align: top; padding-left: 20px;
+    .menu-toolbar { visibility: hidden; display: inline-block; vertical-align: top; padding-left: 24px;
 
         .btn { margin-right: 10px;
 
@@ -136,25 +160,9 @@ img { vertical-align: top; max-width: 100%; }
 
             &:nth-child(5) { @include prefix((transition-delay: $delay+90 !important), webkit ms); }
 
-        }
+            &.btn-image { background-image: url("../img/image.svg"); background-size: 16px; }
 
-    }
-
-}
-
-.search { float: right; width: 25%; padding-left: 30px;
-
-    .search-wrap { position: relative;
-
-        .search-submit { position: absolute; top: 0; left: 0; width: 38px; height: 38px; background: url("../img/search.svg") center no-repeat; background-size: 22px; text-indent: -9999px; border: none; outline: none; cursor: pointer; }
-
-        .search-text { width: 100%; outline: none; height: 38px; padding: 0 5px 0 35px; border: 1px solid rgba(0,0,0,0.15); border-radius: 20px;
-
-            @include prefix(( transition: all .2s ease ), webkit moz ms);
-
-            &:hover { border-color: rgba(0,0,0,0.3); }
-
-            &:focus { border-color: rgba(0,0,0,0.6); }
+            &.btn-code { background-image: url("../img/code.svg"); background-size: 18px; }
 
         }
 
@@ -170,7 +178,7 @@ img { vertical-align: top; max-width: 100%; }
 
 .nav { padding: 0; margin: 0; list-style-type: none;
 
-    .nav-item { display: block; padding: 0 20px; color: #36556e; text-decoration: none; line-height: 30px; font-size: 14px;
+    .nav-item { display: block; padding: 0 20px; color: #36556e; text-decoration: none; line-height: 30px; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 
         @include prefix(( transition: all .1s ease ), webkit moz ms );
 
@@ -215,7 +223,7 @@ img { vertical-align: top; max-width: 100%; }
 
             }
 
-            .sub-section { margin-bottom: 30px; margin-top: 0; font-size: 22px; line-height: 1.5; color: rgba(0,0,0,0.95); font-family: "freight-text-pro",Georgia,Cambria,"Times New Roman",Times,serif;
+            .sub-section { min-height: 40px; margin-bottom: 30px; margin-top: 0; font-size: 22px; line-height: 1.5; color: rgba(0,0,0,0.95); font-family: "freight-text-pro",Georgia,Cambria,"Times New Roman",Times,serif;
 
                 h1 { margin-bottom: 8px; margin-top: 0; color: rgba(0,0,0,0.8); font-size: 60px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; position: relative; line-height: 1; }
 
