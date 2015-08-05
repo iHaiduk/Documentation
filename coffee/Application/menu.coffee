@@ -65,7 +65,7 @@ define [ 'jquery', 'hljs', 'Application/editor' ], ($) ->
           arrMenu.forEach (val)->
             htmlMenu += """
                         <li class='nav-list'>
-                            <a class='nav-item"""+(if val.child? and val.child.length then " parent" else "")+"""' href="javascript:void(0)" data-id='header"""+Menu::MenuHeadingCnt+"""'>"""+val.text+"""</a>"""
+                            <a class='nav-item"""+(if val.child? and val.child.length then " parent" else "")+"""' href="javascript:void(0)" data-id='header"""+Menu::MenuHeadingCnt+"""'>"""+val.text+"""<span class='slide-arrow'></span></a>"""
             Menu::MenuHeadingCnt++
             if val.child? and val.child.length
 
@@ -77,9 +77,9 @@ define [ 'jquery', 'hljs', 'Application/editor' ], ($) ->
 
       Menu::listen = ()->
         Menu::navigation.find(".nav-item").off('click').on 'click', ->
-          $(this).next().slideToggle 200 if $(this).hasClass("parent")
-          $(this).parents(".nav").find(".active").removeClass 'active'
-          $(this).parent().addClass('active').parents(".nav-list").addClass('active')
+          $("html, body").stop().animate({
+            scrollTop: $("#" + $(@).data().id).offset().top - _document.find(".header.cf").height() - 15
+          },500)
           return
         return
 

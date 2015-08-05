@@ -77,7 +77,7 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
         if ((arrMenu != null) && arrMenu.length) {
           htmlMenu += "<ul class='" + (sub ? "sub-nav" : "nav") + "'>";
           arrMenu.forEach(function(val) {
-            htmlMenu += "<li class='nav-list'>\n    <a class='nav-item" + ((val.child != null) && val.child.length ? " parent" : "") + "' href=\"javascript:void(0)\" data-id='header" + Menu.prototype.MenuHeadingCnt + "'>" + val.text + "</a>";
+            htmlMenu += "<li class='nav-list'>\n    <a class='nav-item" + ((val.child != null) && val.child.length ? " parent" : "") + "' href=\"javascript:void(0)\" data-id='header" + Menu.prototype.MenuHeadingCnt + "'>" + val.text + "<span class='slide-arrow'></span></a>";
             Menu.prototype.MenuHeadingCnt++;
             if ((val.child != null) && val.child.length) {
               htmlMenu += Menu.prototype.treeHTMLGenerate(val.child, true);
@@ -90,11 +90,9 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
 
       Menu.prototype.listen = function() {
         Menu.prototype.navigation.find(".nav-item").off('click').on('click', function() {
-          if ($(this).hasClass("parent")) {
-            $(this).next().slideToggle(200);
-          }
-          $(this).parents(".nav").find(".active").removeClass('active');
-          $(this).parent().addClass('active').parents(".nav-list").addClass('active');
+          $("html, body").stop().animate({
+            scrollTop: $("#" + $(this).data().id).offset().top - _document.find(".header.cf").height() - 15
+          }, 500);
         });
       };
 
