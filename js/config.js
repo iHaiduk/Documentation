@@ -27,6 +27,6 @@ require.config({
 this.loadApplication = function(name) {
   requirejs(["jquery", "hljs", "redactor"], function($, hljs) {
     require(["Application/app"]);
-    require(["Application/editor"]);
+    require(["Application/site"]);
   });
 };

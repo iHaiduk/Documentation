@@ -25,10 +25,8 @@ define [
 
             }
 
-        Redactor = do ->
-            `var Redactor`
-
-            Redactor = (document, nameElement) ->
+        class Redactor
+            constructor: (document, nameElement) ->
                 Redactor::redactor = null
                 Redactor::document = document
                 Redactor::nameElement = nameElement
@@ -41,16 +39,17 @@ define [
                     end:
                         x: 0
                         y: 0
-                return
 
             Redactor::init = ->
 
                 Redactor::document.find("#initRedactor").off('click').on 'click', ->
                     if $(this).hasClass("btn-edit")
                         $(this).removeClass("btn-edit").addClass "btn-save"
+                        $("body").addClass "editing"
                         Redactor::initialize()
                     else
                         $(this).removeClass("btn-save").addClass "btn-edit"
+                        $("body").removeClass "editing"
                         Redactor::save()
                 Redactor::addListen()
                 return
@@ -109,20 +108,24 @@ define [
                             element.off 'click'
                             Redactor::activeElement = element
                             Redactor::listenEvent element
+                            Redactor::showPlusButton(this)
                             return
                         blurCallback: (e) ->
                             _elements.parent().find('.redactor-toolbar').stop().fadeOut 400
-                            this.$element.parents(".section").find(".media-toolbar").removeClass("active")
+                            Redactor::showPlusButton(this)
                             return
                         keydownCallback: (e) ->
                             Redactor::removeRedactor(this.$element) if e.keyCode is 8 and $.trim(this.code.get()) is ""
                             ###e.preventDefault()
                             false###
                         focusCallback: (e)->
-                            if $.trim(this.code.get()) is ""
-                                this.$element.parents(".section").find(".media-toolbar").addClass("active")
+                            this.$element.parents(".section").find(".media-toolbar .btn-toggle").removeClass("open")
 
                     return
+
+            Redactor::showPlusButton = (_redactor)->
+                _redactor.$element.parents(".section").find(".media-toolbar").toggleClass("active", !$.trim(_redactor.$element[0].innerText).length).find(".btn-toggle").removeClass("open")
+
 
             Redactor::listenEvent = (element)->
                 element.off('mousedown mouseup').on('mousedown mouseup', (event) ->

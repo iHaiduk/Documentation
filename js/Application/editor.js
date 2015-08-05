@@ -24,8 +24,7 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
       };
     };
     Redactor = (function() {
-      var Redactor;
-      Redactor = function(document, nameElement) {
+      function Redactor(document, nameElement) {
         Redactor.prototype.redactor = null;
         Redactor.prototype.document = document;
         Redactor.prototype.nameElement = nameElement;
@@ -41,24 +40,29 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
             y: 0
           }
         };
-      };
+      }
+
       Redactor.prototype.init = function() {
         Redactor.prototype.document.find("#initRedactor").off('click').on('click', function() {
           if ($(this).hasClass("btn-edit")) {
             $(this).removeClass("btn-edit").addClass("btn-save");
+            $("body").addClass("editing");
             return Redactor.prototype.initialize();
           } else {
             $(this).removeClass("btn-save").addClass("btn-edit");
+            $("body").removeClass("editing");
             return Redactor.prototype.save();
           }
         });
         Redactor.prototype.addListen();
       };
+
       Redactor.prototype.addListen = function() {
         return Redactor.prototype.document.find(".btn-plus").off('click').on('click', function() {
           return Redactor.prototype.addSection($(this).parents(".section"));
         });
       };
+
       Redactor.prototype.addSection = function(block) {
         var newBlock;
         newBlock = $("<div class=\"section\">\n    <div class=\"sub-section\"></div>\n    <div class=\"media-toolbar\">\n        <span class=\"btn btn-toggle\"></span>\n        <div class=\"menu-toolbar\">\n            <span class=\"btn btn-image\"></span>\n            <span class=\"btn btn-code\"></span>\n        </div>\n    </div>\n\n    <div class=\"btn-plus-wrap\">\n        <span class=\"btn btn-plus\">Add</span>\n    </div>\n</div>");
@@ -67,14 +71,17 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
         Redactor.prototype.addRedactor(newBlock.find(".sub-section"), true);
         return Redactor.prototype.addListen();
       };
+
       Redactor.prototype.initialize = function() {
         Redactor.prototype.loadRedactors();
       };
+
       Redactor.prototype.loadRedactors = function() {
         Redactor.prototype.elements.each(function() {
           Redactor.prototype.addRedactor($(this));
         });
       };
+
       Redactor.prototype.addRedactor = function(element, focus) {
         var _elements;
         if (focus == null) {
@@ -95,10 +102,11 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
               element.off('click');
               Redactor.prototype.activeElement = element;
               Redactor.prototype.listenEvent(element);
+              Redactor.prototype.showPlusButton(this);
             },
             blurCallback: function(e) {
               _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
-              this.$element.parents(".section").find(".media-toolbar").removeClass("active");
+              Redactor.prototype.showPlusButton(this);
             },
             keydownCallback: function(e) {
               if (e.keyCode === 8 && $.trim(this.code.get()) === "") {
@@ -110,13 +118,16 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
                */
             },
             focusCallback: function(e) {
-              if ($.trim(this.code.get()) === "") {
-                return this.$element.parents(".section").find(".media-toolbar").addClass("active");
-              }
+              return this.$element.parents(".section").find(".media-toolbar .btn-toggle").removeClass("open");
             }
           });
         }
       };
+
+      Redactor.prototype.showPlusButton = function(_redactor) {
+        return _redactor.$element.parents(".section").find(".media-toolbar").toggleClass("active", !$.trim(_redactor.$element[0].innerText).length).find(".btn-toggle").removeClass("open");
+      };
+
       Redactor.prototype.listenEvent = function(element) {
         element.off('mousedown mouseup').on('mousedown mouseup', function(event) {
           if (event.type === 'mousedown') {
@@ -137,15 +148,18 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
           }
         });
       };
+
       Redactor.prototype.removeRedactor = function(element) {
         if (element != null) {
           element.redactor('core.destroy');
           element.parents(".section").remove();
         }
       };
+
       Redactor.prototype.save = function(element) {
         return Redactor.prototype.elements.redactor("core.destroy");
       };
+
       Redactor.prototype.toolbarPosition = function(toolbar) {
         var left, readTop, top;
         readTop = Redactor.prototype.position.start.y < Redactor.prototype.position.end.y ? 'start' : 'end';
@@ -170,6 +184,7 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
         }
       };
 
+
       /*Redactor::viewBox = ()->
           selection = if not window.getSelection? then window.getSelection() else document.getSelection()
           console.log(selection.type)
@@ -184,7 +199,11 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
                   Redactor::redactor.caret.setOffset(40)
               , 20
        */
+
+      Redactor;
+
       return Redactor;
+
     })();
     redactor = new Redactor(_docum, '.sub-section');
     redactor.init();
