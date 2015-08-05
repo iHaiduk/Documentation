@@ -211,16 +211,6 @@ body:not(.editing) .media-toolbar { display: none; }
 
     }
 
-    > .nav-list {
-
-        > .nav-item {
-
-            .slide-arrow { position: absolute; top: 0; bottom: 0; right: 0; width: 20px; background: url("../img/arrows.svg") center no-repeat; background-size: 16px; }
-
-        }
-
-    }
-
 }
 
 .view {
