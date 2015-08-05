@@ -38,7 +38,7 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-.header { position: fixed; top: 0; left: 0; right: 0; height: 60px; padding-top: 14px; background: #f2f2f2; z-index: 99;
+.header { position: fixed; top: 0; left: 0; right: 0; height: 60px; padding-top: 14px; background: #f2f2f2; z-index: 999;
 
     @include prefix(( transition: all .1s linear ), webkkit moz ms );
 
@@ -92,7 +92,7 @@ img { vertical-align: top; max-width: 100%; }
 
 .editing .btn-plus-wrap { height: 72px; padding: 20px 0; }
 
-.btn { display: inline-block; vertical-align: top; min-width: 80px; position: relative; height: 32px; padding: 0 10px; color: rgba(0,0,0,0.44); background-color: $white; font-size: 14px; text-align: center; text-decoration: none; cursor: pointer; border: 1px solid rgba(0,0,0,0.15); white-space: nowrap; @include prefix(( user-select: none ), webkit moz ms ); border-radius: 20px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; line-height: 32px;
+.btn { display: inline-block; vertical-align: top; min-width: 80px; position: relative; height: 32px; padding: 0 10px; color: rgba(0,0,0,0.44); background-color: $white; font-size: 14px; text-align: center; text-decoration: none; cursor: pointer; border: 1px solid #D9D9D9; white-space: nowrap; @include prefix(( user-select: none ), webkit moz ms ); border-radius: 20px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; line-height: 32px;
 
     @include prefix(( transition: all .2s ease ), webkkit ms );
 
@@ -219,6 +219,16 @@ body:not(.editing) .media-toolbar { display: none; }
 
         .section { position: relative;
 
+            &:first-child .sub-section {
+
+                &:first-child {
+
+                    h1, h2 { padding-top: 0; }
+
+                }
+
+            }
+
             .btn-edit { position: absolute; top: 0; right: -30px; width: 30px; height: 24px; visibility: hidden; opacity: 0; z-index: 1; background: url("../img/edit.svg") right center no-repeat; background-size: 24px 24px; cursor: pointer;
 
                 @include prefix(( transition: all .5s ease ), webkit moz ms);
@@ -237,15 +247,13 @@ body:not(.editing) .media-toolbar { display: none; }
 
                 &:empty:after { content: 'Text...'; color: rgba(0,0,0,.3); position: relative; z-index: -1; }
 
-                h1 { margin-bottom: 8px; margin-top: 0; color: rgba(0,0,0,0.8); font-size: 60px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; position: relative; line-height: 1;
+                h1 { margin:0; padding: 10px 0 ;color: rgba(0,0,0,0.8); font-size: 60px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; position: relative; line-height: 1;
 
                     &:empty:after { content: 'Title'; color: rgba(0,0,0,.3) }
 
                 }
 
-                h2 { @extend h1; margin-bottom: 4px; font-size: 36px; line-height: 1.2; }
-
-                h3 { @extend h2; margin-bottom: 2px; color: rgba(0,0,0,0.44); font-size: 32px; }
+                h2 { @extend h1; font-size: 36px; line-height: 1.2; }
 
             }
 
