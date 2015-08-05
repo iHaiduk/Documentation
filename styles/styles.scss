@@ -30,7 +30,7 @@ img { vertical-align: top; max-width: 100%; }
 
 .main { min-height: 100%; margin-bottom: -50px; font-size: 0;
 
-    .left-side { display: inline-block; width: 25%; padding-right: 30px; vertical-align: top; }
+    .left-side { display: inline-block; width: 25%; padding-right: 45px; vertical-align: top; }
 
     .right-side { display: inline-block; width: 75%; vertical-align: top; }
 
@@ -64,7 +64,7 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-.search { float: right; width: 25%; padding-left: 30px;
+.search { float: right; width: 25%; padding-left: 45px;
 
     .search-wrap { position: relative;
 
@@ -90,11 +90,11 @@ img { vertical-align: top; max-width: 100%; }
 
     @include prefix(( transition: all .2s ease ), webkkit moz ms );
 
-    &.btn-product { float: left; width: 25%; width: calc( 25% - 30px ); }
+    &.btn-product { float: left; width: 25%; width: calc( 25% - 45px ); }
 
     &.btn-plus { visibility: hidden; opacity: 0; position: relative; top: 30px; }
 
-    &.btn-accept { float: right; width: 80px; margin-right: -15px;
+    &.btn-accept { float: right; width: 80px; margin-right: -30px;
 
         &.btn-edit {
 
@@ -116,7 +116,7 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-.media-toolbar { display: none; position: absolute; top: 0; left: -45px; z-index: 1;
+.media-toolbar { display: none; position: absolute; top: 0; left: -40px; z-index: 1;
 
     .btn { width: 32px; min-width: 32px; padding: 0; background-position: center; background-repeat: no-repeat; background-color: $white; }
 
@@ -132,7 +132,7 @@ img { vertical-align: top; max-width: 100%; }
 
         }
 
-        &.open + .menu-toolbar { visibility: visible; width: auto; padding-left: 24px;
+        &.open + .menu-toolbar { visibility: visible; width: auto; padding-left: 20px;
 
             .btn {
 
@@ -170,6 +170,8 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
+body:not(.editing) .media-toolbar { display: none; }
+
 .footer { height: 50px; padding-top: 5px; background: #f2f2f2; color: #484848;
 
     .footer-text { margin: 0; line-height: 20px; }
@@ -203,9 +205,7 @@ img { vertical-align: top; max-width: 100%; }
 
 .view {
 
-    .section-wrap { margin-bottom: 30px; background: $white; border-bottom: 1px dashed #ccc;
-
-        &:last-of-type { border: none; }
+    .section-wrap { margin-bottom: 20px; background: $white;
 
         .section { position: relative;
 
