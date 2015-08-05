@@ -192,17 +192,15 @@ body:not(.editing) .media-toolbar { display: none; }
 
     .nav-item { display: block; padding: 0 20px; color: #36556e; text-decoration: none; line-height: 30px; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative;
 
-        @include prefix(( transition: all .1s ease ), webkit moz ms );
+        @include prefix(( transition: all .2s ease ), webkit moz ms );
 
-        &:hover { background: #e8ebee; border-right: 1px solid #d8dde2; }
-        
-        .slide-arrow { position: absolute; top: 0; bottom: 0; right: 0; width: 20px; background: url("../img/arrows.svg") center no-repeat; background-size: 16px; }
+        &:hover { background: #e8ebee; box-shadow: inset -1px 0 #d8dde2; }
 
     }
 
     li.active {
 
-      > .nav-item { background: transparent; border-right: 1px solid #1d365d; color: red; }
+      > .nav-item { background: transparent; box-shadow: inset -1px 0 #1d365d; color: red; }
 
     }
 
@@ -210,6 +208,16 @@ body:not(.editing) .media-toolbar { display: none; }
     .sub-nav { margin: 0 0 8px 0; padding: 0; list-style-type: none;
 
         .nav-item { padding: 0 30px; font-size: 13px; line-height: 24px; }
+
+    }
+
+    > .nav-list {
+
+        > .nav-item {
+
+            .slide-arrow { position: absolute; top: 0; bottom: 0; right: 0; width: 20px; background: url("../img/arrows.svg") center no-repeat; background-size: 16px; }
+
+        }
 
     }
 

@@ -308,24 +308,16 @@ body:not(.editing) .media-toolbar {
     overflow: hidden;
     text-overflow: ellipsis;
     position: relative;
-    -webkit-transition: all 0.1s ease;
-    -moz-transition: all 0.1s ease;
-    -ms-transition: all 0.1s ease;
-    transition: all 0.1s ease; }
+    -webkit-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    -ms-transition: all 0.2s ease;
+    transition: all 0.2s ease; }
     .nav .nav-item:hover {
       background: #e8ebee;
-      border-right: 1px solid #d8dde2; }
-    .nav .nav-item .slide-arrow {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      right: 0;
-      width: 20px;
-      background: url("../img/arrows.svg") center no-repeat;
-      background-size: 16px; }
+      box-shadow: inset -1px 0 #d8dde2; }
   .nav li.active > .nav-item {
     background: transparent;
-    border-right: 1px solid #1d365d;
+    box-shadow: inset -1px 0 #1d365d;
     color: red; }
   .nav .sub-nav {
     margin: 0 0 8px 0;
@@ -335,6 +327,14 @@ body:not(.editing) .media-toolbar {
       padding: 0 30px;
       font-size: 13px;
       line-height: 24px; }
+  .nav > .nav-list > .nav-item .slide-arrow {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 20px;
+    background: url("../img/arrows.svg") center no-repeat;
+    background-size: 16px; }
 
 .view .section-wrap {
   margin-bottom: 20px;
