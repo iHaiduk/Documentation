@@ -315,8 +315,38 @@ body:not(.editing) .media-toolbar {
     .nav .nav-item:hover {
       background: #e8ebee;
       box-shadow: inset -1px 0 #d8dde2; }
+    .nav .nav-item .ink {
+      display: block;
+      position: absolute;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 100%;
+      -webkit-transform: scale(0);
+      -moz-transform: scale(0);
+      -o-transform: scale(0);
+      transform: scale(0); }
+    .nav .nav-item .animate {
+      -webkit-animation: ripple 0.65s linear;
+      -moz-animation: ripple 0.65s linear;
+      -ms-animation: ripple 0.65s linear;
+      -o-animation: ripple 0.65s linear;
+      animation: ripple 0.65s linear; }
+@-webkit-keyframes ripple {
+  100% {
+    opacity: 0;
+    -webkit-transform: scale(2.5); } }
+@-moz-keyframes ripple {
+  100% {
+    opacity: 0;
+    -moz-transform: scale(2.5); } }
+@-o-keyframes ripple {
+  100% {
+    opacity: 0;
+    -o-transform: scale(2.5); } }
+@keyframes ripple {
+  100% {
+    opacity: 0;
+    transform: scale(2.5); } }
   .nav li.active > .nav-item {
-    background: transparent;
     box-shadow: inset -1px 0 #1d365d;
     color: red; }
   .nav .sub-nav {
@@ -327,14 +357,6 @@ body:not(.editing) .media-toolbar {
       padding: 0 30px;
       font-size: 13px;
       line-height: 24px; }
-  .nav > .nav-list > .nav-item .slide-arrow {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 20px;
-    background: url("../img/arrows.svg") center no-repeat;
-    background-size: 16px; }
 
 .view .section-wrap {
   margin-bottom: 20px;
