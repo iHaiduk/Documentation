@@ -6,6 +6,7 @@ define [
     'jquery'
     'hljs'
     'redactor'
+    'Application/menu'
 ], ($, hljs) ->
     _docum = $(document)
     _docum.ready ->
@@ -104,20 +105,29 @@ define [
                         plugins: ['formatting', 'bold', 'italic', 'deleted',
                                   'unorderedlist', 'orderedlist', 'link', 'alignment']
                         initCallback: ->
-                            Redactor::redactor = this
+                            Redactor::redactor = @
                             element.off 'click'
                             Redactor::activeElement = element
                             Redactor::listenEvent element
-                            Redactor::showPlusButton(this)
+                            Redactor::showPlusButton(@)
                             return
-                        blurCallback: (e) ->
+                        changeCallback: ()->
+                            if @code.get().indexOf("<h1") isnt -1 or @code.get().indexOf("<h2") isnt -1
+                                app.Menu.treeGenerate()
+                            return
+                        blurCallback: () ->
                             _elements.parent().find('.redactor-toolbar').stop().fadeOut 400
-                            Redactor::showPlusButton(this)
+                            Redactor::showPlusButton(@)
+                            if @code.get().indexOf("<h1") isnt -1 or @code.get().indexOf("<h2") isnt -1
+                                app.Menu.treeGenerate()
                             return
                         keydownCallback: (e) ->
-                            Redactor::removeRedactor(this.$element) if e.keyCode is 8 and $.trim(this.code.get()) is ""
+                            Redactor::removeRedactor(@$element) if e.keyCode is 8 and $.trim(@code.get()) is ""
                             ###e.preventDefault()
                             false###
+                        keyupCallback: () ->
+                            Redactor::showPlusButton(@)
+                            return
                         focusCallback: (e)->
                             this.$element.parents(".section").find(".media-toolbar .btn-toggle").removeClass("open")
 

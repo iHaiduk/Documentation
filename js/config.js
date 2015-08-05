@@ -5,6 +5,8 @@
 var app;
 
 app = {
+  editor: null,
+  Menu: null,
   path: "../"
 };
 
@@ -27,6 +29,6 @@ require.config({
 this.loadApplication = function(name) {
   requirejs(["jquery", "hljs", "redactor"], function($, hljs) {
     require(["Application/app"]);
-    require(["Application/site"]);
+    require(["Application/menu"]);
   });
 };
