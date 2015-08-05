@@ -151,8 +151,8 @@ img {
         border-color: rgba(0, 0, 0, 0.6); }
 
 .btn-plus-wrap {
-  min-height: 40px;
-  margin: 30px 0;
+  min-height: 32px;
+  margin: 20px 0;
   text-align: center; }
 
 .btn {
@@ -209,10 +209,12 @@ img {
   display: none;
   position: absolute;
   top: 0;
-  left: -45px; }
+  left: -45px;
+  z-index: 1; }
   .media-toolbar .btn {
     width: 32px;
     min-width: 32px;
+    padding: 0;
     background-position: center;
     background-repeat: no-repeat;
     background-color: #fff; }
@@ -229,7 +231,9 @@ img {
       -ms-transform: rotate(45deg);
       transform: rotate(45deg); }
     .media-toolbar .btn-toggle.open + .menu-toolbar {
-      visibility: visible; }
+      visibility: visible;
+      width: auto;
+      padding-left: 24px; }
       .media-toolbar .btn-toggle.open + .menu-toolbar .btn {
         -webkit-transform: scale(1);
         -ms-transform: scale(1);
@@ -241,7 +245,8 @@ img {
     visibility: hidden;
     display: inline-block;
     vertical-align: top;
-    padding-left: 24px; }
+    background: #fff;
+    width: 0; }
     .media-toolbar .menu-toolbar .btn {
       margin-right: 10px;
       -webkit-transform: scale(0);
@@ -351,15 +356,15 @@ img {
           opacity: .8; }
     .view .section-wrap .section .sub-section {
       min-height: 40px;
-      margin-bottom: 30px;
-      margin-top: 0;
       font-size: 22px;
       line-height: 1.5;
       color: rgba(0, 0, 0, 0.95);
       font-family: "freight-text-pro",Georgia,Cambria,"Times New Roman",Times,serif; }
       .view .section-wrap .section .sub-section:empty:after {
         content: 'Text...';
-        color: rgba(0, 0, 0, 0.3); }
+        color: rgba(0, 0, 0, 0.3);
+        position: relative;
+        z-index: -1; }
       .view .section-wrap .section .sub-section h1, .view .section-wrap .section .sub-section h2, .view .section-wrap .section .sub-section h3 {
         margin-bottom: 8px;
         margin-top: 0;
@@ -379,10 +384,11 @@ img {
         margin-bottom: 2px;
         color: rgba(0, 0, 0, 0.44);
         font-size: 32px; }
-    .view .section-wrap .section:hover .btn-plus {
-      visibility: visible;
-      opacity: 1;
-      top: 0; }
+
+.editing .section:hover .btn-plus {
+  visibility: visible;
+  opacity: 1;
+  top: 0; }
 
 .popup {
   visibility: hidden;

@@ -34,10 +34,10 @@
 .redactor-box textarea:focus {
   outline: none;
 }
-.redactor-editor,
-.redactor-box {
-  background: #fff;
-}
+/*.redactor-editor,*/
+/*.redactor-box {*/
+  /*background: #fff;*/
+/*}*/
 /*
 	Z-index setup
 */
@@ -94,6 +94,7 @@ body .redactor-box-fullscreen {
   font-size: 22px;
   line-height: 1.5;
   font-family: "freight-text-pro",Georgia,Cambria,"Times New Roman",Times,serif;
+  z-index: 1;
 }
 .redactor-editor:focus {
   outline: none;

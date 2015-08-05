@@ -84,7 +84,7 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-.btn-plus-wrap { min-height: 40px; margin: 30px 0; text-align: center; }
+.btn-plus-wrap { min-height: 32px; margin: 20px 0; text-align: center; }
 
 .btn { display: inline-block; vertical-align: top; min-width: 80px; position: relative; height: 32px; padding: 0 10px; color: rgba(0,0,0,0.44); background-color: $white; font-size: 14px; text-align: center; text-decoration: none; cursor: pointer; border: 1px solid rgba(0,0,0,0.15); white-space: nowrap; @include prefix(( user-select: none ), webkit moz ms ); border-radius: 20px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; line-height: 32px;
 
@@ -116,9 +116,9 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-.media-toolbar { display: none; position: absolute; top: 0; left: -45px;
+.media-toolbar { display: none; position: absolute; top: 0; left: -45px; z-index: 1;
 
-    .btn { width: 32px; min-width: 32px; background-position: center; background-repeat: no-repeat; background-color: $white; }
+    .btn { width: 32px; min-width: 32px; padding: 0; background-position: center; background-repeat: no-repeat; background-color: $white; }
 
     &.active { display: block; }
 
@@ -132,7 +132,7 @@ img { vertical-align: top; max-width: 100%; }
 
         }
 
-        &.open + .menu-toolbar { visibility: visible;
+        &.open + .menu-toolbar { visibility: visible; width: auto; padding-left: 24px;
 
             .btn {
 
@@ -144,7 +144,7 @@ img { vertical-align: top; max-width: 100%; }
 
     }
 
-    .menu-toolbar { visibility: hidden; display: inline-block; vertical-align: top; padding-left: 24px;
+    .menu-toolbar { visibility: hidden; display: inline-block; vertical-align: top; background: #fff; width: 0;
 
         .btn { margin-right: 10px;
 
@@ -223,9 +223,9 @@ img { vertical-align: top; max-width: 100%; }
 
             }
 
-            .sub-section { min-height: 40px; margin-bottom: 30px; margin-top: 0; font-size: 22px; line-height: 1.5; color: rgba(0,0,0,0.95); font-family: "freight-text-pro",Georgia,Cambria,"Times New Roman",Times,serif;
+            .sub-section { min-height: 40px; font-size: 22px; line-height: 1.5; color: rgba(0,0,0,0.95); font-family: "freight-text-pro",Georgia,Cambria,"Times New Roman",Times,serif;
 
-                &:empty:after { content: 'Text...'; color: rgba(0,0,0,.3) }
+                &:empty:after { content: 'Text...'; color: rgba(0,0,0,.3); position: relative; z-index: -1; }
 
                 h1 { margin-bottom: 8px; margin-top: 0; color: rgba(0,0,0,0.8); font-size: 60px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; position: relative; line-height: 1;
 
@@ -239,17 +239,13 @@ img { vertical-align: top; max-width: 100%; }
 
             }
 
-            &:hover {
-
-                .btn-plus { visibility: visible; opacity: 1; top: 0; }
-
-            }
-
         }
 
     }
 
 }
+
+.editing .section:hover .btn-plus { visibility: visible; opacity: 1; top: 0; }
 
 .popup { visibility: hidden; position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0; z-index: -1; background: $white; overflow: auto;
 
