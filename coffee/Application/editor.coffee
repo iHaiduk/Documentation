@@ -163,8 +163,11 @@ define [
 
             Redactor::save = (element)->
                 Redactor::elements.each ->
-                    Redactor::removeRedactor $(this) if $.trim($(this).redactor('code.get')) is ""
-                Redactor::elements.redactor("core.destroy")
+                    if $(this).hasClass("redactor-editor")
+                        if $.trim($(this).redactor('code.get')) is ""
+                            Redactor::removeRedactor $(this)
+                        else
+                            $(this).redactor("core.destroy")
                 setTimeout(->
                     app.Menu.treeGenerate()
                     return
@@ -174,25 +177,26 @@ define [
             Redactor::toolbarPosition = (toolbar)->
                 readTop = if Redactor::position.start.y < Redactor::position.end.y then 'start' else 'end'
 
-                top = Redactor::position[readTop].y - (toolbar.next().offset().top) - toolbar.height()*2+ 'px'
-                left = Math.abs(Redactor::position.start.x + Redactor::position.end.x) / 2 - (toolbar.next().offset().left) - (toolbar.width() / 2) + 'px'
+                if toolbar.next().length
+                    top = Redactor::position[readTop].y - (toolbar.next().offset().top) - toolbar.height()*2+ 'px'
+                    left = Math.abs(Redactor::position.start.x + Redactor::position.end.x) / 2 - (toolbar.next().offset().left) - (toolbar.width() / 2) + 'px'
 
-                if ((Math.abs(Redactor::position.start.x + Redactor::position.end.x) / 2 + (toolbar.next().offset().left) - (toolbar.width() / 2)) >= $(window).width() )
-                    left = $(window).width() - 5 - toolbar.width() - toolbar.next().offset().left + "px"
+                    if ((Math.abs(Redactor::position.start.x + Redactor::position.end.x) / 2 + (toolbar.next().offset().left) - (toolbar.width() / 2)) >= $(window).width() )
+                        left = $(window).width() - 5 - toolbar.width() - toolbar.next().offset().left + "px"
 
-                if toolbar.is(':visible') and toolbar.next().offset()?
-                    toolbar.stop().animate {
-                        top
-                        left
-                        opacity: 1
-                    }, 150
-                    return
-                else
-                    if toolbar.next().offset()?
-                        toolbar.stop().fadeIn(400).css({
+                    if toolbar.is(':visible') and toolbar.next().offset()?
+                        toolbar.stop().animate {
                             top
                             left
-                        })
+                            opacity: 1
+                        }, 150
+                        return
+                    else
+                        if toolbar.next().offset()?
+                            toolbar.stop().fadeIn(400).css({
+                                top
+                                left
+                            })
 
             ###Redactor::viewBox = ()->
                 selection = if not window.getSelection? then window.getSelection() else document.getSelection()

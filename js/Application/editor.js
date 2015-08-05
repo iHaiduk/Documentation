@@ -165,11 +165,14 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
 
       Redactor.prototype.save = function(element) {
         Redactor.prototype.elements.each(function() {
-          if ($.trim($(this).redactor('code.get')) === "") {
-            return Redactor.prototype.removeRedactor($(this));
+          if ($(this).hasClass("redactor-editor")) {
+            if ($.trim($(this).redactor('code.get')) === "") {
+              return Redactor.prototype.removeRedactor($(this));
+            } else {
+              return $(this).redactor("core.destroy");
+            }
           }
         });
-        Redactor.prototype.elements.redactor("core.destroy");
         setTimeout(function() {
           app.Menu.treeGenerate();
         }, 250);
@@ -178,23 +181,25 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
       Redactor.prototype.toolbarPosition = function(toolbar) {
         var left, readTop, top;
         readTop = Redactor.prototype.position.start.y < Redactor.prototype.position.end.y ? 'start' : 'end';
-        top = Redactor.prototype.position[readTop].y - (toolbar.next().offset().top) - toolbar.height() * 2 + 'px';
-        left = Math.abs(Redactor.prototype.position.start.x + Redactor.prototype.position.end.x) / 2 - (toolbar.next().offset().left) - (toolbar.width() / 2) + 'px';
-        if ((Math.abs(Redactor.prototype.position.start.x + Redactor.prototype.position.end.x) / 2 + (toolbar.next().offset().left) - (toolbar.width() / 2)) >= $(window).width()) {
-          left = $(window).width() - 5 - toolbar.width() - toolbar.next().offset().left + "px";
-        }
-        if (toolbar.is(':visible') && (toolbar.next().offset() != null)) {
-          toolbar.stop().animate({
-            top: top,
-            left: left,
-            opacity: 1
-          }, 150);
-        } else {
-          if (toolbar.next().offset() != null) {
-            return toolbar.stop().fadeIn(400).css({
+        if (toolbar.next().length) {
+          top = Redactor.prototype.position[readTop].y - (toolbar.next().offset().top) - toolbar.height() * 2 + 'px';
+          left = Math.abs(Redactor.prototype.position.start.x + Redactor.prototype.position.end.x) / 2 - (toolbar.next().offset().left) - (toolbar.width() / 2) + 'px';
+          if ((Math.abs(Redactor.prototype.position.start.x + Redactor.prototype.position.end.x) / 2 + (toolbar.next().offset().left) - (toolbar.width() / 2)) >= $(window).width()) {
+            left = $(window).width() - 5 - toolbar.width() - toolbar.next().offset().left + "px";
+          }
+          if (toolbar.is(':visible') && (toolbar.next().offset() != null)) {
+            toolbar.stop().animate({
               top: top,
-              left: left
-            });
+              left: left,
+              opacity: 1
+            }, 150);
+          } else {
+            if (toolbar.next().offset() != null) {
+              return toolbar.stop().fadeIn(400).css({
+                top: top,
+                left: left
+              });
+            }
           }
         }
       };
