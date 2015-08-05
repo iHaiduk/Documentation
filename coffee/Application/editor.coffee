@@ -163,8 +163,10 @@ define [
             Redactor::save = (element)->
                 Redactor::elements.redactor("core.destroy")
                 setTimeout(->
-                  app.Menu.treeGenerate()
-                , 5)
+                    app.Menu.treeGenerate()
+                    return
+                , 250)
+                return
 
             Redactor::toolbarPosition = (toolbar)->
                 readTop = if Redactor::position.start.y < Redactor::position.end.y then 'start' else 'end'

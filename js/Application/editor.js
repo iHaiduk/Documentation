@@ -164,9 +164,9 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
 
       Redactor.prototype.save = function(element) {
         Redactor.prototype.elements.redactor("core.destroy");
-        return setTimeout(function() {
-          return app.Menu.treeGenerate();
-        }, 5);
+        setTimeout(function() {
+          app.Menu.treeGenerate();
+        }, 250);
       };
 
       Redactor.prototype.toolbarPosition = function(toolbar) {
