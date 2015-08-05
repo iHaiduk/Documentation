@@ -40,16 +40,12 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
         arr = jQuery.grep(_document.find("#viewDoc").find("h1,h2"), function(val) {
           return true;
         });
-        summ = 0;
+        summ = $(arr[arr.length - 1]).parents(".section").height();
         $(arr[arr.length - 1]).parents(".section").nextAll(".section").each(function() {
           return summ += $(this).height();
         });
-        console.log(summ);
-        if (!arr.length) {
-          $(window).scrollTop(0);
-        }
         return _document.find(".right-side").css({
-          "padding-bottom": $(window).height() - summ - _document.find(".header").outerHeight() - _document.find(".footer").outerHeight() - $(arr[arr.length - 1]).outerHeight() - 42 + "px"
+          "padding-bottom": $(window).height() - summ - _document.find(".header").outerHeight() - _document.find(".footer").outerHeight() - 31 + "px"
         });
       };
 
@@ -90,7 +86,7 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
         Menu.prototype.navigation.find('.nav-item').off('click').on('click', function(e) {
           var d, ink, x, y;
           $("html, body").stop().animate({
-            scrollTop: _document.find("#" + $(this).data().id).offset().top - _document.find(".header").height() - 25
+            scrollTop: _document.find("#" + $(this).data().id).offset().top - _document.find(".header").height() - 34
           }, 500);
           ink = $(this).find('.ink').removeClass('animate');
           if (!ink.length) {
