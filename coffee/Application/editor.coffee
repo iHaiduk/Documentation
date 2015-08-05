@@ -59,16 +59,20 @@ define [
                 Redactor::document.find(".btn-plus").off('click').on 'click', ->
                     Redactor::addSection($(this).parents(".section"))
 
+                Redactor::document.find('.btn-toggle').off('click').on 'click', ->
+                    $(this).toggleClass 'open'
+
 
             Redactor::addSection = (block)->
                 newBlock = $("""
                         <div class="section">
                             <div class="sub-section"></div>
                             <div class="media-toolbar">
-                                <span class="btn btn-toggle"></span>
+                                <span class="btn btn-toggle icon-plus"></span>
                                 <div class="menu-toolbar">
                                     <span class="btn btn-image"></span>
                                     <span class="btn btn-code"></span>
+                                    <span class="btn btn-hr">hr</span>
                                 </div>
                             </div>
 

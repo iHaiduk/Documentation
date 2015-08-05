@@ -58,14 +58,17 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
       };
 
       Redactor.prototype.addListen = function() {
-        return Redactor.prototype.document.find(".btn-plus").off('click').on('click', function() {
+        Redactor.prototype.document.find(".btn-plus").off('click').on('click', function() {
           return Redactor.prototype.addSection($(this).parents(".section"));
+        });
+        return Redactor.prototype.document.find('.btn-toggle').off('click').on('click', function() {
+          return $(this).toggleClass('open');
         });
       };
 
       Redactor.prototype.addSection = function(block) {
         var newBlock;
-        newBlock = $("<div class=\"section\">\n    <div class=\"sub-section\"></div>\n    <div class=\"media-toolbar\">\n        <span class=\"btn btn-toggle\"></span>\n        <div class=\"menu-toolbar\">\n            <span class=\"btn btn-image\"></span>\n            <span class=\"btn btn-code\"></span>\n        </div>\n    </div>\n\n    <div class=\"btn-plus-wrap\">\n        <span class=\"btn btn-plus\">Add</span>\n    </div>\n</div>");
+        newBlock = $("<div class=\"section\">\n    <div class=\"sub-section\"></div>\n    <div class=\"media-toolbar\">\n        <span class=\"btn btn-toggle icon-plus\"></span>\n        <div class=\"menu-toolbar\">\n            <span class=\"btn btn-image\"></span>\n            <span class=\"btn btn-code\"></span>\n            <span class=\"btn btn-hr\">hr</span>\n        </div>\n    </div>\n\n    <div class=\"btn-plus-wrap\">\n        <span class=\"btn btn-plus\">Add</span>\n    </div>\n</div>");
         block.after(newBlock);
         Redactor.prototype.elements = Redactor.prototype.document.find(Redactor.prototype.nameElement);
         Redactor.prototype.addRedactor(newBlock.find(".sub-section"), true);

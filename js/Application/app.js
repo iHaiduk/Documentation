@@ -11,8 +11,5 @@ define(['jquery'], function($) {
       $('body').toggleClass('noScroll', bool);
       $('.popup').toggleClass('visible', bool);
     });
-    $('.btn-toggle').click(function() {
-      $(this).toggleClass('open');
-    });
   });
 });

@@ -10,9 +10,5 @@ define [ 'jquery' ], ($) ->
             $('body').toggleClass 'noScroll', bool
             $('.popup').toggleClass 'visible', bool
             return
-
-        $('.btn-toggle').click ->
-            $(this).toggleClass 'open'
-            return
         return
     return
