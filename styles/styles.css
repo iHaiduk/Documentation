@@ -76,8 +76,8 @@ img {
   top: 0;
   left: 0;
   right: 0;
-  height: 52px;
-  padding-top: 10px;
+  height: 60px;
+  padding-top: 14px;
   background: #f2f2f2;
   z-index: 99;
   -webkkit-transition: all 0.1s linear;
@@ -93,14 +93,14 @@ img {
     font-size: 15px;
     color: #484848;
     text-decoration: none;
-    line-height: 52px; }
+    line-height: 60px; }
     @media (max-width: 1385px) {
       .header .subject, .header .user {
         line-height: 32px; } }
   .header .user {
     left: auto;
     right: 10px;
-    top: 10px;
+    top: 14px;
     margin: 0;
     width: 32px;
     height: 32px;
@@ -300,7 +300,7 @@ body:not(.editing) .media-toolbar {
   .nav .nav-item {
     display: block;
     padding: 0 20px;
-    color: #36556e;
+    color: #000;
     text-decoration: none;
     line-height: 30px;
     font-size: 14px;
@@ -313,42 +313,10 @@ body:not(.editing) .media-toolbar {
     -ms-transition: all 0.2s ease;
     transition: all 0.2s ease; }
     .nav .nav-item:hover {
-      background: #e8ebee;
-      box-shadow: inset -1px 0 #d8dde2; }
-    .nav .nav-item .ink {
-      display: block;
-      position: absolute;
-      background: rgba(255, 255, 255, 0.5);
-      border-radius: 100%;
-      -webkit-transform: scale(0);
-      -moz-transform: scale(0);
-      -o-transform: scale(0);
-      transform: scale(0); }
-    .nav .nav-item .animate {
-      -webkit-animation: ripple 0.65s linear;
-      -moz-animation: ripple 0.65s linear;
-      -ms-animation: ripple 0.65s linear;
-      -o-animation: ripple 0.65s linear;
-      animation: ripple 0.65s linear; }
-@-webkit-keyframes ripple {
-  100% {
-    opacity: 0;
-    -webkit-transform: scale(2.5); } }
-@-moz-keyframes ripple {
-  100% {
-    opacity: 0;
-    -moz-transform: scale(2.5); } }
-@-o-keyframes ripple {
-  100% {
-    opacity: 0;
-    -o-transform: scale(2.5); } }
-@keyframes ripple {
-  100% {
-    opacity: 0;
-    transform: scale(2.5); } }
+      box-shadow: inset -1px 0 #1d365d;
+      color: #1d365d; }
   .nav li.active > .nav-item {
-    box-shadow: inset -1px 0 #1d365d;
-    color: red; }
+    color: #1d365d; }
   .nav .sub-nav {
     margin: 0 0 8px 0;
     padding: 0;

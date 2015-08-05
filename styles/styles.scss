@@ -38,19 +38,19 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-.header { position: fixed; top: 0; left: 0; right: 0; height: 52px; padding-top: 10px; background: #f2f2f2; z-index: 99;
+.header { position: fixed; top: 0; left: 0; right: 0; height: 60px; padding-top: 14px; background: #f2f2f2; z-index: 99;
 
     @include prefix(( transition: all .1s linear ), webkkit moz ms );
 
     &.shadow { box-shadow: 0 1px 3px rgba(0,0,0,.2); }
 
-    .subject { position: absolute; top: 0; left: 20px; font-size: 15px; color: #484848; text-decoration: none; line-height: 52px;
+    .subject { position: absolute; top: 0; left: 20px; font-size: 15px; color: #484848; text-decoration: none; line-height: 60px;
 
         @include custom_breakpoint(1385) { line-height: 32px; }
 
     }
 
-    .user { @extend .subject; left: auto; right: 10px; top: 10px; margin: 0; width: 32px; height: 32px; border: 1px solid #DEDEDE; border-radius: 100%; overflow: hidden;
+    .user { @extend .subject; left: auto; right: 10px; top: 14px; margin: 0; width: 32px; height: 32px; border: 1px solid #DEDEDE; border-radius: 100%; overflow: hidden;
 
         @include custom_breakpoint(1385) { top: 0; }
 
@@ -190,49 +190,17 @@ body:not(.editing) .media-toolbar { display: none; }
 
 .nav { padding: 0; margin: 0; list-style-type: none;
 
-    .nav-item { display: block; padding: 0 20px; color: #36556e; text-decoration: none; line-height: 30px; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative;
+    .nav-item { display: block; padding: 0 20px; color: #000; text-decoration: none; line-height: 30px; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative;
 
         @include prefix(( transition: all .2s ease ), webkit moz ms );
 
-        &:hover { background: #e8ebee; box-shadow: inset -1px 0 #d8dde2; }
-
-        .ink {
-            display: block;
-            position: absolute;
-            background:rgba(255, 255, 255, 0.5);
-            border-radius: 100%;
-            -webkit-transform:scale(0);
-            -moz-transform:scale(0);
-            -o-transform:scale(0);
-            transform:scale(0);
-        }
-
-        .animate {
-            -webkit-animation:ripple 0.65s linear;
-            -moz-animation:ripple 0.65s linear;
-            -ms-animation:ripple 0.65s linear;
-            -o-animation:ripple 0.65s linear;
-            animation:ripple 0.65s linear;
-        }
-
-        @-webkit-keyframes ripple {
-            100% {opacity: 0; -webkit-transform: scale(2.5);}
-        }
-        @-moz-keyframes ripple {
-            100% {opacity: 0; -moz-transform: scale(2.5);}
-        }
-        @-o-keyframes ripple {
-            100% {opacity: 0; -o-transform: scale(2.5);}
-        }
-        @keyframes ripple {
-            100% {opacity: 0; transform: scale(2.5);}
-        }
+        &:hover { box-shadow: inset -1px 0 #1d365d; color: #1d365d; }
 
     }
 
     li.active {
 
-      > .nav-item { box-shadow: inset -1px 0 #1d365d; color: red; }
+      > .nav-item { color: #1d365d; }
 
     }
 
