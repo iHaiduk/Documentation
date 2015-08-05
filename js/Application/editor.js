@@ -107,17 +107,9 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
               Redactor.prototype.listenEvent(element);
               Redactor.prototype.showPlusButton(this);
             },
-            changeCallback: function() {
-              if (this.code.get().indexOf("<h1") !== -1 || this.code.get().indexOf("<h2") !== -1) {
-                app.Menu.treeGenerate();
-              }
-            },
             blurCallback: function() {
               _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
               Redactor.prototype.showPlusButton(this);
-              if (this.code.get().indexOf("<h1") !== -1 || this.code.get().indexOf("<h2") !== -1) {
-                app.Menu.treeGenerate();
-              }
             },
             keydownCallback: function(e) {
               if (e.keyCode === 8 && $.trim(this.code.get()) === "") {
@@ -171,7 +163,10 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
       };
 
       Redactor.prototype.save = function(element) {
-        return Redactor.prototype.elements.redactor("core.destroy");
+        Redactor.prototype.elements.redactor("core.destroy");
+        return setTimeout(function() {
+          return app.Menu.treeGenerate();
+        }, 5);
       };
 
       Redactor.prototype.toolbarPosition = function(toolbar) {

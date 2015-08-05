@@ -115,15 +115,9 @@ define [
                             Redactor::listenEvent element
                             Redactor::showPlusButton(@)
                             return
-                        changeCallback: ()->
-                            if @code.get().indexOf("<h1") isnt -1 or @code.get().indexOf("<h2") isnt -1
-                                app.Menu.treeGenerate()
-                            return
                         blurCallback: () ->
                             _elements.parent().find('.redactor-toolbar').stop().fadeOut 400
                             Redactor::showPlusButton(@)
-                            if @code.get().indexOf("<h1") isnt -1 or @code.get().indexOf("<h2") isnt -1
-                                app.Menu.treeGenerate()
                             return
                         keydownCallback: (e) ->
                             Redactor::removeRedactor(@$element) if e.keyCode is 8 and $.trim(@code.get()) is ""
@@ -168,6 +162,9 @@ define [
 
             Redactor::save = (element)->
                 Redactor::elements.redactor("core.destroy")
+                setTimeout(->
+                  app.Menu.treeGenerate()
+                , 5)
 
             Redactor::toolbarPosition = (toolbar)->
                 readTop = if Redactor::position.start.y < Redactor::position.end.y then 'start' else 'end'
