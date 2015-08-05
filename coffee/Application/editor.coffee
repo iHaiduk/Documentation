@@ -127,6 +127,7 @@ define [
                             Redactor::showPlusButton(@)
                             return
                         focusCallback: (e)->
+                            _elements.not(this.$element).parent().find('.redactor-toolbar').stop().fadeOut 400
                             this.$element.parents(".section").find(".media-toolbar .btn-toggle").removeClass("open")
 
                     return

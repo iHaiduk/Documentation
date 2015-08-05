@@ -124,6 +124,7 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
               Redactor.prototype.showPlusButton(this);
             },
             focusCallback: function(e) {
+              _elements.not(this.$element).parent().find('.redactor-toolbar').stop().fadeOut(400);
               return this.$element.parents(".section").find(".media-toolbar .btn-toggle").removeClass("open");
             }
           });
