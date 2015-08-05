@@ -47,13 +47,13 @@ module.exports = function(grunt) {
                 files: ['coffee/Application/*.coffee', 'coffee/*.coffee'],
                 tasks: ['newer:coffee:Application','newer:coffee:main']
             }
-        },
+        }
     });
 
     grunt.loadNpmTasks('grunt-contrib-coffee');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-newer');
 
-    grunt.registerTask('default', ['coffee:Application','coffee:main']);
+    grunt.registerTask('default', ['coffee:Application','coffee:main','watch']);
 
 };

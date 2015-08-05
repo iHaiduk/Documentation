@@ -12,7 +12,6 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
         save: function() {
           var html;
           html = this.code.get();
-          console.log(html);
         },
         init: function() {
           var button;
@@ -27,6 +26,7 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
     Redactor = (function() {
       var Redactor;
       Redactor = function(document, nameElement) {
+        Redactor.prototype.redactor = null;
         Redactor.prototype.document = document;
         Redactor.prototype.nameElement = nameElement;
         Redactor.prototype.elements = document.find(nameElement);
@@ -43,95 +43,147 @@ define(['jquery', 'hljs', 'redactor'], function($, hljs) {
         };
       };
       Redactor.prototype.init = function() {
-        $(window).on("resize", function() {});
         Redactor.prototype.document.find("#initRedactor").off('click').on('click', function() {
-          var _elements;
           if ($(this).hasClass("btn-edit")) {
             $(this).removeClass("btn-edit").addClass("btn-save");
-            _elements = Redactor.prototype.elements;
-            Redactor.prototype.loadRedactors();
-            _elements.off('mousedown mouseup').on('mousedown mouseup', function(event) {
-              if (event.type === 'mousedown') {
-                Redactor.prototype.position.start.y = event.pageY;
-                Redactor.prototype.position.start.x = event.pageX;
-              } else {
-                Redactor.prototype.position.end.y = event.pageY;
-                Redactor.prototype.position.end.x = event.pageX;
-              }
-            }).off('click').on('click', function() {
-              var toolbar;
-              if (window.getSelection().type === 'Range') {
-                toolbar = $(this).prev();
-                Redactor.prototype.toolbarPosition(toolbar);
-              } else {
-                _elements.parent().find('.redactor-toolbar').hide();
-              }
-            });
+            return Redactor.prototype.initialize();
           } else {
             $(this).removeClass("btn-save").addClass("btn-edit");
             return Redactor.prototype.save();
           }
         });
+        Redactor.prototype.addListen();
+      };
+      Redactor.prototype.addListen = function() {
+        return Redactor.prototype.document.find(".btn-plus").off('click').on('click', function() {
+          return Redactor.prototype.addSection($(this).parents(".section"));
+        });
+      };
+      Redactor.prototype.addSection = function(block) {
+        var newBlock;
+        newBlock = $("<div class=\"section\">\n    <div class=\"sub-section\"></div>\n    <div class=\"media-toolbar\">\n        <span class=\"btn btn-toggle\"></span>\n        <div class=\"menu-toolbar\">\n            <span class=\"btn btn-image\"></span>\n            <span class=\"btn btn-code\"></span>\n        </div>\n    </div>\n\n    <div class=\"btn-plus-wrap\">\n        <span class=\"btn btn-plus\">Add</span>\n    </div>\n</div>");
+        block.after(newBlock);
+        Redactor.prototype.elements = Redactor.prototype.document.find(Redactor.prototype.nameElement);
+        Redactor.prototype.addRedactor(newBlock.find(".sub-section"), true);
+        return Redactor.prototype.addListen();
+      };
+      Redactor.prototype.initialize = function() {
+        Redactor.prototype.loadRedactors();
       };
       Redactor.prototype.loadRedactors = function() {
         Redactor.prototype.elements.each(function() {
           Redactor.prototype.addRedactor($(this));
         });
       };
-      Redactor.prototype.addRedactor = function(element) {
+      Redactor.prototype.addRedactor = function(element, focus) {
         var _elements;
+        if (focus == null) {
+          focus = false;
+        }
         if (element != null) {
           _elements = Redactor.prototype.elements;
           element.redactor({
             iframe: true,
             cleanStyleOnEnter: false,
             linebreaks: true,
+            focus: focus,
             formatting: ['p', 'blockquote', 'h1', 'h2'],
             buttons: ['formatting', 'bold', 'italic', 'deleted', 'link', 'alignment'],
             plugins: ['formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist', 'link', 'alignment'],
             initCallback: function() {
+              Redactor.prototype.redactor = this;
               element.off('click');
               Redactor.prototype.activeElement = element;
+              Redactor.prototype.listenEvent(element);
             },
             blurCallback: function(e) {
               _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
+              this.$element.parents(".section").find(".media-toolbar").removeClass("active");
             },
             keydownCallback: function(e) {
+              if (e.keyCode === 8 && $.trim(this.code.get()) === "") {
+                return Redactor.prototype.removeRedactor(this.$element);
+              }
 
               /*e.preventDefault()
-              console.log e.keyCode
               false
                */
+            },
+            focusCallback: function(e) {
+              if ($.trim(this.code.get()) === "") {
+                return this.$element.parents(".section").find(".media-toolbar").addClass("active");
+              }
             }
           });
         }
       };
+      Redactor.prototype.listenEvent = function(element) {
+        element.off('mousedown mouseup').on('mousedown mouseup', function(event) {
+          if (event.type === 'mousedown') {
+            Redactor.prototype.position.start.y = event.pageY;
+            Redactor.prototype.position.start.x = event.pageX;
+          } else {
+            Redactor.prototype.position.end.y = event.pageY;
+            Redactor.prototype.position.end.x = event.pageX;
+          }
+        }).off('click').on('click', function() {
+          var selection, toolbar;
+          selection = window.getSelection == null ? window.getSelection() : document.getSelection();
+          if (selection.type === 'Range') {
+            toolbar = $(this).prev();
+            Redactor.prototype.toolbarPosition(toolbar);
+          } else {
+            element.parent().find('.redactor-toolbar').hide();
+          }
+        });
+      };
       Redactor.prototype.removeRedactor = function(element) {
         if (element != null) {
           element.redactor('core.destroy');
+          element.parents(".section").remove();
         }
       };
       Redactor.prototype.save = function(element) {
         return Redactor.prototype.elements.redactor("core.destroy");
       };
       Redactor.prototype.toolbarPosition = function(toolbar) {
-        var readTop;
+        var left, readTop, top;
         readTop = Redactor.prototype.position.start.y < Redactor.prototype.position.end.y ? 'start' : 'end';
+        top = Redactor.prototype.position[readTop].y - (toolbar.next().offset().top) - toolbar.height() * 2 + 'px';
+        left = Math.abs(Redactor.prototype.position.start.x + Redactor.prototype.position.end.x) / 2 - (toolbar.next().offset().left) - (toolbar.width() / 2) + 'px';
+        if ((Math.abs(Redactor.prototype.position.start.x + Redactor.prototype.position.end.x) / 2 + (toolbar.next().offset().left) - (toolbar.width() / 2)) >= $(window).width()) {
+          left = $(window).width() - 5 - toolbar.width() - toolbar.next().offset().left + "px";
+        }
         if (toolbar.is(':visible') && (toolbar.next().offset() != null)) {
           toolbar.stop().animate({
-            top: Redactor.prototype.position[readTop].y - (toolbar.next().offset().top) - toolbar.height - 15 + 'px',
-            left: Math.abs(Redactor.prototype.position.start.x + Redactor.prototype.position.end.x) / 2 - (toolbar.next().offset().left) - (toolbar.width() / 2) + 'px',
+            top: top,
+            left: left,
             opacity: 1
           }, 150);
         } else {
           if (toolbar.next().offset() != null) {
-            toolbar.stop().fadeIn(400).css({
-              top: Redactor.prototype.position[readTop].y - (toolbar.next().offset().top) - 60 + 'px',
-              left: Math.abs(Redactor.prototype.position.start.x + Redactor.prototype.position.end.x) / 2 - (toolbar.next().offset().left) - (toolbar.width() / 2) + 'px'
+            return toolbar.stop().fadeIn(400).css({
+              top: top,
+              left: left
             });
           }
         }
       };
+
+      /*Redactor::viewBox = ()->
+          selection = if not window.getSelection? then window.getSelection() else document.getSelection()
+          console.log(selection.type)
+          if selection.type is 'Range'
+              range = selection.getRangeAt(0)
+              container = $(range.commonAncestorContainer.parentElement)
+              text = container.text()
+              startText = text.substring(0, range.startOffset)
+              endText = text.substring(range.endOffset, text.length)
+              container.html(startText + "<span class='range'>" + selection + "</span>" + endText)
+              setTimeout ->
+                  Redactor::redactor.caret.setOffset(40)
+              , 20
+       */
       return Redactor;
     })();
     redactor = new Redactor(_docum, '.sub-section');

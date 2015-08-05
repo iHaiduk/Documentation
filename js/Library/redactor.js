@@ -8671,6 +8671,7 @@
 				},
 				observeScrollEnable: function(scrollTop, boxTop)
 				{
+					return;
 					var top = this.opts.toolbarFixedTopOffset + scrollTop - boxTop;
 					var left = 0;
 					var end = boxTop + this.$box.height() - 32;
@@ -8695,8 +8696,6 @@
 					this.$toolbar.css({
 						position: 'relative',
 						width: 'auto',
-						top: 0,
-						left: 0,
 						visibility: 'visible'
 					});
 
