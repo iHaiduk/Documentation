@@ -19,6 +19,6 @@ require.config
         "redactor"
     ], ($, hljs) ->
         require [ "Application/app" ]
-        require [ "Application/editor" ]
+        require [ "Application/site" ]
         return
     return
