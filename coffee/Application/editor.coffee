@@ -162,6 +162,8 @@ define [
                     return
 
             Redactor::save = (element)->
+                Redactor::elements.each ->
+                    Redactor::removeRedactor $(this) if $.trim($(this).redactor('code.get')) is ""
                 Redactor::elements.redactor("core.destroy")
                 setTimeout(->
                     app.Menu.treeGenerate()

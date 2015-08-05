@@ -164,6 +164,11 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
       };
 
       Redactor.prototype.save = function(element) {
+        Redactor.prototype.elements.each(function() {
+          if ($.trim($(this).redactor('code.get')) === "") {
+            return Redactor.prototype.removeRedactor($(this));
+          }
+        });
         Redactor.prototype.elements.redactor("core.destroy");
         setTimeout(function() {
           app.Menu.treeGenerate();
