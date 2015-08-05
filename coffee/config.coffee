@@ -2,7 +2,11 @@
 # Created by Igor on 02.08.2015.
 ###
 
-app = path: "../"
+app =
+    editor: null
+    Menu: null
+    path: "../"
+
 require.config
     paths:
         "jquery": "Library/jquery.min"
@@ -19,6 +23,6 @@ require.config
         "redactor"
     ], ($, hljs) ->
         require [ "Application/app" ]
-        require [ "Application/site" ]
+        require [ "Application/menu" ]
         return
     return
