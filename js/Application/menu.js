@@ -55,7 +55,6 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
         Menu.prototype.HeadingCnt = 0;
         Menu.prototype.MenuHeadingCnt = 0;
         _document.find("#viewDoc").find("h1,h2").each(function() {
-          console.log(this);
           if ($(this)[0].tagName.toLowerCase() === "h1") {
             Menu.prototype.lastIdHeading++;
             Menu.prototype.tree.push({
