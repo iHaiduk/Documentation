@@ -90,11 +90,9 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
 
       Menu.prototype.listen = function() {
         Menu.prototype.navigation.find(".nav-item").off('click').on('click', function() {
-          if ($(this).hasClass("parent")) {
-            $(this).next().slideToggle(200);
-          }
-          $(this).parents(".nav").find(".active").removeClass('active');
-          $(this).parent().addClass('active').parents(".nav-list").addClass('active');
+          $("html, body").stop().animate({
+            scrollTop: $("#" + $(this).data().id).offset().top
+          }, 500);
         });
       };
 

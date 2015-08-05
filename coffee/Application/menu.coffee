@@ -77,9 +77,9 @@ define [ 'jquery', 'hljs', 'Application/editor' ], ($) ->
 
       Menu::listen = ()->
         Menu::navigation.find(".nav-item").off('click').on 'click', ->
-          $(this).next().slideToggle 200 if $(this).hasClass("parent")
-          $(this).parents(".nav").find(".active").removeClass 'active'
-          $(this).parent().addClass('active').parents(".nav-list").addClass('active')
+          $("html, body").stop().animate({
+            scrollTop: $("#" + $(@).data().id).offset().top
+          },500)
           return
         return
 
