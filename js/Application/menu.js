@@ -21,7 +21,7 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
         Menu.prototype.addBottomPadding();
         $(window).off('scroll').on('scroll', function() {
           Menu.prototype.fixed();
-          return Menu.prototype.offsetTop();
+          Menu.prototype.offsetTop();
         });
         return this;
       };
@@ -30,31 +30,27 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
         var top;
         top = $(window).scrollTop();
         _document.find(".header.cf").toggleClass('shadow', top > 0);
-        return Menu.prototype.navigation.find("ul.nav").css({
+        Menu.prototype.navigation.find("ul.nav").css({
           'margin-top': top + 'px'
         });
       };
 
       Menu.prototype.addBottomPadding = function() {
-        var arr;
+        var arr, summ;
         arr = jQuery.grep(_document.find("#viewDoc").find("h1,h2"), function(val) {
-          return $(val).offset().top - $(window).scrollTop() - _document.find(".header.cf").height() >= 0;
+          return true;
         });
-        console.group();
-        console.log("window", $(window).height());
-        console.log("offset", $(arr[arr.length - 1]).offset().top);
-        console.log("scrollTop", $(window).scrollTop());
-        console.log("---- scrollTop", $(arr[arr.length - 1]).offset().top - $(window).scrollTop());
-        console.log("outerHeight", _document.find(".header.cf").outerHeight());
-        console.log("footer", _document.find(".footer").outerHeight());
-        console.log("outerHeight", $(arr[arr.length - 1]).outerHeight());
-        console.log("arr", $(arr[arr.length - 1]));
-        return console.groupEnd();
-
-        /*_document.find("#viewDoc").css(
-          "padding-bottom": ($(arr[arr.length-1]).offset().top-$(window).scrollTop()) + (_document.find(".header").height()) + (_document.find(".footer").height()) + ($(arr[arr.length-1]).outerHeight()) + "px"
-        )
-         */
+        summ = 0;
+        $(arr[arr.length - 1]).parents(".section").nextAll(".section").each(function() {
+          return summ += $(this).height();
+        });
+        console.log(summ);
+        if (!arr.length) {
+          $(window).scrollTop(0);
+        }
+        return _document.find(".right-side").css({
+          "padding-bottom": $(window).height() - summ - _document.find(".header").outerHeight() - _document.find(".footer").outerHeight() - $(arr[arr.length - 1]).outerHeight() - 42 + "px"
+        });
       };
 
       Menu.prototype.treeGenerate = function() {
@@ -63,6 +59,7 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
         Menu.prototype.HeadingCnt = 0;
         Menu.prototype.MenuHeadingCnt = 0;
         _document.find("#viewDoc").find("h1,h2").each(function() {
+          console.log(this);
           if ($(this)[0].tagName.toLowerCase() === "h1") {
             Menu.prototype.lastIdHeading++;
             Menu.prototype.tree.push({
@@ -85,8 +82,35 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
         Menu.prototype.navigation.html(Menu.prototype.treeHTMLGenerate());
         Menu.prototype.fixed();
         Menu.prototype.offsetTop();
-        Menu.prototype.listen();
         Menu.prototype.addBottomPadding();
+        Menu.prototype.animateClick();
+      };
+
+      Menu.prototype.animateClick = function() {
+        Menu.prototype.navigation.find('.nav-item').off('click').on('click', function(e) {
+          var d, ink, x, y;
+          $("html, body").stop().animate({
+            scrollTop: _document.find("#" + $(this).data().id).offset().top - _document.find(".header").height() - 25
+          }, 500);
+          ink = $(this).find('.ink').removeClass('animate');
+          if (!ink.length) {
+            ink = $('<span class=\'ink\'></span>');
+            $(this).prepend(ink);
+          }
+          if (!ink.height() && !ink.width()) {
+            d = Math.max($(this).outerWidth(), $(this).outerHeight());
+            ink.css({
+              height: d,
+              width: d
+            });
+          }
+          x = e.pageX - ($(this).offset().left) - (ink.width() / 2);
+          y = e.pageY - ($(this).offset().top) - (ink.height() / 2);
+          ink.css({
+            top: y + 'px',
+            left: x + 'px'
+          }).addClass('animate');
+        });
       };
 
       Menu.prototype.treeHTMLGenerate = function(arrMenu, sub) {
@@ -112,14 +136,6 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
         }
       };
 
-      Menu.prototype.listen = function() {
-        Menu.prototype.navigation.find(".nav-item").off('click').on('click', function() {
-          $("html, body").stop().animate({
-            scrollTop: _document.find("#" + $(this).data().id).offset().top - _document.find(".header").height() - 28
-          }, 500);
-        });
-      };
-
       Menu.prototype.offsetTop = function() {
         var arr;
         arr = jQuery.grep(_document.find("#viewDoc").find("h1,h2"), function(val) {
@@ -128,9 +144,9 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
         if (arr.length) {
           Menu.prototype.navigation.find(".active").removeClass('active');
           if (arr[0].tagName.toLowerCase() === "h1") {
-            return Menu.prototype.navigation.find(".nav > .nav-list").eq(_document.find("#viewDoc").find("h1").index($(arr[0]))).addClass('active');
+            Menu.prototype.navigation.find(".nav > .nav-list").eq(_document.find("#viewDoc").find("h1").index($(arr[0]))).addClass('active');
           } else {
-            return Menu.prototype.navigation.find(".sub-nav > .nav-list").eq(_document.find("#viewDoc").find("h2").index($(arr[0]))).addClass('active').parents(".nav-list").addClass('active');
+            Menu.prototype.navigation.find(".sub-nav > .nav-list").eq(_document.find("#viewDoc").find("h2").index($(arr[0]))).addClass('active').parents(".nav-list").addClass('active');
           }
         }
       };
