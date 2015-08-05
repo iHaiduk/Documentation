@@ -29,7 +29,8 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
       Menu.prototype.fixed = function() {
         var top;
         top = $(window).scrollTop();
-        return Menu.prototype.navigation.toggleClass('shadow', top > 0).find("ul.nav").css({
+        _document.find(".header.cf").toggleClass('shadow', top > 0);
+        return Menu.prototype.navigation.find("ul.nav").css({
           'margin-top': top + 'px'
         });
       };
@@ -39,9 +40,21 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
         arr = jQuery.grep(_document.find("#viewDoc").find("h1,h2"), function(val) {
           return $(val).offset().top - $(window).scrollTop() - _document.find(".header.cf").height() >= 0;
         });
-        return _document.find("#viewDoc").css({
-          "margin-bottom": $(window).height() - $(arr[arr.length - 1]).offset().top - (_document.find(".header.cf").outerHeight()) - (_document.find(".footer").outerHeight()) - ($(arr[arr.length - 1]).outerHeight() + 5) + "px"
-        });
+        console.group();
+        console.log("window", $(window).height());
+        console.log("offset", $(arr[arr.length - 1]).offset().top);
+        console.log("scrollTop", $(window).scrollTop());
+        console.log("---- scrollTop", $(arr[arr.length - 1]).offset().top - $(window).scrollTop());
+        console.log("outerHeight", _document.find(".header.cf").outerHeight());
+        console.log("footer", _document.find(".footer").outerHeight());
+        console.log("outerHeight", $(arr[arr.length - 1]).outerHeight());
+        console.log("arr", $(arr[arr.length - 1]));
+        return console.groupEnd();
+
+        /*_document.find("#viewDoc").css(
+          "padding-bottom": ($(arr[arr.length-1]).offset().top-$(window).scrollTop()) + (_document.find(".header").height()) + (_document.find(".footer").height()) + ($(arr[arr.length-1]).outerHeight()) + "px"
+        )
+         */
       };
 
       Menu.prototype.treeGenerate = function() {
@@ -73,6 +86,7 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
         Menu.prototype.fixed();
         Menu.prototype.offsetTop();
         Menu.prototype.listen();
+        Menu.prototype.addBottomPadding();
       };
 
       Menu.prototype.treeHTMLGenerate = function(arrMenu, sub) {
@@ -101,7 +115,7 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
       Menu.prototype.listen = function() {
         Menu.prototype.navigation.find(".nav-item").off('click').on('click', function() {
           $("html, body").stop().animate({
-            scrollTop: $("#" + $(this).data().id).offset().top - _document.find(".header.cf").height() - 28
+            scrollTop: _document.find("#" + $(this).data().id).offset().top - _document.find(".header").height() - 28
           }, 500);
         });
       };
@@ -109,7 +123,7 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
       Menu.prototype.offsetTop = function() {
         var arr;
         arr = jQuery.grep(_document.find("#viewDoc").find("h1,h2"), function(val) {
-          return $(val).offset().top - $(window).scrollTop() - _document.find(".header.cf").height() >= 0;
+          return $(val).offset().top - $(window).scrollTop() - _document.find(".header").height() >= 0;
         });
         if (arr.length) {
           Menu.prototype.navigation.find(".active").removeClass('active');

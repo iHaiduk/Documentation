@@ -24,16 +24,30 @@ define [ 'jquery', 'hljs', 'Application/editor' ], ($) ->
 
       Menu::fixed = ()->
         top = $(window).scrollTop()
-        Menu::navigation.toggleClass('shadow', top > 0).find("ul.nav").css 'margin-top': top + 'px'
+        _document.find(".header.cf").toggleClass('shadow', top > 0)
+        Menu::navigation.find("ul.nav").css 'margin-top': top + 'px'
 
       Menu::addBottomPadding = () ->
         arr = jQuery.grep(_document.find("#viewDoc").find("h1,h2"), (val) ->
           $(val).offset().top-$(window).scrollTop()-_document.find(".header.cf").height() >= 0
         )
 
-        _document.find("#viewDoc").css(
-          "margin-bottom": $(window).height() - $(arr[arr.length-1]).offset().top - (_document.find(".header.cf").outerHeight()) - (_document.find(".footer").outerHeight()) - ($(arr[arr.length-1]).outerHeight()+5) + "px"
-        )
+        console.group()
+        console.log("window", $(window).height())
+        console.log("offset", $(arr[arr.length-1]).offset().top )
+        console.log("scrollTop", $(window).scrollTop() )
+        console.log("---- scrollTop", $(arr[arr.length-1]).offset().top - $(window).scrollTop() )
+        console.log("outerHeight", _document.find(".header.cf").outerHeight())
+        console.log("footer", _document.find(".footer").outerHeight())
+        console.log("outerHeight", $(arr[arr.length-1]).outerHeight())
+        console.log("arr", $(arr[arr.length-1]))
+
+
+        console.groupEnd()
+
+        ###_document.find("#viewDoc").css(
+          "padding-bottom": ($(arr[arr.length-1]).offset().top-$(window).scrollTop()) + (_document.find(".header").height()) + (_document.find(".footer").height()) + ($(arr[arr.length-1]).outerHeight()) + "px"
+        )###
 
       Menu::treeGenerate = ()->
         Menu::tree = []
@@ -65,6 +79,7 @@ define [ 'jquery', 'hljs', 'Application/editor' ], ($) ->
         Menu::fixed()
         Menu::offsetTop()
         Menu::listen()
+        Menu::addBottomPadding()
         return
 
       Menu::treeHTMLGenerate = (arrMenu = Menu::tree, sub = false)->
@@ -87,7 +102,7 @@ define [ 'jquery', 'hljs', 'Application/editor' ], ($) ->
       Menu::listen = ()->
         Menu::navigation.find(".nav-item").off('click').on 'click', ->
           $("html, body").stop().animate({
-            scrollTop: $("#" + $(@).data().id).offset().top - _document.find(".header.cf").height() - 28
+            scrollTop: _document.find("#" + $(@).data().id).offset().top - _document.find(".header").height() - 28
           },500)
           return
         return
@@ -95,7 +110,7 @@ define [ 'jquery', 'hljs', 'Application/editor' ], ($) ->
       Menu::offsetTop = ()->
 
         arr = jQuery.grep(_document.find("#viewDoc").find("h1,h2"), (val) ->
-          $(val).offset().top-$(window).scrollTop()-_document.find(".header.cf").height() >= 0
+          $(val).offset().top-$(window).scrollTop()-_document.find(".header").height() >= 0
         )
         if arr.length
           Menu::navigation.find(".active").removeClass 'active'
