@@ -15,6 +15,7 @@ define [ 'jquery', 'hljs', 'Application/editor' ], ($) ->
 
       Menu::init = ()->
         Menu::treeGenerate()
+        Menu::addBottomPadding()
         $(window).off('scroll').on 'scroll', ->
           Menu::fixed()
           Menu::offsetTop()
@@ -23,8 +24,16 @@ define [ 'jquery', 'hljs', 'Application/editor' ], ($) ->
 
       Menu::fixed = ()->
         top = $(window).scrollTop()
-        console.log(top)
         Menu::navigation.toggleClass('shadow', top > 0).find("ul.nav").css 'margin-top': top + 'px'
+
+      Menu::addBottomPadding = () ->
+        arr = jQuery.grep(_document.find("#viewDoc").find("h1,h2"), (val) ->
+          $(val).offset().top-$(window).scrollTop()-_document.find(".header.cf").height() >= 0
+        )
+
+        _document.find("#viewDoc").css(
+          "margin-bottom": $(window).height() - $(arr[arr.length-1]).offset().top - (_document.find(".header.cf").outerHeight()) - (_document.find(".footer").outerHeight()) - ($(arr[arr.length-1]).outerHeight()+5) + "px"
+        )
 
       Menu::treeGenerate = ()->
         Menu::tree = []
@@ -78,13 +87,12 @@ define [ 'jquery', 'hljs', 'Application/editor' ], ($) ->
       Menu::listen = ()->
         Menu::navigation.find(".nav-item").off('click').on 'click', ->
           $("html, body").stop().animate({
-            scrollTop: $("#" + $(@).data().id).offset().top - _document.find(".header.cf").height() - 15
+            scrollTop: $("#" + $(@).data().id).offset().top - _document.find(".header.cf").height() - 28
           },500)
           return
         return
 
       Menu::offsetTop = ()->
-
 
         arr = jQuery.grep(_document.find("#viewDoc").find("h1,h2"), (val) ->
           $(val).offset().top-$(window).scrollTop()-_document.find(".header.cf").height() >= 0
@@ -92,7 +100,6 @@ define [ 'jquery', 'hljs', 'Application/editor' ], ($) ->
         if arr.length
           Menu::navigation.find(".active").removeClass 'active'
           if(arr[0].tagName.toLowerCase() is "h1")
-            console.log(arr[0].tagName.toLowerCase())
             Menu::navigation.find(".nav > .nav-list").eq(_document.find("#viewDoc").find("h1").index($(arr[0]))).addClass('active')
           else
             Menu::navigation.find(".sub-nav > .nav-list").eq(_document.find("#viewDoc").find("h2").index($(arr[0]))).addClass('active').parents(".nav-list").addClass('active')
