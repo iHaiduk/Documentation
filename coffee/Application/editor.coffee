@@ -196,7 +196,7 @@ define [
                             toolbar.stop().fadeIn(400).css({
                                 top
                                 left
-                            })
+                            }).find(".redactor-act").removeClass("redactor-act")
 
             ###Redactor::viewBox = ()->
                 selection = if not window.getSelection? then window.getSelection() else document.getSelection()

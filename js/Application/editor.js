@@ -198,7 +198,7 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
               return toolbar.stop().fadeIn(400).css({
                 top: top,
                 left: left
-              });
+              }).find(".redactor-act").removeClass("redactor-act");
             }
           }
         }
