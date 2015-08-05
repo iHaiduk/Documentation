@@ -2,7 +2,7 @@
 /**
  * Created by Igor on 02.08.2015.
  */
-define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
+define(['jquery', 'hljs', 'redactor'], function($, hljs) {
   var _docum;
   _docum = $(document);
   _docum.ready(function() {
@@ -104,17 +104,9 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
               Redactor.prototype.listenEvent(element);
               Redactor.prototype.showPlusButton(this);
             },
-            changeCallback: function() {
-              if (this.code.get().indexOf("<h1") !== -1 || this.code.get().indexOf("<h2") !== -1) {
-                app.Menu.treeGenerate();
-              }
-            },
-            blurCallback: function() {
+            blurCallback: function(e) {
               _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
               Redactor.prototype.showPlusButton(this);
-              if (this.code.get().indexOf("<h1") !== -1 || this.code.get().indexOf("<h2") !== -1) {
-                app.Menu.treeGenerate();
-              }
             },
             keydownCallback: function(e) {
               if (e.keyCode === 8 && $.trim(this.code.get()) === "") {
@@ -124,9 +116,6 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
               /*e.preventDefault()
               false
                */
-            },
-            keyupCallback: function() {
-              Redactor.prototype.showPlusButton(this);
             },
             focusCallback: function(e) {
               return this.$element.parents(".section").find(".media-toolbar .btn-toggle").removeClass("open");
