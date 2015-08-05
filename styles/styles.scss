@@ -84,11 +84,17 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-.btn-plus-wrap { min-height: 32px; margin: 20px 0; text-align: center; }
+.btn-plus-wrap { height: 0; text-align: center;
+
+    @include prefix(( transition: all .2s ease ), webkkit ms );
+
+}
+
+.editing .btn-plus-wrap { height: 72px; padding: 20px 0; }
 
 .btn { display: inline-block; vertical-align: top; min-width: 80px; position: relative; height: 32px; padding: 0 10px; color: rgba(0,0,0,0.44); background-color: $white; font-size: 14px; text-align: center; text-decoration: none; cursor: pointer; border: 1px solid rgba(0,0,0,0.15); white-space: nowrap; @include prefix(( user-select: none ), webkit moz ms ); border-radius: 20px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; line-height: 32px;
 
-    @include prefix(( transition: all .2s ease ), webkkit moz ms );
+    @include prefix(( transition: all .2s ease ), webkkit ms );
 
     &.btn-product { float: left; width: 25%; width: calc( 25% - 45px ); }
 
@@ -184,17 +190,19 @@ body:not(.editing) .media-toolbar { display: none; }
 
 .nav { padding: 0; margin: 0; list-style-type: none;
 
-    .nav-item { display: block; padding: 0 20px; color: #36556e; text-decoration: none; line-height: 30px; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    .nav-item { display: block; padding: 0 20px; color: #36556e; text-decoration: none; line-height: 30px; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative;
 
         @include prefix(( transition: all .1s ease ), webkit moz ms );
 
         &:hover { background: #e8ebee; border-right: 1px solid #d8dde2; }
+        
+        .slide-arrow { position: absolute; top: 0; bottom: 0; right: 0; width: 20px; background: url("../img/arrows.svg") center no-repeat; background-size: 16px; }
 
     }
 
     li.active {
 
-      > .nav-item { background: transparent; border-right: 1px solid #1d365d; font-weight: bold; }
+      > .nav-item { background: transparent; border-right: 1px solid #1d365d; color: red; }
 
     }
 

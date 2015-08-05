@@ -151,9 +151,15 @@ img {
         border-color: rgba(0, 0, 0, 0.6); }
 
 .btn-plus-wrap {
-  min-height: 32px;
-  margin: 20px 0;
-  text-align: center; }
+  height: 0;
+  text-align: center;
+  -webkkit-transition: all 0.2s ease;
+  -ms-transition: all 0.2s ease;
+  transition: all 0.2s ease; }
+
+.editing .btn-plus-wrap {
+  height: 72px;
+  padding: 20px 0; }
 
 .btn {
   display: inline-block;
@@ -178,7 +184,6 @@ img {
   font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
   line-height: 32px;
   -webkkit-transition: all 0.2s ease;
-  -moz-transition: all 0.2s ease;
   -ms-transition: all 0.2s ease;
   transition: all 0.2s ease; }
   .btn.btn-product {
@@ -302,6 +307,7 @@ body:not(.editing) .media-toolbar {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    position: relative;
     -webkit-transition: all 0.1s ease;
     -moz-transition: all 0.1s ease;
     -ms-transition: all 0.1s ease;
@@ -309,10 +315,18 @@ body:not(.editing) .media-toolbar {
     .nav .nav-item:hover {
       background: #e8ebee;
       border-right: 1px solid #d8dde2; }
+    .nav .nav-item .slide-arrow {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 20px;
+      background: url("../img/arrows.svg") center no-repeat;
+      background-size: 16px; }
   .nav li.active > .nav-item {
     background: transparent;
     border-right: 1px solid #1d365d;
-    font-weight: bold; }
+    color: red; }
   .nav .sub-nav {
     margin: 0 0 8px 0;
     padding: 0;
