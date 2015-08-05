@@ -47,7 +47,6 @@ define [ 'jquery', 'hljs', 'Application/editor' ], ($) ->
         Menu::HeadingCnt = 0
         Menu::MenuHeadingCnt = 0
         _document.find("#viewDoc").find("h1,h2").each ->
-          console.log(this)
           if($(this)[0].tagName.toLowerCase() is "h1")
             Menu::lastIdHeading++;
             Menu::tree.push(

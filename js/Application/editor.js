@@ -124,6 +124,7 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
               Redactor.prototype.showPlusButton(this);
             },
             focusCallback: function(e) {
+              _elements.not(this.$element).parent().find('.redactor-toolbar').stop().fadeOut(400);
               return this.$element.parents(".section").find(".media-toolbar .btn-toggle").removeClass("open");
             }
           });
@@ -163,6 +164,11 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
       };
 
       Redactor.prototype.save = function(element) {
+        Redactor.prototype.elements.each(function() {
+          if ($.trim($(this).redactor('code.get')) === "") {
+            return Redactor.prototype.removeRedactor($(this));
+          }
+        });
         Redactor.prototype.elements.redactor("core.destroy");
         setTimeout(function() {
           app.Menu.treeGenerate();
