@@ -205,9 +205,25 @@ body:not(.editing) .media-toolbar { display: none; }
     }
 
 
-    .sub-nav { margin: 0 0 8px 0; padding: 0; list-style-type: none;
+    .sub-nav { margin: 0; padding: 0; list-style-type: none;
 
         .nav-item { padding: 0 30px; font-size: 13px; line-height: 24px; }
+
+    }
+
+    > .nav-list {
+
+        .nav-list { height: 0; overflow: hidden;
+
+            @include prefix(( transition: all .2s ease .2s ), webkit ms );
+
+        }
+
+        &.active {
+
+            .nav-list { height: 24px; }
+
+        }
 
     }
 

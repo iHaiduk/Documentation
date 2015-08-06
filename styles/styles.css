@@ -318,13 +318,21 @@ body:not(.editing) .media-toolbar {
   .nav li.active > .nav-item {
     color: #1d365d; }
   .nav .sub-nav {
-    margin: 0 0 8px 0;
+    margin: 0;
     padding: 0;
     list-style-type: none; }
     .nav .sub-nav .nav-item {
       padding: 0 30px;
       font-size: 13px;
       line-height: 24px; }
+  .nav > .nav-list .nav-list {
+    height: 0;
+    overflow: hidden;
+    -webkit-transition: all 0.2s ease 0.2s;
+    -ms-transition: all 0.2s ease 0.2s;
+    transition: all 0.2s ease 0.2s; }
+  .nav > .nav-list.active .nav-list {
+    height: 24px; }
 
 .view .section-wrap {
   margin-bottom: 20px;
