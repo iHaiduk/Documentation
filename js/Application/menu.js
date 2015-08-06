@@ -9,6 +9,7 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
         Menu.prototype.lastIdHeading = -1;
         Menu.prototype.HeadingCnt = 0;
         Menu.prototype.MenuHeadingCnt = 0;
+        Menu.prototype.lock = false;
         Menu.prototype.navigation = _document.find("#navigation");
         Menu.prototype.activeElement = {
           element: null,
@@ -22,6 +23,8 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
         $(window).off('scroll').on('scroll', function() {
           Menu.prototype.fixed();
           Menu.prototype.offsetTop();
+        }).off('mousewheel').on('mousewheel', function() {
+          $(window).stop();
         });
         return this;
       };
@@ -78,33 +81,19 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
         Menu.prototype.fixed();
         Menu.prototype.offsetTop();
         Menu.prototype.addBottomPadding();
-        Menu.prototype.animateClick();
+        Menu.prototype.listens();
       };
 
-      Menu.prototype.animateClick = function() {
+      Menu.prototype.listens = function() {
         Menu.prototype.navigation.find('.nav-item').off('click').on('click', function(e) {
-          var d, ink, x, y;
+          Menu.prototype.lock = true;
+          Menu.prototype.navigation.find(".active").removeClass('active');
           $("html, body").stop().animate({
             scrollTop: _document.find("#" + $(this).data().id).offset().top - _document.find(".header").height() - 34
-          }, 500);
-          ink = $(this).find('.ink').removeClass('animate');
-          if (!ink.length) {
-            ink = $('<span class=\'ink\'></span>');
-            $(this).prepend(ink);
-          }
-          if (!ink.height() && !ink.width()) {
-            d = Math.max($(this).outerWidth(), $(this).outerHeight());
-            ink.css({
-              height: d,
-              width: d
-            });
-          }
-          x = e.pageX - ($(this).offset().left) - (ink.width() / 2);
-          y = e.pageY - ($(this).offset().top) - (ink.height() / 2);
-          ink.css({
-            top: y + 'px',
-            left: x + 'px'
-          }).addClass('animate');
+          }, 500, function() {
+            return Menu.prototype.lock = false;
+          });
+          $(this).parent().addClass('active').parents(".nav-list").addClass('active');
         });
       };
 
@@ -133,6 +122,9 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
 
       Menu.prototype.offsetTop = function() {
         var arr;
+        if (Menu.prototype.lock) {
+          return;
+        }
         arr = jQuery.grep(_document.find("#viewDoc").find("h1,h2"), function(val) {
           return $(val).offset().top - $(window).scrollTop() - _document.find(".header").height() >= 0;
         });

@@ -8,6 +8,7 @@ define [ 'jquery', 'hljs', 'Application/editor' ], ($) ->
         Menu::lastIdHeading = -1
         Menu::HeadingCnt = 0
         Menu::MenuHeadingCnt = 0
+        Menu::lock = false
         Menu::navigation = _document.find("#navigation")
         Menu::activeElement =
           element:null
@@ -16,11 +17,13 @@ define [ 'jquery', 'hljs', 'Application/editor' ], ($) ->
       Menu::init = ()->
         Menu::treeGenerate()
         Menu::addBottomPadding()
-        $(window).off('scroll').on 'scroll', ->
+        $(window).off('scroll').on('scroll', ->
           Menu::fixed()
           Menu::offsetTop()
           return
-
+        ).off('mousewheel').on 'mousewheel', ->
+          $(window).stop()
+          return
         this
 
       Menu::fixed = ()->
@@ -71,30 +74,20 @@ define [ 'jquery', 'hljs', 'Application/editor' ], ($) ->
         Menu::fixed()
         Menu::offsetTop()
         Menu::addBottomPadding()
-        Menu::animateClick()
+        Menu::listens()
         return
 
-      Menu::animateClick = ()->
+      Menu::listens = ()->
         Menu::navigation.find('.nav-item').off('click').on 'click', (e)->
+          Menu::lock = true
+          Menu::navigation.find(".active").removeClass 'active'
           $("html, body").stop().animate({
             scrollTop: _document.find("#" + $(@).data().id).offset().top - _document.find(".header").height() - 34
-          },500)
-          ink = $(this).find('.ink').removeClass 'animate'
-          if !ink.length
-            ink = $ '<span class=\'ink\'></span>'
-            $(this).prepend ink
+          },500, ->
+            Menu::lock = false
+          )
+          $(@).parent().addClass('active').parents(".nav-list").addClass('active')
 
-          if !ink.height() and !ink.width()
-            d = Math.max($(this).outerWidth(), $(this).outerHeight())
-            ink.css
-              height: d
-              width: d
-          x = e.pageX - ($(this).offset().left) - (ink.width() / 2)
-          y = e.pageY - ($(this).offset().top) - (ink.height() / 2)
-          ink.css(
-            top: y + 'px'
-            left: x + 'px'
-          ).addClass 'animate'
           return
         return
 
@@ -117,7 +110,7 @@ define [ 'jquery', 'hljs', 'Application/editor' ], ($) ->
           return htmlMenu += """</ul>"""
 
       Menu::offsetTop = ()->
-
+        return if Menu::lock
         arr = jQuery.grep(_document.find("#viewDoc").find("h1,h2"), (val) ->
           $(val).offset().top-$(window).scrollTop()-_document.find(".header").height() >= 0
         )
