@@ -339,7 +339,7 @@ body:not(.editing) .media-toolbar {
   background: #fff; }
   .view .section-wrap .section {
     position: relative; }
-    .view .section-wrap .section:first-child .sub-section:first-child h1, .view .section-wrap .section:first-child .sub-section:first-child h2, .view .section-wrap .section:first-child .sub-section:first-child h2 {
+    .view .section-wrap .section:first-child .sub-section:first-of-type h1, .view .section-wrap .section:first-child .sub-section:first-of-type h2, .view .section-wrap .section:first-child .sub-section:first-of-type h2 {
       padding-top: 0; }
     .view .section-wrap .section .btn-edit {
       position: absolute;
@@ -365,7 +365,7 @@ body:not(.editing) .media-toolbar {
         .view .section-wrap .section .btn-edit.visible:active {
           opacity: .8; }
     .view .section-wrap .section .sub-section {
-      min-height: 40px;
+      min-height: 33px;
       font-size: 22px;
       line-height: 1.5;
       color: rgba(0, 0, 0, 0.95);
@@ -389,6 +389,11 @@ body:not(.editing) .media-toolbar {
       .view .section-wrap .section .sub-section h2 {
         font-size: 36px;
         line-height: 1.2; }
+      .view .section-wrap .section .sub-section hr {
+        margin: 0;
+        padding-top: 15px;
+        border: solid #aaa;
+        border-width: 0 0 1px 0; }
 
 .editing .section:hover .btn-plus {
   visibility: visible;
