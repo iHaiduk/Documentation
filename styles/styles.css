@@ -62,11 +62,7 @@ img {
   padding-top: 12px;
   background: rgba(255, 255, 255, 0.97);
   z-index: 999;
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.15);
-  -webkit-transition: all 0.1s linear;
-  transition: all 0.1s linear; }
-  .header.shadow {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); }
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.15); }
   .header .subject, .header .user {
     position: absolute;
     top: 0;
@@ -83,8 +79,8 @@ img {
     right: 10px;
     top: 14px;
     margin: 0;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border: 1px solid #DEDEDE;
     border-radius: 100%;
     overflow: hidden; }
@@ -94,7 +90,7 @@ img {
   @media (max-width: 1385px) {
     .header .wrap {
       max-width: 100%;
-      padding: 0 57px 0 104px;
+      padding: 0 53px 0 104px;
       position: relative; } }
 
 .search {
@@ -118,7 +114,7 @@ img {
     .search .search-wrap .search-text {
       width: 100%;
       outline: none;
-      height: 32px;
+      height: 36px;
       padding: 0 5px 0 35px;
       border: 1px solid rgba(0, 0, 0, 0.15);
       border-radius: 20px;
@@ -173,7 +169,7 @@ img {
   .btn.btn-accept {
     float: right;
     width: 80px;
-    margin-right: -30px; }
+    margin-right: -37px; }
     .btn.btn-accept.btn-edit:after {
       content: 'Edit'; }
     .btn.btn-accept.btn-save:after {
