@@ -82,7 +82,8 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               matchBrackets: true,
               styleActiveLine: true,
               theme: "3024-day",
-              lineNumbers: true
+              lineNumbers: true,
+              viewportMargin: Infinity
             });
           });
         });
@@ -149,6 +150,9 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               Redactor.prototype.activeElement = element;
               Redactor.prototype.listenEvent(element);
               Redactor.prototype.showPlusButton(this);
+            },
+            changeCallback: function() {
+              return _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
             },
             blurCallback: function() {
               _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);

@@ -89,6 +89,7 @@ define [
                     styleActiveLine: true,
                     theme: "3024-day"
                     lineNumbers: true
+                    viewportMargin: Infinity
                 )
 
               Redactor::document.find('.icon-hr').off('click').on 'click', ->
@@ -156,6 +157,8 @@ define [
                             Redactor::listenEvent element
                             Redactor::showPlusButton(@)
                             return
+                        changeCallback: ()->
+                            _elements.parent().find('.redactor-toolbar').stop().fadeOut 400
                         blurCallback: () ->
                             _elements.parent().find('.redactor-toolbar').stop().fadeOut 400
                             Redactor::showPlusButton(@)
