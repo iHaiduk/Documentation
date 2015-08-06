@@ -61,7 +61,7 @@ img {
   height: 60px;
   padding-top: 12px;
   background: rgba(255, 255, 255, 0.97);
-  z-index: 999;
+  z-index: 99;
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.15); }
   .header .subject, .header .user {
     position: absolute;
@@ -188,8 +188,8 @@ img {
   left: -40px;
   z-index: 1; }
   .media-toolbar .btn {
-    width: 32px;
-    min-width: 32px;
+    width: 30px;
+    height: 30px;
     padding: 0;
     background-position: center;
     background-repeat: no-repeat;
@@ -197,8 +197,8 @@ img {
   .media-toolbar.active {
     display: block; }
   .media-toolbar .btn-toggle {
-    font-size: 28px;
-    line-height: 28px;
+    font-size: 26px;
+    line-height: 26px;
     -webkit-transition: all 250ms ease;
     transition: all 250ms ease; }
     .media-toolbar .btn-toggle.open, .media-toolbar .btn-toggle.remove {

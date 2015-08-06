@@ -36,7 +36,7 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-.header { position: fixed; top: 0; left: 0; right: 0; height: 60px; padding-top: 12px; background: fade-out($white, .03); z-index: 999; box-shadow: 0 0 1px fade-out($black, .85);
+.header { position: fixed; top: 0; left: 0; right: 0; height: 60px; padding-top: 12px; background: fade-out($white, .03); z-index: 99; box-shadow: 0 0 1px fade-out($black, .85);
 
     .subject { position: absolute; top: 0; left: 20px; font-size: 15px; color: #484848; text-decoration: none; line-height: 60px;
 
@@ -120,11 +120,11 @@ img { vertical-align: top; max-width: 100%; }
 
 .media-toolbar { display: none; position: absolute; top: 0; left: -40px; z-index: 1;
 
-    .btn { width: 32px; min-width: 32px; padding: 0; background-position: center; background-repeat: no-repeat; background-color: $white; }
+    .btn { width: 30px; height: 30px; padding: 0; background-position: center; background-repeat: no-repeat; background-color: $white; }
 
     &.active { display: block; }
 
-    .btn-toggle { font-size: 28px; line-height: 28px;
+    .btn-toggle { font-size: 26px; line-height: 26px;
 
         @include prefix(( transition: all 250ms ease ), webkit );
 
