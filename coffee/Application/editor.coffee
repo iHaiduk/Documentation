@@ -62,6 +62,18 @@ define [
                 Redactor::document.find('.btn-toggle').off('click').on 'click', ->
                     $(this).toggleClass 'open'
 
+                Redactor::document.find('.btn-hr').off('click').on 'click', ->
+                  parent = $(this).parent()
+                  parent.prev().removeClass('open').addClass('remove')
+                  parent.parents(".section").find(".sub-section").addClass("noRedactor").redactor('core.destroy').html('<hr/>');
+                  Redactor::addListen()
+
+                Redactor::document.find('.remove').off('click').on 'click', ->
+                  _this = $(this).removeClass('remove').addClass('open')
+                  Redactor::addRedactor(_this.parents(".section").find(".sub-section").removeClass("noRedactor").html(''));
+                  Redactor::addListen()
+
+
 
             Redactor::addSection = (block)->
                 newBlock = $("""
@@ -83,7 +95,7 @@ define [
                         """)
                 block.after newBlock
                 Redactor::elements = Redactor::document.find(Redactor::nameElement)
-                Redactor::addRedactor newBlock.find(".sub-section"), true
+                Redactor::addRedactor newBlock.find(".sub-section:not(.noRedactor)"), true
                 Redactor::addListen()
 
             Redactor::initialize = () ->
@@ -120,7 +132,7 @@ define [
                             Redactor::showPlusButton(@)
                             return
                         keydownCallback: (e) ->
-                            Redactor::removeRedactor(@$element) if e.keyCode is 8 and $.trim(@code.get()) is ""
+                            Redactor::removeRedactor(@$element) if (e.keyCode is 8 or e.keyCode is 46) and $.trim(@code.get()) is ""
                             ###e.preventDefault()
                             false###
                         keyupCallback: () ->
@@ -162,17 +174,18 @@ define [
                     return
 
             Redactor::save = (element)->
-                Redactor::elements.each ->
-                    if $(this).hasClass("redactor-editor")
-                        if $.trim($(this).redactor('code.get')) is ""
-                            Redactor::removeRedactor $(this)
-                        else
-                            $(this).redactor("core.destroy")
-                setTimeout(->
-                    app.Menu.treeGenerate()
-                    return
-                , 250)
-                return
+              Redactor::elements = Redactor::document.find(Redactor::nameElement)
+              Redactor::elements.each ->
+                  if $(this).hasClass("redactor-editor")
+                      if $.trim($(this).redactor('code.get')) is ""
+                          Redactor::removeRedactor $(this)
+                      else
+                          $(this).redactor("core.destroy")
+              setTimeout(->
+                  app.Menu.treeGenerate()
+                  return
+              , 250)
+              return
 
             Redactor::toolbarPosition = (toolbar)->
                 readTop = if Redactor::position.start.y < Redactor::position.end.y then 'start' else 'end'
@@ -214,7 +227,7 @@ define [
 
 
             Redactor
-        redactor = new Redactor(_docum, '.sub-section')
+        redactor = new Redactor(_docum, '.sub-section:not(.noRedactor')
         redactor.init()
         return
     return
