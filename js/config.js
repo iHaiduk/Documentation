@@ -11,9 +11,9 @@ app = {
 };
 
 require.config({
+  waitSeconds: 200,
   paths: {
     "jquery": "Library/jquery.min",
-    "hljs": "Library/highlight.pack",
     "redactor": "Library/redactor"
   },
   shim: {
@@ -23,11 +23,18 @@ require.config({
     "redactor": {
       deps: ["jquery"]
     }
-  }
+  },
+  packages: [
+    {
+      name: 'codemirror',
+      location: 'CodeMirror',
+      main: 'lib/codemirror'
+    }
+  ]
 });
 
 this.loadApplication = function(name) {
-  requirejs(["jquery", "hljs", "redactor"], function($, hljs) {
+  requirejs(["jquery", "redactor", "codemirror"], function($, hljs) {
     require(["Application/app"]);
     require(["Application/menu"]);
   });

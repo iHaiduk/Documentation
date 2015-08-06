@@ -2,8 +2,9 @@
 /**
  * Created by Igor on 02.08.2015.
  */
-define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
+define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode/htmlmixed/htmlmixed', 'codemirror/mode/clike/clike', 'codemirror/mode/coffeescript/coffeescript', 'codemirror/mode/css/css', 'codemirror/mode/javascript/javascript', 'codemirror/mode/php/php', 'codemirror/mode/sass/sass', 'codemirror/mode/sql/sql', 'codemirror/mode/xml/xml'], function($, CodeMirror) {
   var _docum;
+  console.log(CodeMirror);
   _docum = $(document);
   _docum.ready(function() {
     var Redactor, redactor;
@@ -30,6 +31,7 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
         Redactor.prototype.nameElement = nameElement;
         Redactor.prototype.elements = document.find(nameElement);
         Redactor.prototype.activeElement = null;
+        Redactor.prototype.CodeMirror = null;
         Redactor.prototype.position = {
           start: {
             x: 0,
@@ -47,6 +49,7 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
           if ($(this).hasClass("btn-edit")) {
             $(this).removeClass("btn-edit").addClass("btn-save");
             $("body").addClass("editing");
+            Redactor.prototype.reset();
             return Redactor.prototype.initialize();
           } else {
             $(this).removeClass("btn-save").addClass("btn-edit");
@@ -57,19 +60,34 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
         Redactor.prototype.addListen();
       };
 
-      Redactor.prototype.addListen = function() {
-        Redactor.prototype.document.find(".btn-plus").off('click').on('click', function() {
-          return Redactor.prototype.addSection($(this).parents(".section"));
+      Redactor.prototype.reset = function() {
+        Redactor.prototype.elements.find(".code").removeClass().addClass("code").each(function() {
+          $(this).text($(this).text());
         });
+      };
+
+      Redactor.prototype.addListen = function() {
+
+        /*Redactor::document.find(".btn-plus").off('click').on 'click', ->
+            Redactor::addSection($(@).parents(".section"))
+         */
         Redactor.prototype.document.find('.btn-toggle').off('click').on('click', function() {
           return $(this).toggleClass('open');
         });
-        Redactor.prototype.document.find('.btn-hr').off('click').on('click', function() {
-          var parent;
-          parent = $(this).parent();
-          parent.prev().removeClass('open').addClass('remove');
-          parent.parents(".section").find(".sub-section").addClass("noRedactor").redactor('core.destroy').html('<hr/>');
-          return Redactor.prototype.addListen();
+        Redactor.prototype.document.find('.icon-code').off('click').on('click', function() {
+          return Redactor.prototype.mediaButton($(this), "code", "<textarea class='code'></textarea>", function(element) {
+            return Redactor.prototype.CodeMirror = CodeMirror.fromTextArea(element[0], {
+              mode: "javascript",
+              lineNumbers: true,
+              matchBrackets: true,
+              styleActiveLine: true,
+              theme: "3024-day",
+              lineNumbers: true
+            });
+          });
+        });
+        Redactor.prototype.document.find('.icon-hr').off('click').on('click', function() {
+          return Redactor.prototype.mediaButton($(this), "hr", "<hr/>");
         });
         return Redactor.prototype.document.find('.remove').off('click').on('click', function() {
           var _this;
@@ -79,9 +97,21 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
         });
       };
 
+      Redactor.prototype.mediaButton = function(element, type, code, call) {
+        var parent;
+        parent = element.parent();
+        parent.prev().removeClass('open').addClass('remove');
+        code = $(code);
+        parent.parents(".section").find(".sub-section").addClass("noRedactor").attr("data-type", type).redactor('core.destroy').html(code);
+        Redactor.prototype.addListen();
+        if ((call != null) && typeof call === "function") {
+          return call(code, element);
+        }
+      };
+
       Redactor.prototype.addSection = function(block) {
         var newBlock;
-        newBlock = $("<div class=\"section\">\n    <div class=\"sub-section\"></div>\n    <div class=\"media-toolbar\">\n        <span class=\"btn btn-toggle icon-plus\"></span>\n        <div class=\"menu-toolbar\">\n            <span class=\"btn btn-image\"></span>\n            <span class=\"btn btn-code\"></span>\n            <span class=\"btn btn-hr\">hr</span>\n        </div>\n    </div>\n\n    <div class=\"btn-plus-wrap\">\n        <span class=\"btn btn-plus\">Add</span>\n    </div>\n</div>");
+        newBlock = $("<div class=\"section\">\n    <div class=\"sub-section\"></div>\n    <div class=\"media-toolbar\">\n        <span class=\"btn btn-toggle icon-plus\"></span>\n        <div class=\"menu-toolbar\">\n            <span class=\"btn icon-image\"></span>\n            <span class=\"btn icon-code\"></span>\n            <span class=\"btn icon-hr\">hr</span>\n        </div>\n    </div>\n</div>");
         block.after(newBlock);
         Redactor.prototype.elements = Redactor.prototype.document.find(Redactor.prototype.nameElement);
         Redactor.prototype.addRedactor(newBlock.find(".sub-section:not(.noRedactor)"), true);
@@ -93,7 +123,7 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
       };
 
       Redactor.prototype.loadRedactors = function() {
-        Redactor.prototype.elements.each(function() {
+        Redactor.prototype.elements.not(".noRedactor").each(function() {
           Redactor.prototype.addRedactor($(this));
         });
       };
@@ -126,7 +156,11 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
             },
             keydownCallback: function(e) {
               if ((e.keyCode === 8 || e.keyCode === 46) && $.trim(this.code.get()) === "") {
-                return Redactor.prototype.removeRedactor(this.$element);
+                Redactor.prototype.removeRedactor(this.$element);
+              }
+              if (e.keyCode === 13) {
+                Redactor.prototype.addSection(this.$element.parents(".section"), true);
+                return false;
               }
 
               /*e.preventDefault()
@@ -170,7 +204,8 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
       };
 
       Redactor.prototype.removeRedactor = function(element) {
-        if (element != null) {
+        Redactor.prototype.elements = Redactor.prototype.document.find(Redactor.prototype.nameElement);
+        if ((element != null) && Redactor.prototype.elements.length > 1) {
           element.redactor('core.destroy');
           element.parents(".section").remove();
         }
@@ -179,12 +214,18 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
       Redactor.prototype.save = function(element) {
         Redactor.prototype.elements = Redactor.prototype.document.find(Redactor.prototype.nameElement);
         Redactor.prototype.elements.each(function() {
-          if ($(this).hasClass("redactor-editor")) {
+          if ($(this).hasClass("redactor-editor") && !$(this).hasClass("noRedactor")) {
             if ($.trim($(this).redactor('code.get')) === "") {
-              return Redactor.prototype.removeRedactor($(this));
+              Redactor.prototype.removeRedactor($(this));
             } else {
-              return $(this).redactor("core.destroy");
+              $(this).redactor("core.destroy");
             }
+          }
+          console.log($(this));
+          if ($(this).hasClass("noRedactor")) {
+            $(this).find(".code").each(function() {
+              Redactor.prototype.CodeMirror.setOption("readOnly", true);
+            });
           }
         });
         setTimeout(function() {
@@ -239,7 +280,7 @@ define(['jquery', 'hljs', 'redactor', 'Application/menu'], function($, hljs) {
       return Redactor;
 
     })();
-    redactor = new Redactor(_docum, '.sub-section:not(.noRedactor');
+    redactor = new Redactor(_docum, '.sub-section');
     redactor.init();
   });
 });

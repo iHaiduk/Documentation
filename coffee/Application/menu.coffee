@@ -1,4 +1,4 @@
-define [ 'jquery', 'hljs', 'Application/editor' ], ($) ->
+define [ 'jquery', 'Application/editor' ], ($) ->
   _document = $(document)
   _document.ready ->
 
@@ -107,7 +107,8 @@ define [ 'jquery', 'hljs', 'Application/editor' ], ($) ->
 
             htmlMenu += """</li>"""
 
-          return htmlMenu += """</ul>"""
+          htmlMenu += """</ul>"""
+        htmlMenu
 
       Menu::offsetTop = ()->
         return if Menu::lock

@@ -4,10 +4,20 @@
 
 define [
     'jquery'
-    'hljs'
+    'codemirror'
     'redactor'
     'Application/menu'
-], ($, hljs) ->
+    'codemirror/mode/htmlmixed/htmlmixed'
+    'codemirror/mode/clike/clike'
+    'codemirror/mode/coffeescript/coffeescript'
+    'codemirror/mode/css/css'
+    'codemirror/mode/javascript/javascript'
+    'codemirror/mode/php/php'
+    'codemirror/mode/sass/sass'
+    'codemirror/mode/sql/sql'
+    'codemirror/mode/xml/xml'
+], ($, CodeMirror) ->
+    console.log(CodeMirror)
     _docum = $(document)
     _docum.ready ->
 
@@ -33,6 +43,7 @@ define [
                 Redactor::nameElement = nameElement
                 Redactor::elements = document.find(nameElement)
                 Redactor::activeElement = null
+                Redactor::CodeMirror = null
                 Redactor::position =
                     start:
                         x: 0
@@ -44,35 +55,57 @@ define [
             Redactor::init = ->
 
                 Redactor::document.find("#initRedactor").off('click').on 'click', ->
-                    if $(this).hasClass("btn-edit")
-                        $(this).removeClass("btn-edit").addClass "btn-save"
+                    if $(@).hasClass("btn-edit")
+                        $(@).removeClass("btn-edit").addClass "btn-save"
                         $("body").addClass "editing"
+                        Redactor::reset()
                         Redactor::initialize()
                     else
-                        $(this).removeClass("btn-save").addClass "btn-edit"
+                        $(@).removeClass("btn-save").addClass "btn-edit"
                         $("body").removeClass "editing"
                         Redactor::save()
                 Redactor::addListen()
                 return
 
+            Redactor::reset = ()->
+              Redactor::elements.find(".code").removeClass().addClass("code").each ->
+                $(@).text($(@).text())
+                return
+              return
+
             Redactor::addListen = ()->
-                Redactor::document.find(".btn-plus").off('click').on 'click', ->
-                    Redactor::addSection($(this).parents(".section"))
+              ###Redactor::document.find(".btn-plus").off('click').on 'click', ->
+                  Redactor::addSection($(@).parents(".section"))###
 
-                Redactor::document.find('.btn-toggle').off('click').on 'click', ->
-                    $(this).toggleClass 'open'
+              Redactor::document.find('.btn-toggle').off('click').on 'click', ->
+                  $(@).toggleClass 'open'
 
-                Redactor::document.find('.btn-hr').off('click').on 'click', ->
-                  parent = $(this).parent()
-                  parent.prev().removeClass('open').addClass('remove')
-                  parent.parents(".section").find(".sub-section").addClass("noRedactor").redactor('core.destroy').html('<hr/>');
-                  Redactor::addListen()
+              Redactor::document.find('.icon-code').off('click').on 'click', ->
+                Redactor::mediaButton($(@), "code", "<textarea class='code'></textarea>", (element)->
+                  Redactor::CodeMirror = CodeMirror.fromTextArea element[0],
+                    mode: "javascript"
+                    lineNumbers: true,
+                    matchBrackets: true,
+                    styleActiveLine: true,
+                    theme: "3024-day"
+                    lineNumbers: true
+                )
 
-                Redactor::document.find('.remove').off('click').on 'click', ->
-                  _this = $(this).removeClass('remove').addClass('open')
-                  Redactor::addRedactor(_this.parents(".section").find(".sub-section").removeClass("noRedactor").html(''));
-                  Redactor::addListen()
+              Redactor::document.find('.icon-hr').off('click').on 'click', ->
+                Redactor::mediaButton($(@), "hr", "<hr/>")
 
+              Redactor::document.find('.remove').off('click').on 'click', ->
+                _this = $(@).removeClass('remove').addClass('open')
+                Redactor::addRedactor(_this.parents(".section").find(".sub-section").removeClass("noRedactor").html(''));
+                Redactor::addListen()
+
+            Redactor::mediaButton = (element, type, code, call)->
+              parent = element.parent()
+              parent.prev().removeClass('open').addClass('remove')
+              code = $(code)
+              parent.parents(".section").find(".sub-section").addClass("noRedactor").attr("data-type",type).redactor('core.destroy').html(code);
+              Redactor::addListen()
+              call(code, element) if call? and typeof call is "function"
 
 
             Redactor::addSection = (block)->
@@ -82,14 +115,10 @@ define [
                             <div class="media-toolbar">
                                 <span class="btn btn-toggle icon-plus"></span>
                                 <div class="menu-toolbar">
-                                    <span class="btn btn-image"></span>
-                                    <span class="btn btn-code"></span>
-                                    <span class="btn btn-hr">hr</span>
+                                    <span class="btn icon-image"></span>
+                                    <span class="btn icon-code"></span>
+                                    <span class="btn icon-hr">hr</span>
                                 </div>
-                            </div>
-
-                            <div class="btn-plus-wrap">
-                                <span class="btn btn-plus">Add</span>
                             </div>
                         </div>
                         """)
@@ -103,8 +132,8 @@ define [
                 return
 
             Redactor::loadRedactors = ->
-                Redactor::elements.each ->
-                    Redactor::addRedactor $(this)
+                Redactor::elements.not(".noRedactor").each ->
+                    Redactor::addRedactor $(@)
                     return
                 return
 
@@ -133,6 +162,9 @@ define [
                             return
                         keydownCallback: (e) ->
                             Redactor::removeRedactor(@$element) if (e.keyCode is 8 or e.keyCode is 46) and $.trim(@code.get()) is ""
+                            if e.keyCode is 13
+                              Redactor::addSection(@$element.parents(".section"), true)
+                              false
                             ###e.preventDefault()
                             false###
                         keyupCallback: () ->
@@ -160,7 +192,7 @@ define [
                 ).off('click').on 'click', ->
                     selection = if not window.getSelection? then window.getSelection() else document.getSelection()
                     if selection.type is 'Range'
-                        toolbar = $(this).prev()
+                        toolbar = $(@).prev()
                         Redactor::toolbarPosition(toolbar)
                     else
                         element.parent().find('.redactor-toolbar').hide()
@@ -168,19 +200,28 @@ define [
                 return
 
             Redactor::removeRedactor = (element)->
-                if element?
-                    element.redactor 'core.destroy'
-                    element.parents(".section").remove()
-                    return
+              Redactor::elements = Redactor::document.find(Redactor::nameElement)
+              if element? and Redactor::elements.length > 1
+                  element.redactor 'core.destroy'
+                  element.parents(".section").remove()
+                  return
 
             Redactor::save = (element)->
               Redactor::elements = Redactor::document.find(Redactor::nameElement)
               Redactor::elements.each ->
-                  if $(this).hasClass("redactor-editor")
-                      if $.trim($(this).redactor('code.get')) is ""
-                          Redactor::removeRedactor $(this)
+                  if $(@).hasClass("redactor-editor") and !$(@).hasClass("noRedactor")
+                      if $.trim($(@).redactor('code.get')) is ""
+                          Redactor::removeRedactor $(@)
                       else
-                          $(this).redactor("core.destroy")
+                          $(@).redactor("core.destroy")
+                  console.log($(@))
+                  if $(@).hasClass("noRedactor")
+                    $(@).find(".code").each ->
+                      Redactor::CodeMirror.setOption("readOnly", true)
+                      return
+                    return
+
+
               setTimeout(->
                   app.Menu.treeGenerate()
                   return
@@ -227,7 +268,7 @@ define [
 
 
             Redactor
-        redactor = new Redactor(_docum, '.sub-section:not(.noRedactor')
+        redactor = new Redactor(_docum, '.sub-section')
         redactor.init()
         return
     return

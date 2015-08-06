@@ -8,19 +8,27 @@ app =
     path: "../"
 
 require.config
+    waitSeconds: 200
     paths:
         "jquery": "Library/jquery.min"
-        "hljs": "Library/highlight.pack"
         "redactor": "Library/redactor"
     shim:
         "jquery": exports: "$"
         "redactor": deps: [ "jquery" ]
 
+    packages: [
+        {
+            name: 'codemirror'
+            location: 'CodeMirror'
+            main: 'lib/codemirror'
+        }
+    ]
+
 @loadApplication = (name) ->
     requirejs [
         "jquery"
-        "hljs"
         "redactor"
+        "codemirror"
     ], ($, hljs) ->
         require [ "Application/app" ]
         require [ "Application/menu" ]

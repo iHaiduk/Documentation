@@ -1,4 +1,4 @@
-define(['jquery', 'hljs', 'Application/editor'], function($) {
+define(['jquery', 'Application/editor'], function($) {
   var _document;
   _document = $(document);
   return _document.ready(function() {
@@ -116,8 +116,9 @@ define(['jquery', 'hljs', 'Application/editor'], function($) {
             }
             return htmlMenu += "</li>";
           });
-          return htmlMenu += "</ul>";
+          htmlMenu += "</ul>";
         }
+        return htmlMenu;
       };
 
       Menu.prototype.offsetTop = function() {
