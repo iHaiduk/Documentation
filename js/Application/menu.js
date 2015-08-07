@@ -40,14 +40,14 @@ define(['jquery', 'Application/editor'], function($) {
 
       Menu.prototype.addBottomPadding = function() {
         var arr, summ;
-        arr = jQuery.grep(_document.find("#viewDoc").find("h1,h2"), function(val) {
+        arr = jQuery.grep(_document.find("#viewDoc").find("head1,head2"), function(val) {
           return true;
         });
         summ = $(arr[arr.length - 1]).parents(".section").height();
         $(arr[arr.length - 1]).parents(".section").nextAll(".section").each(function() {
           return summ += $(this).height();
         });
-        return _document.find(".right-side").css({
+        _document.find(".right-side").css({
           "padding-bottom": $(window).height() - summ - _document.find(".header").outerHeight() - _document.find(".footer").outerHeight() - 31 + "px"
         });
       };
@@ -57,8 +57,8 @@ define(['jquery', 'Application/editor'], function($) {
         Menu.prototype.lastIdHeading = -1;
         Menu.prototype.HeadingCnt = 0;
         Menu.prototype.MenuHeadingCnt = 0;
-        _document.find("#viewDoc").find("h1,h2").each(function() {
-          if ($(this)[0].tagName.toLowerCase() === "h1") {
+        _document.find("#viewDoc").find("head1,head2").each(function() {
+          if ($(this)[0].tagName.toLowerCase() === "head1") {
             Menu.prototype.lastIdHeading++;
             Menu.prototype.tree.push({
               element: $(this).attr("id", "header" + Menu.prototype.HeadingCnt),
@@ -91,7 +91,7 @@ define(['jquery', 'Application/editor'], function($) {
           $("html, body").stop().animate({
             scrollTop: _document.find("#" + $(this).data().id).offset().top - _document.find(".header").height() - 34
           }, 500, function() {
-            return Menu.prototype.lock = false;
+            Menu.prototype.lock = false;
           });
           $(this).parent().addClass('active').parents(".nav-list").addClass('active');
         });
@@ -126,15 +126,15 @@ define(['jquery', 'Application/editor'], function($) {
         if (Menu.prototype.lock) {
           return;
         }
-        arr = jQuery.grep(_document.find("#viewDoc").find("h1,h2"), function(val) {
+        arr = jQuery.grep(_document.find("#viewDoc").find("head1,head2"), function(val) {
           return $(val).offset().top - $(window).scrollTop() - _document.find(".header").height() >= 0;
         });
         if (arr.length) {
           Menu.prototype.navigation.find(".active").removeClass('active');
-          if (arr[0].tagName.toLowerCase() === "h1") {
-            Menu.prototype.navigation.find(".nav > .nav-list").eq(_document.find("#viewDoc").find("h1").index($(arr[0]))).addClass('active');
+          if (arr[0].tagName.toLowerCase() === "head1") {
+            Menu.prototype.navigation.find(".nav > .nav-list").eq(_document.find("#viewDoc").find("head1").index($(arr[0]))).addClass('active');
           } else {
-            Menu.prototype.navigation.find(".sub-nav > .nav-list").eq(_document.find("#viewDoc").find("h2").index($(arr[0]))).addClass('active').parents(".nav-list").addClass('active');
+            Menu.prototype.navigation.find(".sub-nav > .nav-list").eq(_document.find("#viewDoc").find("head2").index($(arr[0]))).addClass('active').parents(".nav-list").addClass('active');
           }
         }
       };

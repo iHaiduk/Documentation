@@ -33,7 +33,7 @@ define [ 'jquery', 'Application/editor' ], ($) ->
         return
 
       Menu::addBottomPadding = () ->
-        arr = jQuery.grep(_document.find("#viewDoc").find("h1,h2"), (val) ->
+        arr = jQuery.grep(_document.find("#viewDoc").find("head1,head2"), (val) ->
           true
         )
         summ = $(arr[arr.length - 1]).parents(".section").height()
@@ -43,14 +43,15 @@ define [ 'jquery', 'Application/editor' ], ($) ->
         _document.find(".right-side").css(
           "padding-bottom": $(window).height() - summ - _document.find(".header").outerHeight() - _document.find(".footer").outerHeight() - 31 + "px"
         )
+        return
 
       Menu::treeGenerate = ()->
         Menu::tree = []
         Menu::lastIdHeading = -1
         Menu::HeadingCnt = 0
         Menu::MenuHeadingCnt = 0
-        _document.find("#viewDoc").find("h1,h2").each ->
-          if($(this)[0].tagName.toLowerCase() is "h1")
+        _document.find("#viewDoc").find("head1,head2").each ->
+          if($(this)[0].tagName.toLowerCase() is "head1")
             Menu::lastIdHeading++;
             Menu::tree.push(
               element: $(this).attr("id", "header"+Menu::HeadingCnt)
@@ -85,6 +86,7 @@ define [ 'jquery', 'Application/editor' ], ($) ->
             scrollTop: _document.find("#" + $(@).data().id).offset().top - _document.find(".header").height() - 34
           },500, ->
             Menu::lock = false
+            return
           )
           $(@).parent().addClass('active').parents(".nav-list").addClass('active')
 
@@ -112,15 +114,15 @@ define [ 'jquery', 'Application/editor' ], ($) ->
 
       Menu::offsetTop = ()->
         return if Menu::lock
-        arr = jQuery.grep(_document.find("#viewDoc").find("h1,h2"), (val) ->
+        arr = jQuery.grep(_document.find("#viewDoc").find("head1,head2"), (val) ->
           $(val).offset().top-$(window).scrollTop()-_document.find(".header").height() >= 0
         )
         if arr.length
           Menu::navigation.find(".active").removeClass 'active'
-          if(arr[0].tagName.toLowerCase() is "h1")
-            Menu::navigation.find(".nav > .nav-list").eq(_document.find("#viewDoc").find("h1").index($(arr[0]))).addClass('active')
+          if(arr[0].tagName.toLowerCase() is "head1")
+            Menu::navigation.find(".nav > .nav-list").eq(_document.find("#viewDoc").find("head1").index($(arr[0]))).addClass('active')
           else
-            Menu::navigation.find(".sub-nav > .nav-list").eq(_document.find("#viewDoc").find("h2").index($(arr[0]))).addClass('active').parents(".nav-list").addClass('active')
+            Menu::navigation.find(".sub-nav > .nav-list").eq(_document.find("#viewDoc").find("head2").index($(arr[0]))).addClass('active').parents(".nav-list").addClass('active')
         return
 
 

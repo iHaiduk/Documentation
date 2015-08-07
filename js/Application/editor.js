@@ -4,23 +4,33 @@
  */
 define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode/htmlmixed/htmlmixed', 'codemirror/mode/clike/clike', 'codemirror/mode/coffeescript/coffeescript', 'codemirror/mode/css/css', 'codemirror/mode/javascript/javascript', 'codemirror/mode/php/php', 'codemirror/mode/sass/sass', 'codemirror/mode/sql/sql', 'codemirror/mode/xml/xml'], function($, CodeMirror) {
   var _docum;
-  console.log(CodeMirror);
   _docum = $(document);
   _docum.ready(function() {
     var Redactor, redactor;
-    $.Redactor.prototype.highlight = function() {
+    $.Redactor.prototype.insertHead = function() {
       return {
-        save: function() {
-          var html;
-          html = this.code.get();
-        },
         init: function() {
-          var button;
-          button = this.button.add('bold', 'Insert Code');
-          this.button.addCallback(button, this.highlight.code);
+          var button, button2;
+          button = this.button.add('header1');
+          this.button.setAwesome('insertHead', 'fa-h1');
+          this.button.addCallback(button, this.insertHead.insertH1);
+          button2 = this.button.add('header2');
+          this.button.setAwesome('insertHead', 'fa-h2');
+          this.button.addCallback(button2, this.insertHead.insertH2);
         },
-        code: function() {
-          this.inline.format('pre', 'class', 'code');
+        insertH1: function(html) {
+          if (this.selection.getParent() && $(this.selection.getParent())[0].tagName.toLowerCase() === 'head2') {
+            this.inline.format('head2');
+          }
+          this.selection.restore();
+          this.inline.format('head1');
+        },
+        insertH2: function(html) {
+          if (this.selection.getParent() && $(this.selection.getParent())[0].tagName.toLowerCase() === 'head1') {
+            this.inline.format('head1');
+          }
+          this.selection.restore();
+          this.inline.format('head2');
         }
       };
     };
@@ -32,6 +42,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         Redactor.prototype.elements = document.find(nameElement);
         Redactor.prototype.activeElement = null;
         Redactor.prototype.CodeMirror = null;
+        Redactor.prototype.lastFocus = null;
         Redactor.prototype.position = {
           start: {
             x: 0,
@@ -50,11 +61,12 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             $(this).removeClass("btn-edit").addClass("btn-save");
             $("body").addClass("editing");
             Redactor.prototype.reset();
-            return Redactor.prototype.initialize();
+            Redactor.prototype.initialize();
+            Redactor.prototype.showPlusButton();
           } else {
             $(this).removeClass("btn-save").addClass("btn-edit");
             $("body").removeClass("editing");
-            return Redactor.prototype.save();
+            Redactor.prototype.save();
           }
         });
         Redactor.prototype.addListen();
@@ -67,34 +79,33 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
       };
 
       Redactor.prototype.addListen = function() {
-
-        /*Redactor::document.find(".btn-plus").off('click').on 'click', ->
-            Redactor::addSection($(@).parents(".section"))
-         */
+        Redactor.prototype.document.find(".media-toolbar").off('click').on('click', function() {
+          $(this).addClass("open");
+        });
         Redactor.prototype.document.find('.btn-toggle').off('click').on('click', function() {
-          return $(this).toggleClass('open');
+          $(this).toggleClass('open');
         });
         Redactor.prototype.document.find('.icon-code').off('click').on('click', function() {
-          return Redactor.prototype.mediaButton($(this), "code", "<textarea class='code'></textarea>", function(element) {
-            return Redactor.prototype.CodeMirror = CodeMirror.fromTextArea(element[0], {
+          Redactor.prototype.mediaButton($(this), "code", "<textarea class='code'></textarea>", function(element) {
+            Redactor.prototype.CodeMirror = CodeMirror.fromTextArea(element[0], {
               mode: "javascript",
               lineNumbers: true,
               matchBrackets: true,
               styleActiveLine: true,
-              theme: "3024-day",
+              theme: "monocai",
               lineNumbers: true,
               viewportMargin: Infinity
             });
           });
         });
         Redactor.prototype.document.find('.icon-hr').off('click').on('click', function() {
-          return Redactor.prototype.mediaButton($(this), "hr", "<hr/>");
+          Redactor.prototype.mediaButton($(this), "hr", "<hr/>");
         });
-        return Redactor.prototype.document.find('.remove').off('click').on('click', function() {
+        Redactor.prototype.document.find('.remove').off('click').on('click', function() {
           var _this;
           _this = $(this).removeClass('remove').addClass('open');
           Redactor.prototype.addRedactor(_this.parents(".section").find(".sub-section").removeClass("noRedactor").html(''));
-          return Redactor.prototype.addListen();
+          Redactor.prototype.addListen();
         });
       };
 
@@ -106,7 +117,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         parent.parents(".section").find(".sub-section").addClass("noRedactor").attr("data-type", type).redactor('core.destroy').html(code);
         Redactor.prototype.addListen();
         if ((call != null) && typeof call === "function") {
-          return call(code, element);
+          call(code, element);
         }
       };
 
@@ -116,7 +127,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         block.after(newBlock);
         Redactor.prototype.elements = Redactor.prototype.document.find(Redactor.prototype.nameElement);
         Redactor.prototype.addRedactor(newBlock.find(".sub-section:not(.noRedactor)"), true);
-        return Redactor.prototype.addListen();
+        Redactor.prototype.addListen();
       };
 
       Redactor.prototype.initialize = function() {
@@ -139,11 +150,12 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           element.redactor({
             iframe: true,
             cleanStyleOnEnter: false,
+            cleanSpaces: false,
             linebreaks: true,
             focus: focus,
-            formatting: ['p', 'blockquote', 'h1', 'h2'],
-            buttons: ['formatting', 'bold', 'italic', 'deleted', 'link', 'alignment'],
-            plugins: ['formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist', 'link', 'alignment'],
+            tabAsSpaces: 4,
+            buttons: ['bold', 'italic', 'deleted', 'link', 'alignment'],
+            plugins: ['insertHead'],
             initCallback: function() {
               Redactor.prototype.redactor = this;
               element.off('click');
@@ -152,38 +164,62 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               Redactor.prototype.showPlusButton(this);
             },
             changeCallback: function() {
-              return _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
+              Redactor.prototype.showPlusButton(this, true);
+              if (this.sel.type !== "Range") {
+                _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
+              }
             },
             blurCallback: function() {
+              var redactor;
+              this.$element.removeClass("focus");
               _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
-              Redactor.prototype.showPlusButton(this);
+              redactor = this;
+              setTimeout(function() {
+                Redactor.prototype.showPlusButton(redactor, true);
+              }, 10);
             },
             keydownCallback: function(e) {
-              if ((e.keyCode === 8 || e.keyCode === 46) && $.trim(this.code.get()) === "") {
+              if ((e.keyCode === 8 || e.keyCode === 46) && this.code.get() === "") {
                 Redactor.prototype.removeRedactor(this.$element);
               }
               if (e.keyCode === 13) {
                 Redactor.prototype.addSection(this.$element.parents(".section"), true);
                 return false;
               }
-
-              /*e.preventDefault()
-              false
-               */
             },
             keyupCallback: function() {
-              Redactor.prototype.showPlusButton(this);
+              Redactor.prototype.showPlusButton(this, true);
             },
             focusCallback: function(e) {
+              Redactor.prototype.lastFocus = _docum.find("#viewDoc").find(".section").index(this.$element.parent().parent());
+              Redactor.prototype.showPlusButton(this, true);
+              this.$element.addClass("focus");
               _elements.not(this.$element).parent().find('.redactor-toolbar').stop().fadeOut(400);
-              return this.$element.parents(".section").find(".media-toolbar .btn-toggle").removeClass("open");
+              this.$element.parents(".section").find(".media-toolbar .btn-toggle").removeClass("open");
             }
           });
         }
       };
 
-      Redactor.prototype.showPlusButton = function(_redactor) {
-        return _redactor.$element.parents(".section").find(".media-toolbar").toggleClass("active", !$.trim(_redactor.$element[0].innerText).length).find(".btn-toggle").removeClass("open");
+      Redactor.prototype.showPlusButton = function(_redactor, focus) {
+        var active;
+        if (focus == null) {
+          focus = false;
+        }
+        active = focus = !focus && (_redactor != null) ? _redactor.focus.isFocused() : focus;
+        _docum.find("#viewDoc").find(".section").each(function() {
+          var noRedactor;
+          if (focus) {
+            active = (_redactor != null) && !$.trim($(this).find(".sub-section").html()).length && Redactor.prototype.lastFocus === _docum.find("#viewDoc").find(".section").index($(this));
+          }
+          noRedactor = $(this).find(".noRedactor");
+          if (!((_redactor != null) && !noRedactor.length)) {
+            noRedactor.addClass("active").find(".btn-toggle").removeClass("open").addClass("remove");
+            Redactor.prototype.addListen();
+          } else {
+            $(this).find(".media-toolbar").toggleClass("active", active).find(".btn-toggle").removeClass("open");
+          }
+        });
       };
 
       Redactor.prototype.listenEvent = function(element) {
@@ -225,7 +261,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               $(this).redactor("core.destroy");
             }
           }
-          console.log($(this));
           if ($(this).hasClass("noRedactor")) {
             $(this).find(".code").each(function() {
               Redactor.prototype.CodeMirror.setOption("readOnly", true);
@@ -254,7 +289,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             }, 150);
           } else {
             if (toolbar.next().offset() != null) {
-              return toolbar.stop().fadeIn(400).css({
+              toolbar.stop().fadeIn(400).css({
                 top: top,
                 left: left
               }).find(".redactor-act").removeClass("redactor-act");
