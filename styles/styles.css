@@ -19,7 +19,7 @@ html, body {
 body {
   padding-top: 80px;
   margin: 0;
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "futura-pt";
   font-size: 14px;
   background: #fff; }
   body.noScroll {
@@ -150,7 +150,6 @@ img {
   border: 1px solid #D9D9D9;
   white-space: nowrap;
   border-radius: 20px;
-  font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
   line-height: 36px;
   -webkit-transition: all 0.2s ease;
   transition: all 0.2s ease;
@@ -313,8 +312,7 @@ body:not(.editing) .media-toolbar {
       min-height: 33px;
       font-size: 22px;
       line-height: 33px;
-      color: rgba(0, 0, 0, 0.95);
-      font-family: "freight-text-pro",Georgia,Cambria,"Times New Roman",Times,serif; }
+      color: rgba(0, 0, 0, 0.95); }
       .view .section-wrap .section .sub-section:empty:after {
         content: 'Text...';
         color: rgba(0, 0, 0, 0.3);
@@ -326,9 +324,9 @@ body:not(.editing) .media-toolbar {
         padding: 15px 0;
         color: rgba(0, 0, 0, 0.8);
         font-size: 60px;
-        font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
         position: relative;
-        line-height: 1; }
+        line-height: 1;
+        font-weight: 500; }
       .view .section-wrap .section .sub-section h2, .view .section-wrap .section .sub-section head2 {
         font-size: 36px;
         line-height: 1.2; }

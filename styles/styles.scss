@@ -251,7 +251,7 @@ body:not(.editing) .media-toolbar { display: none; }
 
                 &:empty:after { content: 'Text...'; color: fade-out($black, .7); position: relative; z-index: -1; }
 
-                h1, head1 { display: block; margin:0; padding: 15px 0; color: fade-out($black, .2); font-size: 60px; position: relative; line-height: 1; }
+                h1, head1 { display: block; margin:0; padding: 15px 0; color: fade-out($black, .2); font-size: 60px; position: relative; line-height: 1; font-weight: 500; }
 
                 h2, head2 { @extend h1; font-size: 36px; line-height: 1.2; }
 
