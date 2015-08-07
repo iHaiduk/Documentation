@@ -103,7 +103,7 @@ define [
               lineNumbers: true,
               matchBrackets: true,
               styleActiveLine: true,
-              theme: "3024-day"
+              theme: "monocai"
               lineNumbers: true
               viewportMargin: Infinity
             return
