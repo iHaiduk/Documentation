@@ -30,18 +30,24 @@ define [
         button2 = @button.add('header2')
         @button.setAwesome 'insertHead', 'fa-h2'
         @button.addCallback button2, @insertHead.insertH2
+        button3 = @button.add('center')
+        @button.setAwesome 'insertHead', 'fa-center'
+        @button.addCallback button3, @insertHead.center
         return
-      insertH1: (html) ->
+      insertH1: ->
 # remove formatting from the text pasted into the textarea
         this.inline.format('head2') if this.selection.getParent() and $(this.selection.getParent())[0].tagName.toLowerCase() =='head2'
         this.selection.restore();
         this.inline.format('head1')
         return
-      insertH2: (html) ->
+      insertH2: ->
 # remove formatting from the text pasted into the textarea
         this.inline.format('head1') if this.selection.getParent() and $(this.selection.getParent())[0].tagName.toLowerCase() =='head1'
         this.selection.restore();
         this.inline.format('head2')
+        return
+      center: ->
+        this.$element.toggleClass("center")
         return
 
       }

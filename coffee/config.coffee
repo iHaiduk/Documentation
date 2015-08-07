@@ -12,8 +12,10 @@ require.config
     paths:
         "jquery": "Library/jquery.min"
         "redactor": "Library/redactor"
+        "font": "http://use.typekit.net/dwg6kzf"
     shim:
         "jquery": exports: "$"
+        "font": exports: "Typekit"
         "redactor": deps: [ "jquery" ]
 
     packages: [
@@ -28,6 +30,7 @@ require.config
     requirejs [
         "jquery"
         "redactor"
+        "font"
         "codemirror"
     ], ($, hljs) ->
         require [ "Application/app" ]
