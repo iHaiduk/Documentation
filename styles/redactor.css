@@ -119,7 +119,7 @@ body .redactor-box-fullscreen {
 	Toolbar
 */
 .redactor-toolbar {
-  width: 230px !important;
+  width: 240px !important;
   display: none;
   position: absolute !important;
   margin: 0 !important;
@@ -210,12 +210,12 @@ body .redactor-box-fullscreen {
   /*background-color: #ccc;*/
   color:#33cfff;
 }
-.redactor-toolbar li a.redactor-btn-image {
-  width: 14px;
-  height: 14px;
-  background-position: center center;
-  background-repeat: no-repeat;
-}
+/*.redactor-toolbar li a.redactor-btn-image {*/
+  /*width: 14px;*/
+  /*height: 14px;*/
+  /*background-position: center center;*/
+  /*background-repeat: no-repeat;*/
+/*}*/
 .redactor-toolbar li a.fa-redactor-btn {
   display: inline-block;
   padding: 9px 10px 8px 10px;
