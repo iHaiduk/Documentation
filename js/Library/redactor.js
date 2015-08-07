@@ -1573,6 +1573,7 @@
 				},
 				createTooltip: function($button, name, title)
 				{
+					return;
 					var $tooltip = $('<span>').addClass('redactor-toolbar-tooltip redactor-toolbar-tooltip-' + this.uuid + ' redactor-toolbar-tooltip-' + name).hide().html(title);
 					$tooltip.appendTo('body');
 
