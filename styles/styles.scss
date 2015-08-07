@@ -36,7 +36,7 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-.header { position: fixed; top: 0; left: 0; right: 0; height: 60px; padding-top: 12px; background: fade-out($white, .03); z-index: 999; box-shadow: 0 0 1px fade-out($black, .85);
+.header { position: fixed; top: 0; left: 0; right: 0; height: 60px; padding-top: 12px; background: fade-out($white, .03); z-index: 99; box-shadow: 0 0 1px fade-out($black, .85);
 
     .subject { position: absolute; top: 0; left: 20px; font-size: 15px; color: #484848; text-decoration: none; line-height: 60px;
 
@@ -62,15 +62,15 @@ img { vertical-align: top; max-width: 100%; }
 
     .search-wrap { position: relative;
 
-        .search-submit { position: absolute; top: 0; left: 0; width: 38px; height: 32px; background: url("../img/search.svg") center no-repeat; background-size: 22px; text-indent: -9999px; border: none; outline: none; cursor: pointer; }
+        .search-submit { position: absolute; top: 0; left: 0; width: 38px; height: 36px; background: url("../img/search.svg") center no-repeat; background-size: 22px; text-indent: -9999px; border: none; outline: none; cursor: pointer; }
 
-        .search-text { width: 100%; outline: none; height: 36px; padding: 0 5px 0 35px; border: 1px solid rgba(0,0,0,0.15); border-radius: 20px;
+        .search-text { width: 100%; outline: none; height: 36px; padding: 0 5px 0 35px; border: 1px solid fade-out($black, .85); border-radius: 20px;
 
             @include prefix(( transition: all .2s ease ), webkit );
 
-            &:hover { border-color: rgba(0,0,0,0.3); }
+            &:hover { border-color: fade-out($black, .7); }
 
-            &:focus { border-color: rgba(0,0,0,0.6); }
+            &:focus { border-color: fade-out($black, .4); }
 
         }
 
@@ -120,11 +120,11 @@ img { vertical-align: top; max-width: 100%; }
 
 .media-toolbar { display: none; position: absolute; top: 0; left: -40px; z-index: 1;
 
-    .btn { width: 32px; min-width: 32px; padding: 0; background-position: center; background-repeat: no-repeat; background-color: $white; }
+    .btn { width: 30px; height: 30px; padding: 0; background-position: center; background-repeat: no-repeat; background-color: $white; }
 
     &.active { display: block; }
 
-    .btn-toggle { font-size: 28px; line-height: 28px;
+    .btn-toggle { font-size: 26px; line-height: 26px;
 
         @include prefix(( transition: all 250ms ease ), webkit );
 
@@ -138,7 +138,9 @@ img { vertical-align: top; max-width: 100%; }
 
             .btn {
 
-                @include prefix(( transform: scale(1), transition: all 250ms ease ), webkit );
+                @include prefix(( transform: scale(1), transition: all .2s ease ), webkit );
+
+                &:before { @include prefix((transform: scale(1) ), webkit ); }
 
             }
 
@@ -156,13 +158,23 @@ img { vertical-align: top; max-width: 100%; }
 
             @for $i from 2 through 3 {
 
-                &:nth-child(#{$i}) { @include prefix((transition-delay: $delay + ($delay * ($i - 2)) !important), webkit ); }
+                &:nth-child(#{$i}) {
+
+                    @include prefix((transition-delay: $delay + ($delay * ($i - 2)) !important), webkit );
+
+                    &:before { @include prefix((transition-delay: $delay2 + ($delay * ($i - 1))), webkit ); }
+
+                }
 
             }
 
-            &.btn-image { background-image: url("../img/image.svg"); background-size: 16px; }
+            &:before {
 
-            &.btn-code { background-image: url("../img/code.svg"); background-size: 18px; }
+                @include prefix((transform: scale(0), transition: all .2s ease .1s ), webkit );
+
+            }
+
+            &.icon-hr { font-size: 1px; }
 
         }
 
@@ -180,17 +192,17 @@ body:not(.editing) .media-toolbar { display: none; }
 
 .nav { padding: 0; margin: 0; list-style-type: none;
 
-    .nav-item { display: block; padding: 0 20px; color: #000; text-decoration: none; line-height: 30px; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative;
+    .nav-item { display: block; padding: 0 20px; color: #000; text-decoration: none; line-height: 30px; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative;
 
         @include prefix(( transition: all .2s ease ), webkit );
 
-        &:hover { box-shadow: inset -1px 0 #1d365d; color: #1d365d; }
+        &:hover { box-shadow: inset -1px 0 $blue; color: $blue; }
 
     }
 
     li.active {
 
-      > .nav-item { color: #1d365d; }
+      > .nav-item { color: $blue; box-shadow: inset -1px 0 $blue }
 
     }
 
@@ -229,37 +241,19 @@ body:not(.editing) .media-toolbar { display: none; }
 
                 &:first-of-type {
 
-                    h1, h2 { padding-top: 0; }
+                    h1, h2, head1, head2 { padding-top: 0; }
 
                 }
 
             }
 
-            .btn-edit { position: absolute; top: 0; right: -30px; width: 30px; height: 24px; visibility: hidden; opacity: 0; z-index: 1; background: url("../img/edit.svg") right center no-repeat; background-size: 24px 24px; cursor: pointer;
+            .sub-section { min-height: 33px; font-size: 22px; line-height: 33px; color: fade-out($black, .05); font-family: "freight-text-pro",Georgia,Cambria,"Times New Roman",Times,serif;
 
-                @include prefix(( transition: all .5s ease ), webkit );
+                &:empty:after { content: 'Text...'; color: fade-out($black, .7); position: relative; z-index: -1; }
 
-                &.visible { visibility: visible; opacity: .3;
+                h1, head1 { display: block; margin:0; padding: 15px 0; color: fade-out($black, .2); font-size: 60px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; position: relative; line-height: 1; }
 
-                    &:hover { opacity: .5; }
-
-                    &:active { opacity: .8; }
-
-                }
-
-            }
-
-            .sub-section { min-height: 33px; font-size: 22px; line-height: 33px; color: rgba(0,0,0,0.95); font-family: "freight-text-pro",Georgia,Cambria,"Times New Roman",Times,serif;
-
-                &:empty:after { content: 'Text...'; color: rgba(0,0,0,.3); position: relative; z-index: -1; }
-
-                h1 { margin:0; padding: 10px 0 ;color: rgba(0,0,0,0.8); font-size: 60px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; position: relative; line-height: 1;
-
-                    &:empty:after { content: 'Title'; color: rgba(0,0,0,.3) }
-
-                }
-
-                h2 { @extend h1; font-size: 36px; line-height: 1.2; }
+                h2, head2 { @extend h1; font-size: 36px; line-height: 1.2; }
 
                 hr { margin: 0; padding-top: 15px; border: solid #aaa; border-width: 0 0 1px 0; }
 
@@ -289,29 +283,29 @@ body:not(.editing) .media-toolbar { display: none; }
 
     .popup-title { margin: 30px 0 15px; font-size: 30px; text-align: center; }
 
-    .product-list { padding: 0 20px; font-size: 0;
+}
 
-        .product-item { display: inline-block; width: 21%; height: 200px; margin: 2%; position: relative; text-decoration: none; overflow: hidden; background: url("http://placecreature.com/300/200") center no-repeat; background-size: cover; vertical-align: top;
+.product-list { padding: 0 20px; font-size: 0;
 
-            @include prefix(( flex: 1 ), webkit moz ms);
+    .product-item { display: inline-block; width: 21%; height: 200px; margin: 2%; position: relative; text-decoration: none; overflow: hidden; background: url("http://placecreature.com/300/200") center no-repeat; background-size: cover; vertical-align: top;
 
-            .product-name { position: absolute; top: 20px; left: 0; font-size: 20px; background: $black; color: $white; padding: 4px 12px; max-width: 100%; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;
+        @include prefix(( flex: 1 ), webkit moz ms);
 
-                &:hover { text-shadow: 0 0 1px $white; }
+        .product-name { position: absolute; top: 20px; left: 0; font-size: 20px; background: $black; color: $white; padding: 4px 12px; max-width: 100%; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;
 
-                @include prefix(( transition: all .3s ease ), webkit);
+            &:hover { text-shadow: 0 0 1px $white; }
 
-            }
-
-            .product-data { @extend .product-name; top: auto; bottom: 0; font-size: 16px;
-
-                @include prefix(( transform: translate3d(0, 100%, 0) ), webkit moz ms);
-
-            }
-
-            &:hover .product-data { @include prefix(( transform: translate3d(0, -20px, 0) ), webkit moz ms); }
+            @include prefix(( transition: all .3s ease ), webkit);
 
         }
+
+        .product-data { @extend .product-name; top: auto; bottom: 0; font-size: 16px;
+
+            @include prefix(( transform: translate3d(0, 100%, 0) ), webkit moz ms);
+
+        }
+
+        &:hover .product-data { @include prefix(( transform: translate3d(0, -20px, 0) ), webkit moz ms); }
 
     }
 
