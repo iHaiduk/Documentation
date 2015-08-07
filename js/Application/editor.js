@@ -10,27 +10,33 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
     $.Redactor.prototype.insertHead = function() {
       return {
         init: function() {
-          var button, button2;
+          var button, button2, button3;
           button = this.button.add('header1');
           this.button.setAwesome('insertHead', 'fa-h1');
           this.button.addCallback(button, this.insertHead.insertH1);
           button2 = this.button.add('header2');
           this.button.setAwesome('insertHead', 'fa-h2');
           this.button.addCallback(button2, this.insertHead.insertH2);
+          button3 = this.button.add('center');
+          this.button.setAwesome('insertHead', 'fa-center');
+          this.button.addCallback(button3, this.insertHead.center);
         },
-        insertH1: function(html) {
+        insertH1: function() {
           if (this.selection.getParent() && $(this.selection.getParent())[0].tagName.toLowerCase() === 'head2') {
             this.inline.format('head2');
           }
           this.selection.restore();
           this.inline.format('head1');
         },
-        insertH2: function(html) {
+        insertH2: function() {
           if (this.selection.getParent() && $(this.selection.getParent())[0].tagName.toLowerCase() === 'head1') {
             this.inline.format('head1');
           }
           this.selection.restore();
           this.inline.format('head2');
+        },
+        center: function() {
+          this.$element.toggleClass("center");
         }
       };
     };

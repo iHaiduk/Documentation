@@ -14,11 +14,15 @@ require.config({
   waitSeconds: 200,
   paths: {
     "jquery": "Library/jquery.min",
-    "redactor": "Library/redactor"
+    "redactor": "Library/redactor",
+    "font": "http://use.typekit.net/dwg6kzf"
   },
   shim: {
     "jquery": {
       exports: "$"
+    },
+    "font": {
+      exports: "Typekit"
     },
     "redactor": {
       deps: ["jquery"]
@@ -34,7 +38,7 @@ require.config({
 });
 
 this.loadApplication = function(name) {
-  requirejs(["jquery", "redactor", "codemirror"], function($, hljs) {
+  requirejs(["jquery", "redactor", "font", "codemirror"], function($, hljs) {
     require(["Application/app"]);
     require(["Application/menu"]);
   });
