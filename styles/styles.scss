@@ -241,7 +241,7 @@ body:not(.editing) .media-toolbar { display: none; }
 
                 &:first-of-type {
 
-                    h1, h2 { padding-top: 0; }
+                    h1, h2, head1, head2 { padding-top: 0; }
 
                 }
 
@@ -251,13 +251,9 @@ body:not(.editing) .media-toolbar { display: none; }
 
                 &:empty:after { content: 'Text...'; color: fade-out($black, .7); position: relative; z-index: -1; }
 
-                h1 { margin:0; padding: 15px 0; color: fade-out($black, .2); font-size: 60px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; position: relative; line-height: 1;
+                h1, head1 { display: block; margin:0; padding: 15px 0; color: fade-out($black, .2); font-size: 60px; font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif; position: relative; line-height: 1; }
 
-                    &:empty:after { content: 'Title'; color: fade-out($black, .7); }
-
-                }
-
-                h2 { @extend h1; font-size: 36px; line-height: 1.2; }
+                h2, head2 { @extend h1; font-size: 36px; line-height: 1.2; }
 
                 hr { margin: 0; padding-top: 15px; border: solid #aaa; border-width: 0 0 1px 0; }
 
