@@ -104,7 +104,7 @@ img {
       top: 0;
       left: 0;
       width: 38px;
-      height: 32px;
+      height: 36px;
       background: url("../img/search.svg") center no-repeat;
       background-size: 22px;
       text-indent: -9999px;
@@ -211,8 +211,11 @@ img {
       .media-toolbar .btn-toggle.open + .menu-toolbar .btn {
         -webkit-transform: scale(1);
         transform: scale(1);
-        -webkit-transition: all 250ms ease;
-        transition: all 250ms ease; }
+        -webkit-transition: all 0.2s ease;
+        transition: all 0.2s ease; }
+        .media-toolbar .btn-toggle.open + .menu-toolbar .btn:before {
+          -webkit-transform: scale(1);
+          transform: scale(1); }
   .media-toolbar .menu-toolbar {
     visibility: hidden;
     display: inline-block;
@@ -231,15 +234,22 @@ img {
       .media-toolbar .menu-toolbar .btn:nth-child(2) {
         -webkit-transition-delay: 30ms !important;
         transition-delay: 30ms !important; }
+        .media-toolbar .menu-toolbar .btn:nth-child(2):before {
+          -webkit-transition-delay: 130ms;
+          transition-delay: 130ms; }
       .media-toolbar .menu-toolbar .btn:nth-child(3) {
         -webkit-transition-delay: 60ms !important;
         transition-delay: 60ms !important; }
-      .media-toolbar .menu-toolbar .btn.btn-image {
-        background-image: url("../img/image.svg");
-        background-size: 16px; }
-      .media-toolbar .menu-toolbar .btn.btn-code {
-        background-image: url("../img/code.svg");
-        background-size: 18px; }
+        .media-toolbar .menu-toolbar .btn:nth-child(3):before {
+          -webkit-transition-delay: 160ms;
+          transition-delay: 160ms; }
+      .media-toolbar .menu-toolbar .btn:before {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+        -webkit-transition: all 0.2s ease 0.1s;
+        transition: all 0.2s ease 0.1s; }
+      .media-toolbar .menu-toolbar .btn.icon-hr {
+        font-size: 1px; }
 
 body:not(.editing) .media-toolbar {
   display: none; }
@@ -263,7 +273,7 @@ body:not(.editing) .media-toolbar {
     color: #000;
     text-decoration: none;
     line-height: 30px;
-    font-size: 14px;
+    font-size: 16px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -274,7 +284,8 @@ body:not(.editing) .media-toolbar {
       box-shadow: inset -1px 0 #1d365d;
       color: #1d365d; }
   .nav li.active > .nav-item {
-    color: #1d365d; }
+    color: #1d365d;
+    box-shadow: inset -1px 0 #1d365d; }
   .nav .sub-nav {
     margin: 0;
     padding: 0;
@@ -298,27 +309,6 @@ body:not(.editing) .media-toolbar {
     position: relative; }
     .view .section-wrap .section:first-child .sub-section:first-of-type h1, .view .section-wrap .section:first-child .sub-section:first-of-type h2, .view .section-wrap .section:first-child .sub-section:first-of-type h2 {
       padding-top: 0; }
-    .view .section-wrap .section .btn-edit {
-      position: absolute;
-      top: 0;
-      right: -30px;
-      width: 30px;
-      height: 24px;
-      visibility: hidden;
-      opacity: 0;
-      z-index: 1;
-      background: url("../img/edit.svg") right center no-repeat;
-      background-size: 24px 24px;
-      cursor: pointer;
-      -webkit-transition: all 0.5s ease;
-      transition: all 0.5s ease; }
-      .view .section-wrap .section .btn-edit.visible {
-        visibility: visible;
-        opacity: .3; }
-        .view .section-wrap .section .btn-edit.visible:hover {
-          opacity: .5; }
-        .view .section-wrap .section .btn-edit.visible:active {
-          opacity: .8; }
     .view .section-wrap .section .sub-section {
       min-height: 33px;
       font-size: 22px;
@@ -332,7 +322,7 @@ body:not(.editing) .media-toolbar {
         z-index: -1; }
       .view .section-wrap .section .sub-section h1, .view .section-wrap .section .sub-section h2 {
         margin: 0;
-        padding: 10px 0;
+        padding: 15px 0;
         color: rgba(0, 0, 0, 0.8);
         font-size: 60px;
         font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
@@ -394,52 +384,53 @@ body:not(.editing) .media-toolbar {
     margin: 30px 0 15px;
     font-size: 30px;
     text-align: center; }
-  .popup .product-list {
-    padding: 0 20px;
-    font-size: 0; }
-    .popup .product-list .product-item {
-      display: inline-block;
-      width: 21%;
-      height: 200px;
-      margin: 2%;
-      position: relative;
-      text-decoration: none;
+
+.product-list {
+  padding: 0 20px;
+  font-size: 0; }
+  .product-list .product-item {
+    display: inline-block;
+    width: 21%;
+    height: 200px;
+    margin: 2%;
+    position: relative;
+    text-decoration: none;
+    overflow: hidden;
+    background: url("http://placecreature.com/300/200") center no-repeat;
+    background-size: cover;
+    vertical-align: top;
+    -webkit-flex: 1;
+    -moz-flex: 1;
+    -ms-flex: 1;
+    flex: 1; }
+    .product-list .product-item .product-name, .product-list .product-item .product-data {
+      position: absolute;
+      top: 20px;
+      left: 0;
+      font-size: 20px;
+      background: #000;
+      color: #fff;
+      padding: 4px 12px;
+      max-width: 100%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       overflow: hidden;
-      background: url("http://placecreature.com/300/200") center no-repeat;
-      background-size: cover;
-      vertical-align: top;
-      -webkit-flex: 1;
-      -moz-flex: 1;
-      -ms-flex: 1;
-      flex: 1; }
-      .popup .product-list .product-item .product-name, .popup .product-list .product-item .product-data {
-        position: absolute;
-        top: 20px;
-        left: 0;
-        font-size: 20px;
-        background: #000;
-        color: #fff;
-        padding: 4px 12px;
-        max-width: 100%;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        -webkit-transition: all 0.3s ease;
-        transition: all 0.3s ease; }
-        .popup .product-list .product-item .product-name:hover, .popup .product-list .product-item .product-data:hover {
-          text-shadow: 0 0 1px #fff; }
-      .popup .product-list .product-item .product-data {
-        top: auto;
-        bottom: 0;
-        font-size: 16px;
-        -webkit-transform: translate3d(0, 100%, 0);
-        -moz-transform: translate3d(0, 100%, 0);
-        -ms-transform: translate3d(0, 100%, 0);
-        transform: translate3d(0, 100%, 0); }
-      .popup .product-list .product-item:hover .product-data {
-        -webkit-transform: translate3d(0, -20px, 0);
-        -moz-transform: translate3d(0, -20px, 0);
-        -ms-transform: translate3d(0, -20px, 0);
-        transform: translate3d(0, -20px, 0); }
+      -webkit-transition: all 0.3s ease;
+      transition: all 0.3s ease; }
+      .product-list .product-item .product-name:hover, .product-list .product-item .product-data:hover {
+        text-shadow: 0 0 1px #fff; }
+    .product-list .product-item .product-data {
+      top: auto;
+      bottom: 0;
+      font-size: 16px;
+      -webkit-transform: translate3d(0, 100%, 0);
+      -moz-transform: translate3d(0, 100%, 0);
+      -ms-transform: translate3d(0, 100%, 0);
+      transform: translate3d(0, 100%, 0); }
+    .product-list .product-item:hover .product-data {
+      -webkit-transform: translate3d(0, -20px, 0);
+      -moz-transform: translate3d(0, -20px, 0);
+      -ms-transform: translate3d(0, -20px, 0);
+      transform: translate3d(0, -20px, 0); }
 
 /*# sourceMappingURL=styles.css.map */
