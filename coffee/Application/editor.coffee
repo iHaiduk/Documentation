@@ -103,8 +103,7 @@ define [
               lineNumbers: true,
               matchBrackets: true,
               styleActiveLine: true,
-              theme: "monocai"
-              lineNumbers: true
+              theme: "monokai"
               viewportMargin: Infinity
             return
           )
