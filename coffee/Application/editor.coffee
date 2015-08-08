@@ -25,29 +25,30 @@ define [
       init: ->
 # add a button to the toolbar that calls the showMyModal method when clicked
         button = @button.add('header1')
-        @button.setAwesome 'insertHead', 'fa-h1'
         @button.addCallback button, @insertHead.insertH1
         button2 = @button.add('header2')
-        @button.setAwesome 'insertHead', 'fa-h2'
         @button.addCallback button2, @insertHead.insertH2
-        button3 = @button.add('center')
-        @button.setAwesome 'insertHead', 'fa-center'
+        button3 = @button.add('alignment')
         @button.addCallback button3, @insertHead.center
         return
-      insertH1: ->
-# remove formatting from the text pasted into the textarea
-        this.inline.format('head2') if this.selection.getParent() and $(this.selection.getParent())[0].tagName.toLowerCase() =='head2'
-        this.selection.restore();
-        this.inline.format('head1')
+      insertH1: (key)->
+        @inline.format('head1')
+        @selection.restore()
+        @code.sync()
+        @observe.load()
+        @inline.format('head2') if @.selection.getParent() and $(@.selection.getParent())[0].tagName.toLowerCase() =='head2'
         return
-      insertH2: ->
-# remove formatting from the text pasted into the textarea
-        this.inline.format('head1') if this.selection.getParent() and $(this.selection.getParent())[0].tagName.toLowerCase() =='head1'
-        this.selection.restore();
-        this.inline.format('head2')
+      insertH2: (key)->
+        @inline.format('head2')
+        @selection.restore()
+        @code.sync()
+        @observe.load()
+        @inline.format('head1') if @.selection.getParent() and $(@.selection.getParent())[0].tagName.toLowerCase() =='head1'
         return
       center: ->
-        this.$element.toggleClass("center")
+        @selection.restore();
+        @$element.toggleClass("center")
+        @observe.load();
         return
 
       }
@@ -55,6 +56,7 @@ define [
     class Redactor
       constructor: (document, nameElement) ->
         Redactor::redactor = null
+        Redactor::toolbar = null
         Redactor::document = document
         Redactor::nameElement = nameElement
         Redactor::elements = document.find(nameElement)
@@ -68,6 +70,29 @@ define [
           end:
             x: 0
             y: 0
+        Redactor::template =
+          empty: """<div class="section">
+                            <div class="sub-section"></div>
+                            <div class="media-toolbar">
+                                <span class="btn btn-toggle icon-plus"></span>
+                                <div class="menu-toolbar">
+                                    <span class="btn icon-image"></span>
+                                    <span class="btn icon-code"></span>
+                                    <span class="btn icon-hr"></span>
+                                </div>
+                            </div>
+                        </div>"""
+          image: """<img/>"""
+          code: """<textarea class='code'></textarea><select size="7">
+   <option value="1">HTML</option>
+   <option value="2">CSS</option>
+   <option value="3">SASS</option>
+   <option value="4">JavaScript</option>
+   <option value="5">CoffeScript</option>
+   <option value="6">PHP</option>
+   <option value="7">SQL</option>
+  </select>"""
+          hr: """<hr/>"""
 
       Redactor::init = ->
 
@@ -94,34 +119,35 @@ define [
         return
 
       Redactor::addListen = ()->
-        Redactor::document.find(".media-toolbar").off('click').on 'click', ->
-          $(this).addClass("open")
-          return
 
         Redactor::document.find('.btn-toggle').off('click').on 'click', ->
           $(@).toggleClass 'open'
           return
 
+        Redactor::document.find('.icon-image').off('click').on 'click', ->
+          Redactor::mediaButton($(@), "image", Redactor::template.image)
+          return
+
         Redactor::document.find('.icon-code').off('click').on 'click', ->
-          Redactor::mediaButton($(@), "code", "<textarea class='code'></textarea>", (element)->
+          Redactor::mediaButton($(@), "code", Redactor::template.code, (element)->
             Redactor::CodeMirror = CodeMirror.fromTextArea element[0],
               mode: "javascript"
               lineNumbers: true,
               matchBrackets: true,
               styleActiveLine: true,
-              theme: "monokai"
+              theme: "3024-day"
               viewportMargin: Infinity
             return
           )
           return
 
         Redactor::document.find('.icon-hr').off('click').on 'click', ->
-          Redactor::mediaButton($(@), "hr", "<hr/>")
+          Redactor::mediaButton($(@), "hr", Redactor::template.hr)
           return
 
         Redactor::document.find('.remove').off('click').on 'click', ->
           _this = $(@).removeClass('remove').addClass('open')
-          Redactor::addRedactor(_this.parents(".section").find(".sub-section").removeClass("noRedactor").html(''));
+          Redactor::addRedactor(_this.parents(".section").find(".sub-section").removeClass("noRedactor").html(''), true);
           Redactor::addListen()
           return
         return
@@ -137,19 +163,7 @@ define [
 
 
       Redactor::addSection = (block)->
-        newBlock = $("""
-                        <div class="section">
-                            <div class="sub-section"></div>
-                            <div class="media-toolbar">
-                                <span class="btn btn-toggle icon-plus"></span>
-                                <div class="menu-toolbar">
-                                    <span class="btn icon-image"></span>
-                                    <span class="btn icon-code"></span>
-                                    <span class="btn icon-hr">hr</span>
-                                </div>
-                            </div>
-                        </div>
-                        """)
+        newBlock = $(Redactor::template.empty)
         block.after newBlock
         Redactor::elements = Redactor::document.find(Redactor::nameElement)
         Redactor::addRedactor newBlock.find(".sub-section:not(.noRedactor)"), true
@@ -176,7 +190,7 @@ define [
             linebreaks: true
             focus: focus
             tabAsSpaces: 4
-            buttons: ['bold', 'italic', 'deleted', 'link', 'alignment']
+            buttons: ['bold', 'italic', 'deleted', 'link']
             plugins: ['insertHead']
             initCallback: ->
               Redactor::redactor = @
@@ -209,8 +223,8 @@ define [
             focusCallback: (e)->
               Redactor::lastFocus = _docum.find("#viewDoc").find(".section").index(@$element.parent().parent())
               Redactor::showPlusButton(@, true)
-              this.$element.addClass("focus")
-              _elements.not(this.$element).parent().find('.redactor-toolbar').stop().fadeOut 400
+              @$element.addClass("focus")
+              _elements.not(@$element).parent().find('.redactor-toolbar').stop().fadeOut 400
               @$element.parents(".section").find(".media-toolbar .btn-toggle").removeClass("open")
               return
 
@@ -246,6 +260,7 @@ define [
           selection = if not window.getSelection? then window.getSelection() else document.getSelection()
           if selection.type is 'Range'
             toolbar = $(@).prev()
+            Redactor::toolbar = toolbar
             Redactor::toolbarPosition(toolbar)
           else
             element.parent().find('.redactor-toolbar').hide()
@@ -280,7 +295,7 @@ define [
         , 250)
         return
 
-      Redactor::toolbarPosition = (toolbar)->
+      Redactor::toolbarPosition = (toolbar = Redactor::toolbar)->
         readTop = if Redactor::position.start.y < Redactor::position.end.y then 'start' else 'end'
 
         if toolbar.next().length
@@ -296,14 +311,20 @@ define [
               left
               opacity: 1
             }, 150
-            return
+
           else
             if toolbar.next().offset()?
               toolbar.stop().fadeIn(400).css({
                 top
                 left
               }).find(".redactor-act").removeClass("redactor-act")
-              return
+
+
+          toolbar.find(".re-header1, .re-header2").removeClass("redactor-act")
+
+          toolbar.find(".re-header1").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("head1") isnt -1
+          toolbar.find(".re-header2").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("head2") isnt -1
+          return
 
       ###Redactor::viewBox = ()->
           selection = if not window.getSelection? then window.getSelection() else document.getSelection()

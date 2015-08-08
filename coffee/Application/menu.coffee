@@ -24,7 +24,7 @@ define [ 'jquery', 'Application/editor' ], ($) ->
         ).off('mousewheel').on 'mousewheel', ->
           $(window).stop()
           return
-        this
+        @
 
       Menu::fixed = ()->
         top = $(window).scrollTop()
@@ -38,7 +38,7 @@ define [ 'jquery', 'Application/editor' ], ($) ->
         )
         summ = $(arr[arr.length - 1]).parents(".section").height()
         $(arr[arr.length-1]).parents(".section").nextAll(".section").each ->
-          summ += $(this).height()
+          summ += $(@).height()
 
         _document.find(".right-side").css(
           "padding-bottom": $(window).height() - summ - _document.find(".header").outerHeight() - _document.find(".footer").outerHeight() - 31 + "px"
@@ -51,11 +51,11 @@ define [ 'jquery', 'Application/editor' ], ($) ->
         Menu::HeadingCnt = 0
         Menu::MenuHeadingCnt = 0
         _document.find("#viewDoc").find("head1,head2").each ->
-          if($(this)[0].tagName.toLowerCase() is "head1")
+          if($(@)[0].tagName.toLowerCase() is "head1")
             Menu::lastIdHeading++;
             Menu::tree.push(
-              element: $(this).attr("id", "header"+Menu::HeadingCnt)
-              text: $(this).text()
+              element: $(@).attr("id", "header"+Menu::HeadingCnt)
+              text: $(@).text()
               child: []
             )
             Menu::HeadingCnt++
@@ -64,8 +64,8 @@ define [ 'jquery', 'Application/editor' ], ($) ->
           else
             if Menu::lastIdHeading > -1
               Menu::tree[Menu::lastIdHeading].child.push(
-                element: $(this).attr("id", "header"+Menu::HeadingCnt)
-                text: $(this).text()
+                element: $(@).attr("id", "header"+Menu::HeadingCnt)
+                text: $(@).text()
                 active: false
               )
               Menu::HeadingCnt++

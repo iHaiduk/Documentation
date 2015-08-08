@@ -1631,6 +1631,10 @@
 				{
 					return this.$toolbar.find('a.re-' + key);
 				},
+				getAll: function()
+				{
+					return this.$toolbar.find('a');
+				},
 				setActive: function(key)
 				{
 					this.button.get(key).addClass('redactor-act');
