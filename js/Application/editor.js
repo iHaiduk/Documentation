@@ -38,7 +38,8 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         },
         center: function() {
           this.selection.restore();
-          this.$element.toggleClass("center");
+          this.inline.format('center');
+          this.code.sync();
           this.observe.load();
         }
       };
@@ -175,6 +176,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               }
             },
             initCallback: function() {
+              Redactor.prototype.empty();
               Redactor.prototype.redactor = this;
               element.off('click');
               Redactor.prototype.activeElement = element;
@@ -182,6 +184,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               Redactor.prototype.showPlusButton(this);
             },
             changeCallback: function() {
+              Redactor.prototype.empty();
               Redactor.prototype.showPlusButton(this, true);
               if (this.sel.type !== "Range") {
                 _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
@@ -189,6 +192,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             },
             blurCallback: function() {
               var redactor;
+              Redactor.prototype.empty();
               this.$element.removeClass("focus");
               _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
               redactor = this;
@@ -207,6 +211,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               }
             },
             keyupCallback: function() {
+              Redactor.prototype.empty();
               Redactor.prototype.showPlusButton(this, true);
             },
             focusCallback: function(e) {
@@ -218,6 +223,16 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             }
           });
         }
+      };
+
+      Redactor.prototype.empty = function() {
+        _docum.find("#viewDoc").find("p,head1,head2").each(function() {
+          if (!$.trim($(this).text()).length) {
+            $(this).addClass("empty");
+          } else {
+            $(this).removeClass("empty");
+          }
+        });
       };
 
       Redactor.prototype.showPlusButton = function(_redactor, focus) {
