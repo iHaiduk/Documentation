@@ -193,7 +193,6 @@ define [
             plugins: ['insertHead']
             shortcutsAdd: 'ctrl+enter': func: 'insertHead.newRedactor'
             initCallback: ->
-              Redactor::empty()
               Redactor::redactor = @
               element.off 'click'
               Redactor::activeElement = element
@@ -201,12 +200,12 @@ define [
               Redactor::showPlusButton(@)
               return
             changeCallback: ()->
-              Redactor::empty()
+              Redactor::empty(@)
               Redactor::showPlusButton(@, true)
               _elements.parent().find('.redactor-toolbar').stop().fadeOut 400 if @sel.type isnt "Range"
               return
             blurCallback: () ->
-              Redactor::empty()
+              Redactor::empty(@)
               @$element.removeClass("focus")
               _elements.parent().find('.redactor-toolbar').stop().fadeOut 400
               redactor = @
@@ -222,10 +221,10 @@ define [
                 Redactor::addSection(@$element.parents(".section"), true)
               return
             keyupCallback: () ->
-              Redactor::empty()
               Redactor::showPlusButton(@, true)
               return
             focusCallback: (e)->
+              Redactor::empty(@)
               Redactor::lastFocus = _docum.find("#viewDoc").find(".section").index(@$element.parent().parent())
               Redactor::showPlusButton(@, true)
               @$element.addClass("focus")
@@ -235,13 +234,19 @@ define [
 
           return
 
-      Redactor::empty = ->
-        _docum.find("#viewDoc").find("p,head1,head2").each ->
-          if !$.trim($(@).text()).length
-            $(@).addClass("empty")
-          else
-            $(@).removeClass("empty")
-          return
+      Redactor::empty = (_this)->
+        elem = _this.selection.getBlock()
+        _elements = $("#viewDoc").find("p,head1,head2")
+        if _elements.index($(elem)) isnt -1
+          _elements.off("click").on "click", ->
+            Redactor::empty(elem)
+            return
+          _elements.each ->
+            if _elements.index($(@)) is _elements.index($(elem)) and !$.trim($(@).text()).length
+              $(@).addClass("empty")
+            else
+              $(@).removeClass("empty")
+            return
         return
 
       Redactor::showPlusButton = (_redactor, focus = false)->

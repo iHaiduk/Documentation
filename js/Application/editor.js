@@ -176,7 +176,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               }
             },
             initCallback: function() {
-              Redactor.prototype.empty();
               Redactor.prototype.redactor = this;
               element.off('click');
               Redactor.prototype.activeElement = element;
@@ -184,7 +183,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               Redactor.prototype.showPlusButton(this);
             },
             changeCallback: function() {
-              Redactor.prototype.empty();
+              Redactor.prototype.empty(this);
               Redactor.prototype.showPlusButton(this, true);
               if (this.sel.type !== "Range") {
                 _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
@@ -192,7 +191,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             },
             blurCallback: function() {
               var redactor;
-              Redactor.prototype.empty();
+              Redactor.prototype.empty(this);
               this.$element.removeClass("focus");
               _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
               redactor = this;
@@ -211,10 +210,10 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               }
             },
             keyupCallback: function() {
-              Redactor.prototype.empty();
               Redactor.prototype.showPlusButton(this, true);
             },
             focusCallback: function(e) {
+              Redactor.prototype.empty(this);
               Redactor.prototype.lastFocus = _docum.find("#viewDoc").find(".section").index(this.$element.parent().parent());
               Redactor.prototype.showPlusButton(this, true);
               this.$element.addClass("focus");
@@ -225,14 +224,22 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         }
       };
 
-      Redactor.prototype.empty = function() {
-        _docum.find("#viewDoc").find("p,head1,head2").each(function() {
-          if (!$.trim($(this).text()).length) {
-            $(this).addClass("empty");
-          } else {
-            $(this).removeClass("empty");
-          }
-        });
+      Redactor.prototype.empty = function(_this) {
+        var _elements, elem;
+        elem = _this.selection.getBlock();
+        _elements = $("#viewDoc").find("p,head1,head2");
+        if (_elements.index($(elem)) !== -1) {
+          _elements.off("click").on("click", function() {
+            Redactor.prototype.empty(elem);
+          });
+          _elements.each(function() {
+            if (_elements.index($(this)) === _elements.index($(elem)) && !$.trim($(this).text()).length) {
+              $(this).addClass("empty");
+            } else {
+              $(this).removeClass("empty");
+            }
+          });
+        }
       };
 
       Redactor.prototype.showPlusButton = function(_redactor, focus) {
