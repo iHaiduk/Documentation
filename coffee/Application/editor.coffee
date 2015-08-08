@@ -47,8 +47,9 @@ define [
         return
       center: ->
         @selection.restore();
-        @$element.toggleClass("center")
-        @observe.load();
+        @inline.format('center')
+        @code.sync()
+        @observe.load()
         return
 
       }
@@ -192,6 +193,7 @@ define [
             plugins: ['insertHead']
             shortcutsAdd: 'ctrl+enter': func: 'insertHead.newRedactor'
             initCallback: ->
+              Redactor::empty()
               Redactor::redactor = @
               element.off 'click'
               Redactor::activeElement = element
@@ -199,10 +201,12 @@ define [
               Redactor::showPlusButton(@)
               return
             changeCallback: ()->
+              Redactor::empty()
               Redactor::showPlusButton(@, true)
               _elements.parent().find('.redactor-toolbar').stop().fadeOut 400 if @sel.type isnt "Range"
               return
             blurCallback: () ->
+              Redactor::empty()
               @$element.removeClass("focus")
               _elements.parent().find('.redactor-toolbar').stop().fadeOut 400
               redactor = @
@@ -218,6 +222,7 @@ define [
                 Redactor::addSection(@$element.parents(".section"), true)
               return
             keyupCallback: () ->
+              Redactor::empty()
               Redactor::showPlusButton(@, true)
               return
             focusCallback: (e)->
@@ -229,6 +234,15 @@ define [
               return
 
           return
+
+      Redactor::empty = ->
+        _docum.find("#viewDoc").find("p,head1,head2").each ->
+          if !$.trim($(@).text()).length
+            $(@).addClass("empty")
+          else
+            $(@).removeClass("empty")
+          return
+        return
 
       Redactor::showPlusButton = (_redactor, focus = false)->
         active = focus = if !focus and _redactor? then _redactor.focus.isFocused() else focus
