@@ -12,37 +12,41 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         init: function() {
           var button, button2, button3;
           button = this.button.add('header1');
-          this.button.setAwesome('insertHead', 'fa-h1');
           this.button.addCallback(button, this.insertHead.insertH1);
           button2 = this.button.add('header2');
-          this.button.setAwesome('insertHead', 'fa-h2');
           this.button.addCallback(button2, this.insertHead.insertH2);
-          button3 = this.button.add('center');
-          this.button.setAwesome('insertHead', 'fa-center');
+          button3 = this.button.add('alignment');
           this.button.addCallback(button3, this.insertHead.center);
         },
-        insertH1: function() {
+        insertH1: function(key) {
+          this.inline.format('head1');
+          this.selection.restore();
+          this.code.sync();
+          this.observe.load();
           if (this.selection.getParent() && $(this.selection.getParent())[0].tagName.toLowerCase() === 'head2') {
             this.inline.format('head2');
           }
-          this.selection.restore();
-          this.inline.format('head1');
         },
-        insertH2: function() {
+        insertH2: function(key) {
+          this.inline.format('head2');
+          this.selection.restore();
+          this.code.sync();
+          this.observe.load();
           if (this.selection.getParent() && $(this.selection.getParent())[0].tagName.toLowerCase() === 'head1') {
             this.inline.format('head1');
           }
-          this.selection.restore();
-          this.inline.format('head2');
         },
         center: function() {
+          this.selection.restore();
           this.$element.toggleClass("center");
+          this.observe.load();
         }
       };
     };
     Redactor = (function() {
       function Redactor(document, nameElement) {
         Redactor.prototype.redactor = null;
+        Redactor.prototype.toolbar = null;
         Redactor.prototype.document = document;
         Redactor.prototype.nameElement = nameElement;
         Redactor.prototype.elements = document.find(nameElement);
@@ -58,6 +62,12 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             x: 0,
             y: 0
           }
+        };
+        Redactor.prototype.template = {
+          empty: "<div class=\"section\">\n    <div class=\"sub-section\"></div>\n    <div class=\"media-toolbar\">\n        <span class=\"btn btn-toggle icon-plus\"></span>\n        <div class=\"menu-toolbar\">\n            <span class=\"btn icon-image\"></span>\n            <span class=\"btn icon-code\"></span>\n            <span class=\"btn icon-hr\"></span>\n        </div>\n    </div>\n</div>",
+          image: "<img/>",
+          code: "<textarea class='code'></textarea><select size=\"7\">\n <option value=\"1\">HTML</option>\n <option value=\"2\">CSS</option>\n <option value=\"3\">SASS</option>\n <option value=\"4\">JavaScript</option>\n <option value=\"5\">CoffeScript</option>\n <option value=\"6\">PHP</option>\n <option value=\"7\">SQL</option>\n</select>",
+          hr: "<hr/>"
         };
       }
 
@@ -85,31 +95,31 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
       };
 
       Redactor.prototype.addListen = function() {
-        Redactor.prototype.document.find(".media-toolbar").off('click').on('click', function() {
-          $(this).addClass("open");
-        });
         Redactor.prototype.document.find('.btn-toggle').off('click').on('click', function() {
           $(this).toggleClass('open');
         });
+        Redactor.prototype.document.find('.icon-image').off('click').on('click', function() {
+          Redactor.prototype.mediaButton($(this), "image", Redactor.prototype.template.image);
+        });
         Redactor.prototype.document.find('.icon-code').off('click').on('click', function() {
-          Redactor.prototype.mediaButton($(this), "code", "<textarea class='code'></textarea>", function(element) {
+          Redactor.prototype.mediaButton($(this), "code", Redactor.prototype.template.code, function(element) {
             Redactor.prototype.CodeMirror = CodeMirror.fromTextArea(element[0], {
               mode: "javascript",
               lineNumbers: true,
               matchBrackets: true,
               styleActiveLine: true,
-              theme: "monokai",
+              theme: "3024-day",
               viewportMargin: Infinity
             });
           });
         });
         Redactor.prototype.document.find('.icon-hr').off('click').on('click', function() {
-          Redactor.prototype.mediaButton($(this), "hr", "<hr/>");
+          Redactor.prototype.mediaButton($(this), "hr", Redactor.prototype.template.hr);
         });
         Redactor.prototype.document.find('.remove').off('click').on('click', function() {
           var _this;
           _this = $(this).removeClass('remove').addClass('open');
-          Redactor.prototype.addRedactor(_this.parents(".section").find(".sub-section").removeClass("noRedactor").html(''));
+          Redactor.prototype.addRedactor(_this.parents(".section").find(".sub-section").removeClass("noRedactor").html(''), true);
           Redactor.prototype.addListen();
         });
       };
@@ -128,7 +138,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
 
       Redactor.prototype.addSection = function(block) {
         var newBlock;
-        newBlock = $("<div class=\"section\">\n    <div class=\"sub-section\"></div>\n    <div class=\"media-toolbar\">\n        <span class=\"btn btn-toggle icon-plus\"></span>\n        <div class=\"menu-toolbar\">\n            <span class=\"btn icon-image\"></span>\n            <span class=\"btn icon-code\"></span>\n            <span class=\"btn icon-hr\">hr</span>\n        </div>\n    </div>\n</div>");
+        newBlock = $(Redactor.prototype.template.empty);
         block.after(newBlock);
         Redactor.prototype.elements = Redactor.prototype.document.find(Redactor.prototype.nameElement);
         Redactor.prototype.addRedactor(newBlock.find(".sub-section:not(.noRedactor)"), true);
@@ -159,7 +169,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             linebreaks: true,
             focus: focus,
             tabAsSpaces: 4,
-            buttons: ['bold', 'italic', 'deleted', 'link', 'alignment'],
+            buttons: ['bold', 'italic', 'deleted', 'link'],
             plugins: ['insertHead'],
             initCallback: function() {
               Redactor.prototype.redactor = this;
@@ -241,6 +251,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           selection = window.getSelection == null ? window.getSelection() : document.getSelection();
           if (selection.type === 'Range') {
             toolbar = $(this).prev();
+            Redactor.prototype.toolbar = toolbar;
             Redactor.prototype.toolbarPosition(toolbar);
           } else {
             element.parent().find('.redactor-toolbar').hide();
@@ -279,6 +290,9 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
 
       Redactor.prototype.toolbarPosition = function(toolbar) {
         var left, readTop, top;
+        if (toolbar == null) {
+          toolbar = Redactor.prototype.toolbar;
+        }
         readTop = Redactor.prototype.position.start.y < Redactor.prototype.position.end.y ? 'start' : 'end';
         if (toolbar.next().length) {
           top = Redactor.prototype.position[readTop].y - (toolbar.next().offset().top) - toolbar.height() * 2 + 'px';
@@ -299,6 +313,13 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
                 left: left
               }).find(".redactor-act").removeClass("redactor-act");
             }
+          }
+          toolbar.find(".re-header1, .re-header2").removeClass("redactor-act");
+          if (Redactor.prototype.redactor.selection.getHtml().indexOf("head1") !== -1) {
+            toolbar.find(".re-header1").addClass("redactor-act");
+          }
+          if (Redactor.prototype.redactor.selection.getHtml().indexOf("head2") !== -1) {
+            toolbar.find(".re-header2").addClass("redactor-act");
           }
         }
       };
