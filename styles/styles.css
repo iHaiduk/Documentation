@@ -19,9 +19,9 @@ html, body {
 body {
   padding-top: 80px;
   margin: 0;
-  font-family: "futura-pt";
-  font-size: 14px;
-  background: #fff; }
+  font-family: "Verdana";
+  background: #fff;
+  -webkit-font-smoothing: antialiased; }
   body.noScroll {
     overflow: hidden; }
 
@@ -272,7 +272,7 @@ body:not(.editing) .media-toolbar {
     color: #000;
     text-decoration: none;
     line-height: 30px;
-    font-size: 16px;
+    font: 15px "Open Sans", serif;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -306,12 +306,10 @@ body:not(.editing) .media-toolbar {
   background: #fff; }
   .view .section-wrap .section {
     position: relative; }
-    .view .section-wrap .section:first-child .sub-section:first-of-type head1, .view .section-wrap .section:first-child .sub-section:first-of-type head2, .view .section-wrap .section:first-child .sub-section:first-of-type head2 {
-      padding-top: 0; }
     .view .section-wrap .section .sub-section {
       min-height: 33px;
-      font-size: 22px;
-      line-height: 33px;
+      font-size: 16px;
+      line-height: 24px;
       color: rgba(0, 0, 0, 0.95); }
       .view .section-wrap .section .sub-section.center {
         text-align: center; }
@@ -323,14 +321,13 @@ body:not(.editing) .media-toolbar {
       .view .section-wrap .section .sub-section head1, .view .section-wrap .section .sub-section head2 {
         display: block;
         margin: 0;
-        padding: 15px 0;
+        padding: 0 0 18px 0;
         color: rgba(0, 0, 0, 0.8);
-        font-size: 60px;
+        font-size: 46px;
         position: relative;
-        line-height: 1;
-        font-weight: 500; }
+        line-height: 1; }
       .view .section-wrap .section .sub-section head2 {
-        font-size: 36px;
+        font-size: 30px;
         line-height: 1.2; }
       .view .section-wrap .section .sub-section hr {
         margin: 0;

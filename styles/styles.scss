@@ -16,7 +16,7 @@ html * { @include prefix( ( box-sizing: border-box ), webkit moz );}
 
 html, body { height: 100%; }
 
-body { padding-top: 80px; margin: 0; font-family: "futura-pt"; font-size: 14px; background: $white;
+body { padding-top: 80px; margin: 0; font-family: "Verdana"; background: $white; -webkit-font-smoothing: antialiased;
 
     &.noScroll { overflow: hidden; }
 
@@ -196,7 +196,7 @@ body:not(.editing) .media-toolbar { display: none; }
 
 .nav { padding: 0; margin: 0; list-style-type: none;
 
-    .nav-item { display: block; padding: 0 20px; color: #000; text-decoration: none; line-height: 30px; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative;
+    .nav-item { display: block; padding: 0 20px; color: #000; text-decoration: none; line-height: 30px; font: 15px "Open Sans", serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative;
 
         @include prefix(( transition: all .2s ease ), webkit );
 
@@ -241,25 +241,15 @@ body:not(.editing) .media-toolbar { display: none; }
 
         .section { position: relative;
 
-            &:first-child .sub-section {
-
-                &:first-of-type {
-
-                    head1, head2 { padding-top: 0; }
-
-                }
-
-            }
-
-            .sub-section { min-height: 33px; font-size: 22px; line-height: 33px; color: fade-out($black, .05);
+            .sub-section { min-height: 33px; font-size: 16px; line-height: 24px; color: fade-out($black, .05);
 
                 &.center { text-align: center; }
 
                 &:empty:after { content: 'Text...'; color: fade-out($black, .7); position: relative; z-index: -1; }
 
-                head1 { display: block; margin:0; padding: 15px 0; color: fade-out($black, .2); font-size: 60px; position: relative; line-height: 1; font-weight: 500; }
+                head1 { display: block; margin:0; padding: 0 0 18px 0; color: fade-out($black, .2); font-size: 46px; position: relative; line-height: 1; }
 
-                head2 { @extend head1; font-size: 36px; line-height: 1.2; }
+                head2 { @extend head1; font-size: 30px; line-height: 1.2; }
 
                 hr { margin: 0; padding-top: 15px; border: solid #aaa; border-width: 0 0 1px 0; }
 
