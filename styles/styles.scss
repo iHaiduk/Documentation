@@ -24,7 +24,7 @@ body { padding-top: 80px; margin: 0; font-family: "Verdana"; background: $white;
 
 img { vertical-align: top; max-width: 100%; }
 
-.wrap { max-width: 1200px; min-width: 800px; margin: 0 auto; padding: 0 15px; }
+.wrap { max-width: 1400px; min-width: 768px; margin: 0 auto; padding: 0 15px; }
 
 .main { min-height: 100%; margin-bottom: -50px; font-size: 0;
 
@@ -40,19 +40,19 @@ img { vertical-align: top; max-width: 100%; }
 
     .subject { position: absolute; top: 0; left: 20px; font-size: 15px; color: #484848; text-decoration: none; line-height: 60px;
 
-        @include custom_breakpoint(1385) { line-height: 36px; }
+        @include custom_breakpoint(1600) { line-height: 36px; }
 
     }
 
-    .user { @extend .subject; left: auto; right: 10px; top: 14px; margin: 0; width: 36px; height: 36px; border: 1px solid #DEDEDE; border-radius: 100%; overflow: hidden;
+    .user { @extend .subject; left: auto; right: 10px; top: 12px; margin: 0; width: 36px; height: 36px; border: 1px solid #DEDEDE; border-radius: 100%; overflow: hidden;
 
-        @include custom_breakpoint(1385) { top: 0; }
+        @include custom_breakpoint(1600) { top: 0; }
 
     }
 
     .wrap {
 
-        @include custom_breakpoint(1385) { max-width: 100%; padding: 0 53px 0 104px; position: relative; }
+        @include custom_breakpoint(1600) { max-width: 100%; padding: 0 53px 0 104px; position: relative; }
 
     }
 
@@ -186,7 +186,15 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-body:not(.editing) .media-toolbar { display: none; }
+body:not(.editing) {
+
+    .media-toolbar { display: none; }
+
+    .language-list { display: none; }
+
+    .CodeMirror { margin-top: 0; }
+
+}
 
 .footer { height: 50px; padding-top: 5px; background: #f2f2f2; color: #484848;
 
@@ -196,7 +204,9 @@ body:not(.editing) .media-toolbar { display: none; }
 
 .nav { padding: 0; margin: 0; list-style-type: none;
 
-    .nav-item { display: block; padding: 0 20px; color: #000; text-decoration: none; line-height: 30px; font: 15px "Open Sans", serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative;
+    .nav-item { display: block; padding: 0 20px; color: #000; text-decoration: none; font: 15px "Open Sans", serif; font-weight: 600; line-height: 30px; white-space: nowrap; overflow: hidden;
+
+        text-overflow: ellipsis; position: relative;
 
         @include prefix(( transition: all .2s ease ), webkit );
 
@@ -213,7 +223,7 @@ body:not(.editing) .media-toolbar { display: none; }
 
     .sub-nav { margin: 0; padding: 0; list-style-type: none;
 
-        .nav-item { padding: 0 30px; font-size: 13px; line-height: 24px; }
+        .nav-item { padding: 0 30px; font-size: 14px; }
 
     }
 
@@ -227,7 +237,7 @@ body:not(.editing) .media-toolbar { display: none; }
 
         &.active {
 
-            .nav-list { height: 24px; }
+            .nav-list { height: 30px; }
 
         }
 
@@ -252,6 +262,18 @@ body:not(.editing) .media-toolbar { display: none; }
                 head2 { @extend head1; font-size: 30px; line-height: 1.2; }
 
                 hr { margin: 0; padding-top: 15px; border: solid #aaa; border-width: 0 0 1px 0; }
+
+                .CodeMirror { margin-top: 30px; }
+
+                .language-list { position: absolute; top: -30px; left: 0; padding: 0; margin: 0; z-index: 2; list-style-type: none;
+
+                    .language { display: inline-block; vertical-align: top; margin-right: 5px;
+
+                        &:last-child { margin: 0; }
+
+                    }
+
+                }
 
             }
 

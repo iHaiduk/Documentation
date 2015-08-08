@@ -30,8 +30,8 @@ img {
   max-width: 100%; }
 
 .wrap {
-  max-width: 1200px;
-  min-width: 800px;
+  max-width: 1400px;
+  min-width: 768px;
   margin: 0 auto;
   padding: 0 15px; }
 
@@ -71,23 +71,23 @@ img {
     color: #484848;
     text-decoration: none;
     line-height: 60px; }
-    @media (max-width: 1385px) {
+    @media (max-width: 1600px) {
       .header .subject, .header .user {
         line-height: 36px; } }
   .header .user {
     left: auto;
     right: 10px;
-    top: 14px;
+    top: 12px;
     margin: 0;
     width: 36px;
     height: 36px;
     border: 1px solid #DEDEDE;
     border-radius: 100%;
     overflow: hidden; }
-    @media (max-width: 1385px) {
+    @media (max-width: 1600px) {
       .header .user {
         top: 0; } }
-  @media (max-width: 1385px) {
+  @media (max-width: 1600px) {
     .header .wrap {
       max-width: 100%;
       padding: 0 53px 0 104px;
@@ -252,6 +252,10 @@ img {
 
 body:not(.editing) .media-toolbar {
   display: none; }
+body:not(.editing) .language-list {
+  display: none; }
+body:not(.editing) .CodeMirror {
+  margin-top: 0; }
 
 .footer {
   height: 50px;
@@ -271,8 +275,9 @@ body:not(.editing) .media-toolbar {
     padding: 0 20px;
     color: #000;
     text-decoration: none;
-    line-height: 30px;
     font: 15px "Open Sans", serif;
+    font-weight: 600;
+    line-height: 30px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -291,15 +296,14 @@ body:not(.editing) .media-toolbar {
     list-style-type: none; }
     .nav .sub-nav .nav-item {
       padding: 0 30px;
-      font-size: 13px;
-      line-height: 24px; }
+      font-size: 14px; }
   .nav > .nav-list .nav-list {
     height: 0;
     overflow: hidden;
     -webkit-transition: all 0.2s ease 50ms;
     transition: all 0.2s ease 50ms; }
   .nav > .nav-list.active .nav-list {
-    height: 24px; }
+    height: 30px; }
 
 .view .section-wrap {
   margin-bottom: 20px;
@@ -334,6 +338,22 @@ body:not(.editing) .media-toolbar {
         padding-top: 15px;
         border: solid #aaa;
         border-width: 0 0 1px 0; }
+      .view .section-wrap .section .sub-section .CodeMirror {
+        margin-top: 30px; }
+      .view .section-wrap .section .sub-section .language-list {
+        position: absolute;
+        top: -30px;
+        left: 0;
+        padding: 0;
+        margin: 0;
+        z-index: 2;
+        list-style-type: none; }
+        .view .section-wrap .section .sub-section .language-list .language {
+          display: inline-block;
+          vertical-align: top;
+          margin-right: 5px; }
+          .view .section-wrap .section .sub-section .language-list .language:last-child {
+            margin: 0; }
 
 .editing .section:hover .btn-plus {
   visibility: visible;
