@@ -193,7 +193,6 @@ define [
             plugins: ['insertHead']
             shortcutsAdd: 'ctrl+enter': func: 'insertHead.newRedactor'
             initCallback: ->
-              Redactor::empty()
               Redactor::redactor = @
               element.off 'click'
               Redactor::activeElement = element
@@ -201,7 +200,7 @@ define [
               Redactor::showPlusButton(@)
               return
             changeCallback: ()->
-              Redactor::empty()
+              Redactor::empty(this.selection.getBlock())
               Redactor::showPlusButton(@, true)
               _elements.parent().find('.redactor-toolbar').stop().fadeOut 400 if @sel.type isnt "Range"
               return
@@ -222,10 +221,10 @@ define [
                 Redactor::addSection(@$element.parents(".section"), true)
               return
             keyupCallback: () ->
-              Redactor::empty()
               Redactor::showPlusButton(@, true)
               return
             focusCallback: (e)->
+              Redactor::empty(this.selection.getBlock())
               Redactor::lastFocus = _docum.find("#viewDoc").find(".section").index(@$element.parent().parent())
               Redactor::showPlusButton(@, true)
               @$element.addClass("focus")
@@ -235,12 +234,15 @@ define [
 
           return
 
-      Redactor::empty = ->
-        _docum.find("#viewDoc").find("p,head1,head2").each ->
-          if !$.trim($(@).text()).length
-            $(@).addClass("empty")
-          else
-            $(@).removeClass("empty")
+      Redactor::empty = (elem)->
+        _elements = $("#viewDoc").find("p,head1,head2")
+        _elements.each ->
+          console.log(_elements.index($(elem)),_elements.index($(@)), !$.trim($(@).text()).length)
+          if _elements.index($(elem)) isnt -1
+            if _elements.index($(@)) is _elements.index($(elem)) and !$.trim($(@).text()).length
+              $(@).addClass("empty")
+            else
+              $(@).removeClass("empty")
           return
         return
 
