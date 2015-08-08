@@ -306,58 +306,61 @@ body:not(.editing) .CodeMirror {
   .nav > .nav-list.active .nav-list {
     height: 30px; }
 
-.view .section-wrap {
-  background: #fff; }
-  .view .section-wrap .section {
-    position: relative; }
-    .view .section-wrap .section .sub-section {
-      min-height: 33px; }
-      .view .section-wrap .section .sub-section.center {
-        text-align: center; }
-      .view .section-wrap .section .sub-section p {
-        font-size: 16px;
-        line-height: 24px;
-        color: rgba(0, 0, 0, 0.95);
-        margin: 0; }
-        .view .section-wrap .section .sub-section p:empty:after {
-          content: 'Text...';
-          color: rgba(0, 0, 0, 0.3);
-          position: relative;
-          z-index: -1; }
-      .view .section-wrap .section .sub-section head1, .view .section-wrap .section .sub-section head2 {
-        display: block;
-        margin: 0;
-        padding: 0 0 18px 0;
-        color: rgba(0, 0, 0, 0.8);
-        font-size: 46px;
-        position: relative;
-        line-height: 1; }
-        .view .section-wrap .section .sub-section head1 strong, .view .section-wrap .section .sub-section head2 strong {
-          font-weight: normal; }
-      .view .section-wrap .section .sub-section head2 {
-        font-size: 30px;
-        line-height: 1.2; }
-      .view .section-wrap .section .sub-section hr {
-        margin: 0;
-        padding-top: 15px;
-        border: solid #aaa;
-        border-width: 0 0 1px 0; }
-      .view .section-wrap .section .sub-section .CodeMirror {
-        margin-top: 30px; }
-      .view .section-wrap .section .sub-section .language-list {
+.view .section-wrap .section {
+  position: relative; }
+  .view .section-wrap .section .sub-section {
+    min-height: 33px; }
+    .view .section-wrap .section .sub-section p {
+      font-size: 16px;
+      line-height: 24px;
+      color: rgba(0, 0, 0, 0.95);
+      margin: 0; }
+      .view .section-wrap .section .sub-section p.empty:before {
+        content: 'Text...';
+        color: rgba(0, 0, 0, 0.3);
         position: absolute;
-        top: -30px;
-        left: 0;
-        padding: 0;
-        margin: 0;
-        z-index: 2;
-        list-style-type: none; }
-        .view .section-wrap .section .sub-section .language-list .language {
-          display: inline-block;
-          vertical-align: top;
-          margin-right: 5px; }
-          .view .section-wrap .section .sub-section .language-list .language:last-child {
-            margin: 0; }
+        z-index: -1;
+        margin-left: 1px; }
+    .view .section-wrap .section .sub-section head1, .view .section-wrap .section .sub-section head2 {
+      display: block;
+      margin: 0;
+      padding: 0 0 18px 0;
+      color: rgba(0, 0, 0, 0.8);
+      font-size: 46px;
+      position: relative;
+      line-height: 1; }
+      .view .section-wrap .section .sub-section head1 strong, .view .section-wrap .section .sub-section head2 strong {
+        font-weight: normal; }
+      .view .section-wrap .section .sub-section head1.empty:before, .view .section-wrap .section .sub-section head2.empty:before {
+        content: 'Text...';
+        color: rgba(0, 0, 0, 0.3);
+        position: absolute;
+        z-index: -1;
+        margin-left: 1px; }
+    .view .section-wrap .section .sub-section head2 {
+      font-size: 30px;
+      line-height: 1.2; }
+    .view .section-wrap .section .sub-section hr {
+      margin: 0;
+      padding-top: 15px;
+      border: solid #aaa;
+      border-width: 0 0 1px 0; }
+    .view .section-wrap .section .sub-section .CodeMirror {
+      margin-top: 30px; }
+    .view .section-wrap .section .sub-section .language-list {
+      position: absolute;
+      top: -30px;
+      left: 0;
+      padding: 0;
+      margin: 0;
+      z-index: 2;
+      list-style-type: none; }
+      .view .section-wrap .section .sub-section .language-list .language {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: 5px; }
+        .view .section-wrap .section .sub-section .language-list .language:last-child {
+          margin: 0; }
 
 .editing .section:hover .btn-plus {
   visibility: visible;

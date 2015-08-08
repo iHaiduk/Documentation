@@ -247,23 +247,23 @@ body:not(.editing) {
 
 .view {
 
-    .section-wrap { background: $white;
+    .section-wrap {
 
         .section { position: relative;
 
             .sub-section { min-height: 33px;
 
-                &.center { text-align: center; }
-
                 p { font-size: 16px; line-height: 24px; color: fade-out($black, .05); margin: 0;
 
-                    &:empty:after { content: 'Text...'; color: fade-out($black, .7); position: relative; z-index: -1; }
+                    &.empty:before { content: 'Text...'; color: fade-out($black, .7); position: absolute; z-index: -1; margin-left: 1px; }
 
                 }
 
                 head1 { display: block; margin:0; padding: 0 0 18px 0; color: fade-out($black, .2); font-size: 46px; position: relative; line-height: 1;
 
                     strong { font-weight: normal; }
+
+                    &.empty:before { content: 'Text...'; color: fade-out($black, .7); position: absolute; z-index: -1; margin-left: 1px;  }
 
                 }
 
