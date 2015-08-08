@@ -60,9 +60,9 @@ img {
   right: 0;
   height: 60px;
   padding-top: 12px;
-  background: rgba(255, 255, 255, 0.97);
+  background: #fff;
   z-index: 99;
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.15); }
+  box-shadow: 0 0 10px #eee; }
   .header .subject, .header .user {
     position: absolute;
     top: 0;

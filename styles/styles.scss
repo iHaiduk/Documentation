@@ -36,7 +36,7 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-.header { position: fixed; top: 0; left: 0; right: 0; height: 60px; padding-top: 12px; background: fade-out($white, .03); z-index: 99; box-shadow: 0 0 1px fade-out($black, .85);
+.header { position: fixed; top: 0; left: 0; right: 0; height: 60px; padding-top: 12px; background: $white; z-index: 99; box-shadow: 0 0 10px #eee;
 
     .subject { position: absolute; top: 0; left: 20px; font-size: 15px; color: #484848; text-decoration: none; line-height: 60px;
 
