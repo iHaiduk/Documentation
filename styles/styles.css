@@ -185,7 +185,9 @@ img {
   position: absolute;
   top: 0;
   left: -40px;
-  z-index: 1; }
+  z-index: 1;
+  height: 30px;
+  overflow: hidden; }
   .media-toolbar .btn {
     width: 30px;
     height: 30px;
@@ -255,7 +257,7 @@ body:not(.editing) .media-toolbar {
 body:not(.editing) .language-list {
   display: none; }
 body:not(.editing) .CodeMirror {
-  margin-top: 0; }
+  margin-top: 0 !important; }
 
 .footer {
   height: 50px;
@@ -275,7 +277,7 @@ body:not(.editing) .CodeMirror {
     padding: 0 20px;
     color: #000;
     text-decoration: none;
-    font: 15px "Open Sans", serif;
+    font: 14px "Open Sans", serif;
     font-weight: 600;
     line-height: 30px;
     white-space: nowrap;
@@ -295,8 +297,7 @@ body:not(.editing) .CodeMirror {
     padding: 0;
     list-style-type: none; }
     .nav .sub-nav .nav-item {
-      padding: 0 30px;
-      font-size: 14px; }
+      padding: 0 30px; }
   .nav > .nav-list .nav-list {
     height: 0;
     overflow: hidden;
@@ -306,7 +307,6 @@ body:not(.editing) .CodeMirror {
     height: 30px; }
 
 .view .section-wrap {
-  margin-bottom: 20px;
   background: #fff; }
   .view .section-wrap .section {
     position: relative; }
@@ -330,6 +330,8 @@ body:not(.editing) .CodeMirror {
         font-size: 46px;
         position: relative;
         line-height: 1; }
+        .view .section-wrap .section .sub-section head1 strong, .view .section-wrap .section .sub-section head2 strong {
+          font-weight: normal; }
       .view .section-wrap .section .sub-section head2 {
         font-size: 30px;
         line-height: 1.2; }
