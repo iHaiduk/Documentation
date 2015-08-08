@@ -93,7 +93,6 @@ body .redactor-box-fullscreen {
   /*border: 1px solid #eee;*/
   font-size: 22px;
   line-height: 1.5;
-  font-family: "freight-text-pro",Georgia,Cambria,"Times New Roman",Times,serif;
   z-index: 1;
 }
 .redactor-editor:focus {
@@ -119,7 +118,7 @@ body .redactor-box-fullscreen {
 	Toolbar
 */
 .redactor-toolbar {
-  width: 240px !important;
+  width: 235px !important;
   display: none;
   position: absolute !important;
   margin: 0 !important;
@@ -208,7 +207,7 @@ body .redactor-box-fullscreen {
 .redactor-toolbar li a.redactor-act {
   outline: none;
   /*background-color: #ccc;*/
-  color:#33cfff;
+  /*color:#33cfff;*/
 }
 /*.redactor-toolbar li a.redactor-btn-image {*/
   /*width: 14px;*/
@@ -362,6 +361,9 @@ body .redactor-box-fullscreen {
 }
 .re-header2:before {
     content: 'H2';
+}
+.re-center:before {
+    content: 'C';
 }
 /*
 	Toolbar tooltip

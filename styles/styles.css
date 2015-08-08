@@ -391,8 +391,8 @@ body:not(.editing) .media-toolbar {
     margin: 2%;
     position: relative;
     text-decoration: none;
-    overflow: hidden;
     background: url("http://placecreature.com/300/200") center no-repeat;
+    overflow: hidden;
     background-size: cover;
     vertical-align: top;
     -webkit-flex: 1;

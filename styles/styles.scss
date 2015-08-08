@@ -62,7 +62,9 @@ img { vertical-align: top; max-width: 100%; }
 
     .search-wrap { position: relative;
 
-        .search-submit { position: absolute; top: 0; left: 0; width: 38px; height: 36px; background: url("../img/search.svg") center no-repeat; background-size: 22px; text-indent: -9999px; border: none; outline: none; cursor: pointer; }
+        .search-submit { position: absolute; top: 0; left: 0; width: 38px; height: 36px; background: url("../img/search.svg") center no-repeat; background-size: 22px; text-indent: -9999px; border: none;
+
+            outline: none; cursor: pointer; }
 
         .search-text { width: 100%; outline: none; height: 36px; padding: 0 5px 0 35px; border: 1px solid fade-out($black, .85); border-radius: 20px;
 
@@ -86,7 +88,9 @@ img { vertical-align: top; max-width: 100%; }
 
 .editing .btn-plus-wrap { height: 72px; padding: 20px 0; }
 
-.btn { display: inline-block; vertical-align: top; position: relative; height: 36px; padding: 0 16px; color: fade-out($black, .56); background-color: transparent; font-size: 14px; text-align: center; text-decoration: none; cursor: pointer; border: 1px solid #D9D9D9; white-space: nowrap; border-radius: 20px; line-height: 36px;
+.btn { display: inline-block; vertical-align: top; position: relative; height: 36px; padding: 0 16px; color: fade-out($black, .56); background-color: transparent; font-size: 14px; text-align: center;
+
+    text-decoration: none; cursor: pointer; border: 1px solid #D9D9D9; white-space: nowrap; border-radius: 20px; line-height: 36px;
 
     @include prefix(( transition: all .2s ease ), webkit );
 
@@ -273,7 +277,9 @@ body:not(.editing) .media-toolbar { display: none; }
 
     &.visible { visibility: visible; opacity: 1; z-index: 10000; }
 
-    .close { position: absolute; top: 20px; right: 20px; cursor: pointer; width: 30px; height: 30px; color: $black; border-radius: 100%; border: 1px solid $black; font-size: 28px; text-align: center; line-height: 28px; opacity: .5;
+    .close { position: absolute; top: 20px; right: 20px; cursor: pointer; width: 30px; height: 30px; color: $black; border-radius: 100%; border: 1px solid $black; font-size: 28px; text-align: center;
+
+        line-height: 28px; opacity: .5;
 
         @include prefix(( transition: all .3s ease ), webkit );
 
@@ -287,11 +293,15 @@ body:not(.editing) .media-toolbar { display: none; }
 
 .product-list { padding: 0 20px; font-size: 0;
 
-    .product-item { display: inline-block; width: 21%; height: 200px; margin: 2%; position: relative; text-decoration: none; overflow: hidden; background: url("http://placecreature.com/300/200") center no-repeat; background-size: cover; vertical-align: top;
+    .product-item { display: inline-block; width: 21%; height: 200px; margin: 2%; position: relative; text-decoration: none; background: url("http://placecreature.com/300/200") center no-repeat;
+
+        overflow: hidden; background-size: cover; vertical-align: top;
 
         @include prefix(( flex: 1 ), webkit moz ms);
 
-        .product-name { position: absolute; top: 20px; left: 0; font-size: 20px; background: $black; color: $white; padding: 4px 12px; max-width: 100%; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;
+        .product-name { position: absolute; top: 20px; left: 0; font-size: 20px; background: $black; color: $white; padding: 4px 12px; max-width: 100%; white-space: nowrap; text-overflow: ellipsis;
+
+            overflow: hidden;
 
             &:hover { text-shadow: 0 0 1px $white; }
 
