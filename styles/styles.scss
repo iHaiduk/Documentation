@@ -16,7 +16,7 @@ html * { @include prefix( ( box-sizing: border-box ), webkit moz );}
 
 html, body { height: 100%; }
 
-body { padding-top: 80px; margin: 0; font-family: "futura-pt"; font-size: 14px; background: $white;
+body { padding-top: 80px; margin: 0; font-family: "Verdana"; background: $white; -webkit-font-smoothing: antialiased;
 
     &.noScroll { overflow: hidden; }
 
@@ -24,7 +24,7 @@ body { padding-top: 80px; margin: 0; font-family: "futura-pt"; font-size: 14px; 
 
 img { vertical-align: top; max-width: 100%; }
 
-.wrap { max-width: 1200px; min-width: 800px; margin: 0 auto; padding: 0 15px; }
+.wrap { max-width: 1400px; min-width: 768px; margin: 0 auto; padding: 0 15px; }
 
 .main { min-height: 100%; margin-bottom: -50px; font-size: 0;
 
@@ -36,23 +36,23 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-.header { position: fixed; top: 0; left: 0; right: 0; height: 60px; padding-top: 12px; background: fade-out($white, .03); z-index: 99; box-shadow: 0 0 1px fade-out($black, .85);
+.header { position: fixed; top: 0; left: 0; right: 0; height: 60px; padding-top: 12px; background: $white; z-index: 99; box-shadow: 0 0 10px #eee;
 
     .subject { position: absolute; top: 0; left: 20px; font-size: 15px; color: #484848; text-decoration: none; line-height: 60px;
 
-        @include custom_breakpoint(1385) { line-height: 36px; }
+        @include custom_breakpoint(1600) { line-height: 36px; }
 
     }
 
-    .user { @extend .subject; left: auto; right: 10px; top: 14px; margin: 0; width: 36px; height: 36px; border: 1px solid #DEDEDE; border-radius: 100%; overflow: hidden;
+    .user { @extend .subject; left: auto; right: 10px; top: 12px; margin: 0; width: 36px; height: 36px; border: 1px solid #DEDEDE; border-radius: 100%; overflow: hidden;
 
-        @include custom_breakpoint(1385) { top: 0; }
+        @include custom_breakpoint(1600) { top: 0; }
 
     }
 
     .wrap {
 
-        @include custom_breakpoint(1385) { max-width: 100%; padding: 0 53px 0 104px; position: relative; }
+        @include custom_breakpoint(1600) { max-width: 100%; padding: 0 53px 0 104px; position: relative; }
 
     }
 
@@ -62,7 +62,9 @@ img { vertical-align: top; max-width: 100%; }
 
     .search-wrap { position: relative;
 
-        .search-submit { position: absolute; top: 0; left: 0; width: 38px; height: 36px; background: url("../img/search.svg") center no-repeat; background-size: 22px; text-indent: -9999px; border: none; outline: none; cursor: pointer; }
+        .search-submit { position: absolute; top: 0; left: 0; width: 38px; height: 36px; background: url("../img/search.svg") center no-repeat; background-size: 22px; text-indent: -9999px; border: none;
+
+            outline: none; cursor: pointer; }
 
         .search-text { width: 100%; outline: none; height: 36px; padding: 0 5px 0 35px; border: 1px solid fade-out($black, .85); border-radius: 20px;
 
@@ -86,7 +88,9 @@ img { vertical-align: top; max-width: 100%; }
 
 .editing .btn-plus-wrap { height: 72px; padding: 20px 0; }
 
-.btn { display: inline-block; vertical-align: top; position: relative; height: 36px; padding: 0 16px; color: fade-out($black, .56); background-color: transparent; font-size: 14px; text-align: center; text-decoration: none; cursor: pointer; border: 1px solid #D9D9D9; white-space: nowrap; border-radius: 20px; line-height: 36px;
+.btn { display: inline-block; vertical-align: top; position: relative; height: 36px; padding: 0 16px; color: fade-out($black, .56); background-color: transparent; font-size: 14px; text-align: center;
+
+    text-decoration: none; cursor: pointer; border: 1px solid #D9D9D9; white-space: nowrap; border-radius: 20px; line-height: 36px;
 
     @include prefix(( transition: all .2s ease ), webkit );
 
@@ -118,7 +122,7 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-.media-toolbar { display: none; position: absolute; top: 0; left: -40px; z-index: 1;
+.media-toolbar { display: none; position: absolute; top: 0; left: -40px; z-index: 1; height: 30px; overflow: hidden;
 
     .btn { width: 30px; height: 30px; padding: 0; background-position: center; background-repeat: no-repeat; background-color: $white; }
 
@@ -182,7 +186,15 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-body:not(.editing) .media-toolbar { display: none; }
+body:not(.editing) {
+
+    .media-toolbar { display: none; }
+
+    .language-list { display: none; }
+
+    .CodeMirror { margin-top: 0 !important }
+
+}
 
 .footer { height: 50px; padding-top: 5px; background: #f2f2f2; color: #484848;
 
@@ -192,7 +204,9 @@ body:not(.editing) .media-toolbar { display: none; }
 
 .nav { padding: 0; margin: 0; list-style-type: none;
 
-    .nav-item { display: block; padding: 0 20px; color: #000; text-decoration: none; line-height: 30px; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative;
+    .nav-item { display: block; padding: 0 20px; color: #000; text-decoration: none; font: 14px "Open Sans", serif; font-weight: 600; line-height: 30px; white-space: nowrap; overflow: hidden;
+
+        text-overflow: ellipsis; position: relative;
 
         @include prefix(( transition: all .2s ease ), webkit );
 
@@ -209,7 +223,7 @@ body:not(.editing) .media-toolbar { display: none; }
 
     .sub-nav { margin: 0; padding: 0; list-style-type: none;
 
-        .nav-item { padding: 0 30px; font-size: 13px; line-height: 24px; }
+        .nav-item { padding: 0 30px; }
 
     }
 
@@ -223,7 +237,7 @@ body:not(.editing) .media-toolbar { display: none; }
 
         &.active {
 
-            .nav-list { height: 24px; }
+            .nav-list { height: 30px; }
 
         }
 
@@ -233,29 +247,37 @@ body:not(.editing) .media-toolbar { display: none; }
 
 .view {
 
-    .section-wrap { margin-bottom: 20px; background: $white;
+    .section-wrap { background: $white;
 
         .section { position: relative;
 
-            &:first-child .sub-section {
+            .sub-section { min-height: 33px; font-size: 16px; line-height: 24px; color: fade-out($black, .05);
 
-                &:first-of-type {
-
-                    h1, h2, head1, head2 { padding-top: 0; }
-
-                }
-
-            }
-
-            .sub-section { min-height: 33px; font-size: 22px; line-height: 33px; color: fade-out($black, .05);
+                &.center { text-align: center; }
 
                 &:empty:after { content: 'Text...'; color: fade-out($black, .7); position: relative; z-index: -1; }
 
-                h1, head1 { display: block; margin:0; padding: 15px 0; color: fade-out($black, .2); font-size: 60px; position: relative; line-height: 1; font-weight: 500; }
+                head1 { display: block; margin:0; padding: 0 0 18px 0; color: fade-out($black, .2); font-size: 46px; position: relative; line-height: 1;
 
-                h2, head2 { @extend h1; font-size: 36px; line-height: 1.2; }
+                    strong { font-weight: normal; }
+
+                }
+
+                head2 { @extend head1; font-size: 30px; line-height: 1.2; }
 
                 hr { margin: 0; padding-top: 15px; border: solid #aaa; border-width: 0 0 1px 0; }
+
+                .CodeMirror { margin-top: 30px; }
+
+                .language-list { position: absolute; top: -30px; left: 0; padding: 0; margin: 0; z-index: 2; list-style-type: none;
+
+                    .language { display: inline-block; vertical-align: top; margin-right: 5px;
+
+                        &:last-child { margin: 0; }
+
+                    }
+
+                }
 
             }
 
@@ -273,7 +295,9 @@ body:not(.editing) .media-toolbar { display: none; }
 
     &.visible { visibility: visible; opacity: 1; z-index: 10000; }
 
-    .close { position: absolute; top: 20px; right: 20px; cursor: pointer; width: 30px; height: 30px; color: $black; border-radius: 100%; border: 1px solid $black; font-size: 28px; text-align: center; line-height: 28px; opacity: .5;
+    .close { position: absolute; top: 20px; right: 20px; cursor: pointer; width: 30px; height: 30px; color: $black; border-radius: 100%; border: 1px solid $black; font-size: 28px; text-align: center;
+
+        line-height: 28px; opacity: .5;
 
         @include prefix(( transition: all .3s ease ), webkit );
 
@@ -287,11 +311,15 @@ body:not(.editing) .media-toolbar { display: none; }
 
 .product-list { padding: 0 20px; font-size: 0;
 
-    .product-item { display: inline-block; width: 21%; height: 200px; margin: 2%; position: relative; text-decoration: none; overflow: hidden; background: url("http://placecreature.com/300/200") center no-repeat; background-size: cover; vertical-align: top;
+    .product-item { display: inline-block; width: 21%; height: 200px; margin: 2%; position: relative; text-decoration: none; background: url("http://placecreature.com/300/200") center no-repeat;
+
+        overflow: hidden; background-size: cover; vertical-align: top;
 
         @include prefix(( flex: 1 ), webkit moz ms);
 
-        .product-name { position: absolute; top: 20px; left: 0; font-size: 20px; background: $black; color: $white; padding: 4px 12px; max-width: 100%; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;
+        .product-name { position: absolute; top: 20px; left: 0; font-size: 20px; background: $black; color: $white; padding: 4px 12px; max-width: 100%; white-space: nowrap; text-overflow: ellipsis;
+
+            overflow: hidden;
 
             &:hover { text-shadow: 0 0 1px $white; }
 

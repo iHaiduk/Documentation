@@ -93,7 +93,6 @@ body .redactor-box-fullscreen {
   /*border: 1px solid #eee;*/
   font-size: 22px;
   line-height: 1.5;
-  font-family: "freight-text-pro",Georgia,Cambria,"Times New Roman",Times,serif;
   z-index: 1;
 }
 .redactor-editor:focus {
@@ -362,6 +361,9 @@ body .redactor-box-fullscreen {
 }
 .re-header2:before {
     content: 'H2';
+}
+.re-center:before {
+    content: 'C';
 }
 /*
 	Toolbar tooltip
