@@ -5117,10 +5117,10 @@
 					}
 
 					// Shift+Enter or Ctrl+Enter
-					if (key === this.keyCode.ENTER && (e.ctrlKey || e.shiftKey))
+					/*if (key === this.keyCode.ENTER && (e.ctrlKey || e.shiftKey))
 					{
 						return this.keydown.onShiftEnter(e);
-					}
+					}*/
 
 
 					// tab or cmd + [

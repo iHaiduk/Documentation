@@ -139,6 +139,7 @@ define [
               viewportMargin: Infinity
             return
           )
+          Redactor::loadRedactors()
           return
 
         Redactor::document.find('.icon-hr').off('click').on 'click', ->
@@ -156,7 +157,7 @@ define [
         parent = element.parent()
         parent.prev().removeClass('open').addClass('remove')
         code = $(code)
-        parent.parents(".section").find(".sub-section").addClass("noRedactor").attr("data-type",type).redactor('core.destroy').html(code);
+        parent.parents(".section").find(".sub-section").attr("data-type",type).redactor('core.destroy').html(code);
         Redactor::addListen()
         call(code, element) if call? and typeof call is "function"
         return
@@ -192,6 +193,7 @@ define [
             tabAsSpaces: 4
             buttons: ['bold', 'italic', 'deleted', 'link']
             plugins: ['insertHead']
+            shortcutsAdd: 'ctrl+enter': func: 'insertHead.newRedactor'
             initCallback: ->
               Redactor::redactor = @
               element.off 'click'
@@ -213,10 +215,11 @@ define [
               , 10)
               return
             keydownCallback: (e) ->
+              key = e.which
               Redactor::removeRedactor(@$element) if (e.keyCode is 8 or e.keyCode is 46) and @code.get() is ""
-              if e.keyCode is 13
+              if key is @keyCode.ENTER and (e.ctrlKey or e.shiftKey)
                 Redactor::addSection(@$element.parents(".section"), true)
-                false
+              return
             keyupCallback: () ->
               Redactor::showPlusButton(@, true)
               return

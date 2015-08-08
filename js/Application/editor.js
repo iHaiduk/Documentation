@@ -112,6 +112,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               viewportMargin: Infinity
             });
           });
+          Redactor.prototype.loadRedactors();
         });
         Redactor.prototype.document.find('.icon-hr').off('click').on('click', function() {
           Redactor.prototype.mediaButton($(this), "hr", Redactor.prototype.template.hr);
@@ -129,7 +130,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         parent = element.parent();
         parent.prev().removeClass('open').addClass('remove');
         code = $(code);
-        parent.parents(".section").find(".sub-section").addClass("noRedactor").attr("data-type", type).redactor('core.destroy').html(code);
+        parent.parents(".section").find(".sub-section").attr("data-type", type).redactor('core.destroy').html(code);
         Redactor.prototype.addListen();
         if ((call != null) && typeof call === "function") {
           call(code, element);
@@ -171,6 +172,11 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             tabAsSpaces: 4,
             buttons: ['bold', 'italic', 'deleted', 'link'],
             plugins: ['insertHead'],
+            shortcutsAdd: {
+              'ctrl+enter': {
+                func: 'insertHead.newRedactor'
+              }
+            },
             initCallback: function() {
               Redactor.prototype.redactor = this;
               element.off('click');
@@ -194,12 +200,13 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               }, 10);
             },
             keydownCallback: function(e) {
+              var key;
+              key = e.which;
               if ((e.keyCode === 8 || e.keyCode === 46) && this.code.get() === "") {
                 Redactor.prototype.removeRedactor(this.$element);
               }
-              if (e.keyCode === 13) {
+              if (key === this.keyCode.ENTER && (e.ctrlKey || e.shiftKey)) {
                 Redactor.prototype.addSection(this.$element.parents(".section"), true);
-                return false;
               }
             },
             keyupCallback: function() {
