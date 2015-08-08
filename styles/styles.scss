@@ -251,11 +251,15 @@ body:not(.editing) {
 
         .section { position: relative;
 
-            .sub-section { min-height: 33px; font-size: 16px; line-height: 24px; color: fade-out($black, .05);
+            .sub-section { min-height: 33px;
 
                 &.center { text-align: center; }
 
-                &:empty:after { content: 'Text...'; color: fade-out($black, .7); position: relative; z-index: -1; }
+                p { font-size: 16px; line-height: 24px; color: fade-out($black, .05); margin: 0;
+
+                    &:empty:after { content: 'Text...'; color: fade-out($black, .7); position: relative; z-index: -1; }
+
+                }
 
                 head1 { display: block; margin:0; padding: 0 0 18px 0; color: fade-out($black, .2); font-size: 46px; position: relative; line-height: 1;
 

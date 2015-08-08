@@ -311,17 +311,19 @@ body:not(.editing) .CodeMirror {
   .view .section-wrap .section {
     position: relative; }
     .view .section-wrap .section .sub-section {
-      min-height: 33px;
-      font-size: 16px;
-      line-height: 24px;
-      color: rgba(0, 0, 0, 0.95); }
+      min-height: 33px; }
       .view .section-wrap .section .sub-section.center {
         text-align: center; }
-      .view .section-wrap .section .sub-section:empty:after {
-        content: 'Text...';
-        color: rgba(0, 0, 0, 0.3);
-        position: relative;
-        z-index: -1; }
+      .view .section-wrap .section .sub-section p {
+        font-size: 16px;
+        line-height: 24px;
+        color: rgba(0, 0, 0, 0.95);
+        margin: 0; }
+        .view .section-wrap .section .sub-section p:empty:after {
+          content: 'Text...';
+          color: rgba(0, 0, 0, 0.3);
+          position: relative;
+          z-index: -1; }
       .view .section-wrap .section .sub-section head1, .view .section-wrap .section .sub-section head2 {
         display: block;
         margin: 0;
