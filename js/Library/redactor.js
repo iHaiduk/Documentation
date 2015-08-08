@@ -1927,9 +1927,13 @@
 				    if (sel.rangeCount > 0)
 				    {
 				        var range = window.getSelection().getRangeAt(0);
+						console.log(range)
 				        var caretRange = range.cloneRange();
+						console.log(caretRange)
 				        caretRange.selectNodeContents(this.$editor[0]);
+						console.log(range)
 				        caretRange.setEnd(range.endContainer, range.endOffset);
+						console.log(caretRange)
 				        offset = caretRange.toString().length;
 				    }
 

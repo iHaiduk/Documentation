@@ -33,6 +33,7 @@ define [ 'jquery', 'Application/editor' ], ($) ->
         return
 
       Menu::addBottomPadding = () ->
+        return
         arr = jQuery.grep(_document.find("#viewDoc").find("head1,head2"), (val) ->
           true
         )

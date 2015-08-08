@@ -40,6 +40,7 @@ define(['jquery', 'Application/editor'], function($) {
 
       Menu.prototype.addBottomPadding = function() {
         var arr, summ;
+        return;
         arr = jQuery.grep(_document.find("#viewDoc").find("head1,head2"), function(val) {
           return true;
         });

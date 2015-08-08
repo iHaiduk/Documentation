@@ -83,15 +83,15 @@ define [
                             </div>
                         </div>"""
           image: """<img/>"""
-          code: """<textarea class='code'></textarea><select size="7">
-   <option value="1">HTML</option>
-   <option value="2">CSS</option>
-   <option value="3">SASS</option>
-   <option value="4">JavaScript</option>
-   <option value="5">CoffeScript</option>
-   <option value="6">PHP</option>
-   <option value="7">SQL</option>
-  </select>"""
+          code: """<textarea class='code'></textarea><ul class="language-list" >
+          <li class="language">HTML</li>
+          <li class="language">CSS</li>
+          <li class="language">SASS</li>
+          <li class="language">JavaScript</li>
+          <li class="language">CoffeScript</li>
+          <li class="language">PHP</li>
+          <li class="language">SQL</li>
+</ul>"""
           hr: """<hr/>"""
 
       Redactor::init = ->
@@ -157,7 +157,7 @@ define [
         parent = element.parent()
         parent.prev().removeClass('open').addClass('remove')
         code = $(code)
-        parent.parents(".section").find(".sub-section").attr("data-type",type).redactor('core.destroy').html(code);
+        parent.parents(".section").find(".sub-section").addClass("noRedactor").attr("data-type",type).redactor('core.destroy').html(code);
         Redactor::addListen()
         call(code, element) if call? and typeof call is "function"
         return
@@ -186,9 +186,6 @@ define [
           _elements = Redactor::elements
           element.redactor
             iframe: true
-            cleanStyleOnEnter: false
-            cleanSpaces: false
-            linebreaks: true
             focus: focus
             tabAsSpaces: 4
             buttons: ['bold', 'italic', 'deleted', 'link']

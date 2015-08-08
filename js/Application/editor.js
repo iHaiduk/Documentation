@@ -66,7 +66,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         Redactor.prototype.template = {
           empty: "<div class=\"section\">\n    <div class=\"sub-section\"></div>\n    <div class=\"media-toolbar\">\n        <span class=\"btn btn-toggle icon-plus\"></span>\n        <div class=\"menu-toolbar\">\n            <span class=\"btn icon-image\"></span>\n            <span class=\"btn icon-code\"></span>\n            <span class=\"btn icon-hr\"></span>\n        </div>\n    </div>\n</div>",
           image: "<img/>",
-          code: "<textarea class='code'></textarea><select size=\"7\">\n <option value=\"1\">HTML</option>\n <option value=\"2\">CSS</option>\n <option value=\"3\">SASS</option>\n <option value=\"4\">JavaScript</option>\n <option value=\"5\">CoffeScript</option>\n <option value=\"6\">PHP</option>\n <option value=\"7\">SQL</option>\n</select>",
+          code: "<textarea class='code'></textarea><ul class=\"language-list\" >\n<li class=\"language\">HTML</li>\n<li class=\"language\">CSS</li>\n<li class=\"language\">SASS</li>\n<li class=\"language\">JavaScript</li>\n<li class=\"language\">CoffeScript</li>\n<li class=\"language\">PHP</li>\n<li class=\"language\">SQL</li>\n</ul>",
           hr: "<hr/>"
         };
       }
@@ -130,7 +130,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         parent = element.parent();
         parent.prev().removeClass('open').addClass('remove');
         code = $(code);
-        parent.parents(".section").find(".sub-section").attr("data-type", type).redactor('core.destroy').html(code);
+        parent.parents(".section").find(".sub-section").addClass("noRedactor").attr("data-type", type).redactor('core.destroy').html(code);
         Redactor.prototype.addListen();
         if ((call != null) && typeof call === "function") {
           call(code, element);
@@ -165,9 +165,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           _elements = Redactor.prototype.elements;
           element.redactor({
             iframe: true,
-            cleanStyleOnEnter: false,
-            cleanSpaces: false,
-            linebreaks: true,
             focus: focus,
             tabAsSpaces: 4,
             buttons: ['bold', 'italic', 'deleted', 'link'],
