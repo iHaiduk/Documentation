@@ -306,19 +306,21 @@ body:not(.editing) .media-toolbar {
   background: #fff; }
   .view .section-wrap .section {
     position: relative; }
-    .view .section-wrap .section:first-child .sub-section:first-of-type h1, .view .section-wrap .section:first-child .sub-section:first-of-type h2, .view .section-wrap .section:first-child .sub-section:first-of-type head2, .view .section-wrap .section:first-child .sub-section:first-of-type h2, .view .section-wrap .section:first-child .sub-section:first-of-type head1, .view .section-wrap .section:first-child .sub-section:first-of-type head2 {
+    .view .section-wrap .section:first-child .sub-section:first-of-type head1, .view .section-wrap .section:first-child .sub-section:first-of-type head2, .view .section-wrap .section:first-child .sub-section:first-of-type head2 {
       padding-top: 0; }
     .view .section-wrap .section .sub-section {
       min-height: 33px;
       font-size: 22px;
       line-height: 33px;
       color: rgba(0, 0, 0, 0.95); }
+      .view .section-wrap .section .sub-section.center {
+        text-align: center; }
       .view .section-wrap .section .sub-section:empty:after {
         content: 'Text...';
         color: rgba(0, 0, 0, 0.3);
         position: relative;
         z-index: -1; }
-      .view .section-wrap .section .sub-section h1, .view .section-wrap .section .sub-section h2, .view .section-wrap .section .sub-section head2, .view .section-wrap .section .sub-section head1 {
+      .view .section-wrap .section .sub-section head1, .view .section-wrap .section .sub-section head2 {
         display: block;
         margin: 0;
         padding: 15px 0;
@@ -327,7 +329,7 @@ body:not(.editing) .media-toolbar {
         position: relative;
         line-height: 1;
         font-weight: 500; }
-      .view .section-wrap .section .sub-section h2, .view .section-wrap .section .sub-section head2 {
+      .view .section-wrap .section .sub-section head2 {
         font-size: 36px;
         line-height: 1.2; }
       .view .section-wrap .section .sub-section hr {
