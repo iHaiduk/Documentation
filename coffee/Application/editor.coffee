@@ -204,6 +204,8 @@ define [
               Redactor::showPlusButton(@, true)
               _elements.parent().find('.redactor-toolbar').stop().fadeOut 400 if @sel.type isnt "Range"
               return
+            clickCallback: ->
+              console.log(e)
             blurCallback: () ->
               Redactor::empty(@)
               @$element.removeClass("focus")
@@ -235,6 +237,7 @@ define [
           return
 
       Redactor::empty = (_this)->
+        return if _this.selection?
         elem = _this.selection.getBlock()
         _elements = $("#viewDoc").find("p,head1,head2")
         if _elements.index($(elem)) isnt -1
@@ -249,9 +252,15 @@ define [
             return
         return
 
-      Redactor::showPlusButton = (_redactor, focus = false)->
-        active = focus = if !focus and _redactor? then _redactor.focus.isFocused() else focus
-        _docum.find("#viewDoc").find(".section").each ->
+      Redactor::showPlusButton = (_redactor = Redactor::redactor, focus = false)->
+        block = $(_redactor.selection.getBlock())
+        #active = focus = if !focus and _redactor? then _redactor.focus.isFocused() else focus
+        lnght = $(_redactor.selection.getBlock()).text().trim().length
+        _docum.find("#viewDoc").find(".media-toolbar").toggleClass("active", false)
+        console.log lnght, block.parents(".section")
+        if !lnght
+          $("#media-toolbar").toggleClass("active", true).find(".btn-toggle").removeClass("open")
+        ###_docum.find("#viewDoc").find(".section").each ->
 
           active = _redactor? and !$.trim($(@).find(".sub-section").html()).length and Redactor::lastFocus is _docum.find("#viewDoc").find(".section").index($(@)) if focus
           noRedactor = $(@).find(".noRedactor")
@@ -264,7 +273,7 @@ define [
           else
             $(@).find(".media-toolbar").toggleClass("active", active).find(".btn-toggle").removeClass("open")
           return
-        return
+        return###
 
       Redactor::listenEvent = (element)->
         element.off('mousedown mouseup').on('mousedown mouseup', (event) ->
@@ -276,6 +285,7 @@ define [
             Redactor::position.end.x = event.pageX
           return
         ).off('click').on 'click', ->
+          Redactor::showPlusButton(null, true)
           selection = if not window.getSelection? then window.getSelection() else document.getSelection()
           if selection.type is 'Range'
             toolbar = $(@).prev()
