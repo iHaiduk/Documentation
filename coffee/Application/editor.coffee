@@ -149,9 +149,12 @@ define [
           return
 
         Redactor::document.find('.remove').off('click').on 'click', ->
-          _this = $(@).removeClass('remove').addClass('open')
-          Redactor::addRedactor(_this.parents(".section").find(".sub-section").removeClass("noRedactor").html(''), true);
+          _this = $(@)
+          _this.parents(".section").find(".sub-section").removeClass("noRedactor").html('<p></p>')
+          console.log(_this.parents(".section").find(".sub-section"))
+          Redactor::addRedactor(_this.parents(".section").find(".sub-section"), true);
           Redactor::addListen()
+          _this.remove()
           return
         return
 
@@ -177,11 +180,16 @@ define [
         frstSectionArrayHTML = frstSectionArray.join("")
         lastSectionArrayHTML = lastSectionArray.join("")
 
-        parentSection.find(".sub-section").redactor("code.set", frstSectionArrayHTML)
+        if $(frstSectionArrayHTML).text().trim().length
+          parentSection.find(".sub-section").redactor("code.set", frstSectionArrayHTML)
         element = $(code)
-        noRedactorSection = $("<div class='section noRedactor'><div class='sub-section'>"+element+"</div></div>")
+        noRedactorSection = $("<div class='section'><div class='sub-section noRedactor'></div><span class='btn btn-toggle remove'></span></div></div>")
+        noRedactorSection.find(".sub-section").html(element)
         parentSection.after(noRedactorSection)
+        parentSection.remove() if !$(frstSectionArrayHTML).text().trim().length
         Redactor::addSection(noRedactorSection, lastSectionArrayHTML)
+
+        $("#media-toolbar").find(".btn-toggle").removeClass("open")
 
         call(element, noRedactorSection) if call? and typeof call is "function"
         return
@@ -189,7 +197,7 @@ define [
       Redactor::addSection = (block, code)->
         newBlock = $(Redactor::template.empty)
         block.after newBlock
-        Redactor::elements = Redactor::document.find(Redactor::nameElement)
+        Redactor::elements = Redactor::document.find(Redactor::nameElement+":not(.noRedactor)")
         Redactor::addRedactor newBlock.find(".sub-section:not(.noRedactor)"), false, code
         Redactor::addListen()
         return
@@ -205,10 +213,12 @@ define [
         return
 
       Redactor::addRedactor = (element, focus = false, code) ->
-        if element?
+        if element? and !element.hasClass("noRedactor")
+          console.log(element)
           _elements = Redactor::elements
           element.redactor
             iframe: true
+            cleanStyleOnEnter: false
             focus: focus
             tabAsSpaces: 4
             buttons: ['bold', 'italic', 'deleted', 'link']
@@ -223,14 +233,12 @@ define [
               Redactor::showPlusButton(@)
               return
             changeCallback: ()->
-              Redactor::empty(@)
               Redactor::showPlusButton(@, true)
               _elements.parent().find('.redactor-toolbar').stop().fadeOut 400 if @sel.type isnt "Range"
               return
             clickCallback: ->
               console.log(e)
             blurCallback: () ->
-              Redactor::empty(@)
               @$element.removeClass("focus")
               _elements.parent().find('.redactor-toolbar').stop().fadeOut 400
               redactor = @
@@ -245,11 +253,10 @@ define [
               if key is @keyCode.ENTER and (e.ctrlKey or e.shiftKey)
                 Redactor::addSection(@$element.parents(".section"), true)
               return
-            keyupCallback: () ->
+            keyupCallback: (e) ->
               Redactor::showPlusButton(@, true)
               return
             focusCallback: (e)->
-              Redactor::empty(@)
               Redactor::lastFocus = _docum.find("#viewDoc").find(".section").index(@$element.parent().parent())
               Redactor::showPlusButton(@, true)
               @$element.addClass("focus")
@@ -259,44 +266,21 @@ define [
 
           return
 
-      Redactor::empty = (_this)->
-        return if _this.selection?
-        elem = _this.selection.getBlock()
-        _elements = $("#viewDoc").find("p,head1,head2")
-        if _elements.index($(elem)) isnt -1
-          _elements.off("click").on "click", ->
-            Redactor::empty(elem)
-            return
-          _elements.each ->
-            if _elements.index($(@)) is _elements.index($(elem)) and !$.trim($(@).text()).length
-              $(@).addClass("empty")
-            else
-              $(@).removeClass("empty")
-            return
-        return
-
       Redactor::showPlusButton = (_redactor = Redactor::redactor, focus = false)->
         if _redactor? and _redactor.selection?
           block = $(_redactor.selection.getBlock())
           Redactor::lastSection = block
-          lnght = $(_redactor.selection.getBlock()).text().trim().length
+          text = $(_redactor.selection.getBlock()).text().trim()
+          html = $(_redactor.selection.getBlock()).html()
+          html = html.replace(/[\u200B]/g, '') if html?
+          lnght = text.length
           _docum.find("#viewDoc").find(".media-toolbar").toggleClass("active", false)
-          if !lnght and block.length
+          _docum.find("#viewDoc").find("p").toggleClass("empty", false)
+          if (!lnght or (lnght and !html.length)) and block.length
             $("#media-toolbar").toggleClass("active", true).css("top", (block.offset().top-83)+"px").find(".btn-toggle").removeClass("open")
-        ###_docum.find("#viewDoc").find(".section").each ->
-
-          active = _redactor? and !$.trim($(@).find(".sub-section").html()).length and Redactor::lastFocus is _docum.find("#viewDoc").find(".section").index($(@)) if focus
-          noRedactor = $(@).find(".noRedactor")
-
-          unless _redactor? and !noRedactor.length
-
-            noRedactor.addClass("active").find(".btn-toggle").removeClass("open").addClass("remove")
-            Redactor::addListen()
-
-          else
-            $(@).find(".media-toolbar").toggleClass("active", active).find(".btn-toggle").removeClass("open")
+            block.toggleClass("empty", true)
           return
-        return###
+        return
 
       Redactor::listenEvent = (element)->
         element.off('mousedown mouseup').on('mousedown mouseup', (event) ->
@@ -339,7 +323,6 @@ define [
               Redactor::CodeMirror.setOption("readOnly", true)
               return
             return
-
 
         setTimeout(->
           app.Menu.treeGenerate()

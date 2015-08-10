@@ -121,9 +121,12 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         });
         Redactor.prototype.document.find('.remove').off('click').on('click', function() {
           var _this;
-          _this = $(this).removeClass('remove').addClass('open');
-          Redactor.prototype.addRedactor(_this.parents(".section").find(".sub-section").removeClass("noRedactor").html(''), true);
+          _this = $(this);
+          _this.parents(".section").find(".sub-section").removeClass("noRedactor").html('<p></p>');
+          console.log(_this.parents(".section").find(".sub-section"));
+          Redactor.prototype.addRedactor(_this.parents(".section").find(".sub-section"), true);
           Redactor.prototype.addListen();
+          _this.remove();
         });
       };
 
@@ -150,11 +153,18 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         });
         frstSectionArrayHTML = frstSectionArray.join("");
         lastSectionArrayHTML = lastSectionArray.join("");
-        parentSection.find(".sub-section").redactor("code.set", frstSectionArrayHTML);
+        if ($(frstSectionArrayHTML).text().trim().length) {
+          parentSection.find(".sub-section").redactor("code.set", frstSectionArrayHTML);
+        }
         element = $(code);
-        noRedactorSection = $("<div class='section noRedactor'><div class='sub-section'>" + element + "</div></div>");
+        noRedactorSection = $("<div class='section'><div class='sub-section noRedactor'></div><span class='btn btn-toggle remove'></span></div></div>");
+        noRedactorSection.find(".sub-section").html(element);
         parentSection.after(noRedactorSection);
+        if (!$(frstSectionArrayHTML).text().trim().length) {
+          parentSection.remove();
+        }
         Redactor.prototype.addSection(noRedactorSection, lastSectionArrayHTML);
+        $("#media-toolbar").find(".btn-toggle").removeClass("open");
         if ((call != null) && typeof call === "function") {
           call(element, noRedactorSection);
         }
@@ -164,7 +174,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         var newBlock;
         newBlock = $(Redactor.prototype.template.empty);
         block.after(newBlock);
-        Redactor.prototype.elements = Redactor.prototype.document.find(Redactor.prototype.nameElement);
+        Redactor.prototype.elements = Redactor.prototype.document.find(Redactor.prototype.nameElement + ":not(.noRedactor)");
         Redactor.prototype.addRedactor(newBlock.find(".sub-section:not(.noRedactor)"), false, code);
         Redactor.prototype.addListen();
       };
@@ -184,10 +194,12 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         if (focus == null) {
           focus = false;
         }
-        if (element != null) {
+        if ((element != null) && !element.hasClass("noRedactor")) {
+          console.log(element);
           _elements = Redactor.prototype.elements;
           element.redactor({
             iframe: true,
+            cleanStyleOnEnter: false,
             focus: focus,
             tabAsSpaces: 4,
             buttons: ['bold', 'italic', 'deleted', 'link'],
@@ -208,7 +220,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               Redactor.prototype.showPlusButton(this);
             },
             changeCallback: function() {
-              Redactor.prototype.empty(this);
               Redactor.prototype.showPlusButton(this, true);
               if (this.sel.type !== "Range") {
                 _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
@@ -219,7 +230,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             },
             blurCallback: function() {
               var redactor;
-              Redactor.prototype.empty(this);
               this.$element.removeClass("focus");
               _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
               redactor = this;
@@ -237,11 +247,10 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
                 Redactor.prototype.addSection(this.$element.parents(".section"), true);
               }
             },
-            keyupCallback: function() {
+            keyupCallback: function(e) {
               Redactor.prototype.showPlusButton(this, true);
             },
             focusCallback: function(e) {
-              Redactor.prototype.empty(this);
               Redactor.prototype.lastFocus = _docum.find("#viewDoc").find(".section").index(this.$element.parent().parent());
               Redactor.prototype.showPlusButton(this, true);
               this.$element.addClass("focus");
@@ -252,29 +261,8 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         }
       };
 
-      Redactor.prototype.empty = function(_this) {
-        var _elements, elem;
-        if (_this.selection != null) {
-          return;
-        }
-        elem = _this.selection.getBlock();
-        _elements = $("#viewDoc").find("p,head1,head2");
-        if (_elements.index($(elem)) !== -1) {
-          _elements.off("click").on("click", function() {
-            Redactor.prototype.empty(elem);
-          });
-          _elements.each(function() {
-            if (_elements.index($(this)) === _elements.index($(elem)) && !$.trim($(this).text()).length) {
-              $(this).addClass("empty");
-            } else {
-              $(this).removeClass("empty");
-            }
-          });
-        }
-      };
-
       Redactor.prototype.showPlusButton = function(_redactor, focus) {
-        var block, lnght;
+        var block, html, lnght, text;
         if (_redactor == null) {
           _redactor = Redactor.prototype.redactor;
         }
@@ -284,28 +272,20 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         if ((_redactor != null) && (_redactor.selection != null)) {
           block = $(_redactor.selection.getBlock());
           Redactor.prototype.lastSection = block;
-          lnght = $(_redactor.selection.getBlock()).text().trim().length;
-          _docum.find("#viewDoc").find(".media-toolbar").toggleClass("active", false);
-          if (!lnght && block.length) {
-            return $("#media-toolbar").toggleClass("active", true).css("top", (block.offset().top - 83) + "px").find(".btn-toggle").removeClass("open");
+          text = $(_redactor.selection.getBlock()).text().trim();
+          html = $(_redactor.selection.getBlock()).html();
+          if (html != null) {
+            html = html.replace(/[\u200B]/g, '');
           }
+          lnght = text.length;
+          _docum.find("#viewDoc").find(".media-toolbar").toggleClass("active", false);
+          _docum.find("#viewDoc").find("p").toggleClass("empty", false);
+          if ((!lnght || (lnght && !html.length)) && block.length) {
+            $("#media-toolbar").toggleClass("active", true).css("top", (block.offset().top - 83) + "px").find(".btn-toggle").removeClass("open");
+            block.toggleClass("empty", true);
+          }
+          return;
         }
-
-        /*_docum.find("#viewDoc").find(".section").each ->
-        
-          active = _redactor? and !$.trim($(@).find(".sub-section").html()).length and Redactor::lastFocus is _docum.find("#viewDoc").find(".section").index($(@)) if focus
-          noRedactor = $(@).find(".noRedactor")
-        
-          unless _redactor? and !noRedactor.length
-        
-            noRedactor.addClass("active").find(".btn-toggle").removeClass("open").addClass("remove")
-            Redactor::addListen()
-        
-          else
-            $(@).find(".media-toolbar").toggleClass("active", active).find(".btn-toggle").removeClass("open")
-          return
-        return
-         */
       };
 
       Redactor.prototype.listenEvent = function(element) {
