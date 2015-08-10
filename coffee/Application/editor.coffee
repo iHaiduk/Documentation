@@ -179,7 +179,7 @@ define [
 
         parentSection.find(".sub-section").redactor("code.set", frstSectionArrayHTML)
         element = $(code)
-        noRedactorSection = $("<div/>").addClass("section noRedactor").html(element)
+        noRedactorSection = $("<div class='section noRedactor'><div class='sub-section'>"+element+"</div></div>")
         parentSection.after(noRedactorSection)
         Redactor::addSection(noRedactorSection, lastSectionArrayHTML)
 
