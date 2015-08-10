@@ -26,11 +26,11 @@ img { vertical-align: top; max-width: 100%; }
 
 .wrap { max-width: 1400px; min-width: 768px; margin: 0 auto; }
 
-.main { min-height: 100%; margin-bottom: -50px; position: relative;
+.main { min-height: 100%; margin-bottom: -50px; position: relative; font-size: 0;
 
-    .left-side { position: absolute; top: 0; left: 0; width: 25%; padding: 0 45px 0 15px; }
+    .left-side { display: inline-block; width: 25%; padding: 0 45px 0 15px; vertical-align: top; font-size: 16px; }
 
-    .right-side { margin-left: 25%; padding: 0 15px 25px 0; }
+    .right-side { @extend .left-side; width: 75%; padding: 0 15px 25px 0; }
 
     &:after { content: ''; display: block; height: 50px; }
 
@@ -106,7 +106,7 @@ img { vertical-align: top; max-width: 100%; }
 
     &.icon-code { background-image: url("../img/code.svg"); }
 
-    &.icon-hr { background-image: url("../img/hr.svg"); background-position: center; background-repeat: no-repeat; }
+    &.icon-hr { background-image: url("../img/empty.svg"); }
 
     &.btn-accept { float: right; width: 80px; margin-right: -37px;
 
@@ -267,7 +267,7 @@ body:not(.editing) {
 
                 head2 { @extend head1; font-size: 30px; line-height: 1.2; }
 
-                hr { margin: 0; padding-top: 15px; border: solid #aaa; border-width: 0 0 1px 0; }
+                hr { height: 72px; margin: 0; border: none; }
 
                 .CodeMirror { margin-top: 30px; }
 
