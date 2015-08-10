@@ -122,7 +122,7 @@ body .redactor-box-fullscreen {
   display: none;
   position: absolute !important;
   margin: 0 !important;
-  padding: 0 0 0 120px !important;
+  padding: 0 0 0 85px !important;
   list-style: none !important;
   font-size: 14px !important;
   line-height: 1 !important;
@@ -360,7 +360,9 @@ body .redactor-box-fullscreen {
     content: 'C';
 }
 
-.re-header1 { position: absolute; top: 0; left: 0;  }
+.re-header1 { position: absolute; top: 0; left: 15px; margin: 0 !important; }
+
+.re-header2 { position: absolute; top: 0; left: 50px; margin: 0 !important; }
 /*
 	Toolbar tooltip
 */
