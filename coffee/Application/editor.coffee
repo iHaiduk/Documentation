@@ -160,7 +160,7 @@ define [
         lastSectionArray = []
         parentSection = Redactor::lastSection.parents(".section:not(.noRedactor)")
         pos = Redactor::lastSection.parent().find("p").index(Redactor::lastSection.addClass("tempSection"));
-        console.log(pos)
+
         Redactor::lastSection.parent().find("p").each ->
           if Redactor::lastSection.parent().find("p").index($(@)) < pos
             frstSectionArray.push($(@))
@@ -177,12 +177,7 @@ define [
         frstSectionArrayHTML = frstSectionArray.join("")
         lastSectionArrayHTML = lastSectionArray.join("")
 
-        console.log(frstSectionArrayHTML)
-        console.log(lastSectionArrayHTML)
-        console.log(parentSection)
-
-        parentSection.find(".sub-section").html(frstSectionArrayHTML)
-        Redactor::addSection(parentSection, frstSectionArrayHTML)
+        parentSection.find(".sub-section").redactor("code.set", frstSectionArrayHTML)
         element = $(code)
         noRedactorSection = $("<div/>").addClass("section noRedactor").html(element)
         parentSection.after(noRedactorSection)

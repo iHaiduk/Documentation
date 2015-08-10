@@ -133,7 +133,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         lastSectionArray = [];
         parentSection = Redactor.prototype.lastSection.parents(".section:not(.noRedactor)");
         pos = Redactor.prototype.lastSection.parent().find("p").index(Redactor.prototype.lastSection.addClass("tempSection"));
-        console.log(pos);
         Redactor.prototype.lastSection.parent().find("p").each(function() {
           if (Redactor.prototype.lastSection.parent().find("p").index($(this)) < pos) {
             frstSectionArray.push($(this));
@@ -151,11 +150,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         });
         frstSectionArrayHTML = frstSectionArray.join("");
         lastSectionArrayHTML = lastSectionArray.join("");
-        console.log(frstSectionArrayHTML);
-        console.log(lastSectionArrayHTML);
-        console.log(parentSection);
-        parentSection.find(".sub-section").html(frstSectionArrayHTML);
-        Redactor.prototype.addSection(parentSection, frstSectionArrayHTML);
+        parentSection.find(".sub-section").redactor("code.set", frstSectionArrayHTML);
         element = $(code);
         noRedactorSection = $("<div/>").addClass("section noRedactor").html(element);
         parentSection.after(noRedactorSection);
