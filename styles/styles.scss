@@ -66,7 +66,7 @@ img { vertical-align: top; max-width: 100%; }
 
             outline: none; cursor: pointer; }
 
-        .search-text { width: 100%; outline: none; height: 36px; padding: 0 5px 0 35px; border: 1px solid fade-out($black, .85); border-radius: 20px;
+        .search-text { width: 100%; outline: none; height: 36px; padding: 0 5px 0 35px; border: 1px solid fade-out($black, .85); border-radius: 20px; font-family: "Verdana";
 
             @include prefix(( transition: all .2s ease ), webkit );
 
@@ -98,7 +98,15 @@ img { vertical-align: top; max-width: 100%; }
 
     &.btn-product { float: left; width: 25%; width: calc( 25% - 45px ); }
 
-    &.btn-plus { visibility: hidden; opacity: 0; top: 30px; }
+    &.icon-plus { background-image: url("../img/plus.svg"); }
+
+    &.icon-image { background-image: url("../img/image.svg"); }
+
+    &.icon-video { background-image: url("../img/video.svg"); }
+
+    &.icon-code { background-image: url("../img/code.svg"); }
+
+    &.icon-hr { background-image: url("../img/hr.svg"); background-position: center; background-repeat: no-repeat; }
 
     &.btn-accept { float: right; width: 80px; margin-right: -37px;
 
@@ -124,7 +132,7 @@ img { vertical-align: top; max-width: 100%; }
 
 .media-toolbar { display: none; position: absolute; top: 0; left: -40px; z-index: 1; height: 30px; overflow: hidden;
 
-    .btn { width: 30px; height: 30px; padding: 0; background-position: center; background-repeat: no-repeat; background-color: $white; }
+    .btn { width: 30px; height: 30px; padding: 0; background-size: 100%; background-color: $white; border: none; }
 
     &.active { display: block; }
 
@@ -144,8 +152,6 @@ img { vertical-align: top; max-width: 100%; }
 
                 @include prefix(( transform: scale(1), transition: all .2s ease ), webkit );
 
-                &:before { @include prefix((transform: scale(1) ), webkit ); }
-
             }
 
         }
@@ -160,25 +166,15 @@ img { vertical-align: top; max-width: 100%; }
 
             &:last-child { margin: 0; }
 
-            @for $i from 2 through 3 {
+            @for $i from 2 through 4 {
 
                 &:nth-child(#{$i}) {
 
                     @include prefix((transition-delay: $delay + ($delay * ($i - 2)) !important), webkit );
 
-                    &:before { @include prefix((transition-delay: $delay2 + ($delay * ($i - 1))), webkit ); }
-
                 }
 
             }
-
-            &:before {
-
-                @include prefix((transform: scale(0), transition: all .2s ease .1s ), webkit );
-
-            }
-
-            &.icon-hr { font-size: 1px; }
 
         }
 
@@ -193,6 +189,8 @@ body:not(.editing) {
     .language-list { display: none; }
 
     .CodeMirror { margin-top: 0 !important }
+
+    .empty:before { display: none !important; }
 
 }
 
