@@ -37,8 +37,7 @@ img {
 
 .main {
   min-height: 100%;
-  margin-bottom: -50px;
-  font-size: 0; }
+  margin-bottom: -50px; }
   .main .left-side {
     display: inline-block;
     width: 25%;
