@@ -24,13 +24,13 @@ body { padding-top: 80px; margin: 0; font-family: "Verdana"; background: $white;
 
 img { vertical-align: top; max-width: 100%; }
 
-.wrap { max-width: 1400px; min-width: 768px; margin: 0 auto; padding: 0 15px; }
+.wrap { max-width: 1400px; min-width: 768px; margin: 0 auto; }
 
-.main { min-height: 100%; margin-bottom: -50px; font-size: 0;
+.main { min-height: 100%; margin-bottom: -50px; position: relative;
 
-    .left-side { display: inline-block; width: 25%; padding-right: 45px; vertical-align: top; }
+    .left-side { position: absolute; top: 0; left: 0; width: 25%; padding: 0 45px 0 15px; }
 
-    .right-side { display: inline-block; width: 75%; vertical-align: top; }
+    .right-side { margin-left: 25%; padding: 0 15px 25px 0; }
 
     &:after { content: ''; display: block; height: 50px; }
 
@@ -40,19 +40,19 @@ img { vertical-align: top; max-width: 100%; }
 
     .subject { position: absolute; top: 0; left: 20px; font-size: 15px; color: #484848; text-decoration: none; line-height: 60px;
 
-        @include custom_breakpoint(1600) { line-height: 36px; }
+        @include custom_breakpoint(1635) { line-height: 36px; }
 
     }
 
     .user { @extend .subject; left: auto; right: 10px; top: 12px; margin: 0; width: 36px; height: 36px; border: 1px solid #DEDEDE; border-radius: 100%; overflow: hidden;
 
-        @include custom_breakpoint(1600) { top: 0; }
+        @include custom_breakpoint(1635) { top: 0; }
 
     }
 
     .wrap {
 
-        @include custom_breakpoint(1600) { max-width: 100%; padding: 0 53px 0 104px; position: relative; }
+        @include custom_breakpoint(1635) { max-width: 100%; padding: 0 53px 0 110px; position: relative; }
 
     }
 
@@ -194,9 +194,9 @@ body:not(.editing) {
 
 }
 
-.footer { height: 50px; padding-top: 5px; background: #f2f2f2; color: #484848;
+.footer { height: 50px; padding-top: 5px; background: #f2f2f2; color: #484848; position: relative;
 
-    .footer-text { margin: 0; line-height: 20px; }
+    .footer-text { margin: 0; padding: 0 15px; line-height: 20px; font-size: 14px; }
 
 }
 
