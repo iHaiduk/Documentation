@@ -64,6 +64,7 @@ define [
         Redactor::activeElement = null
         Redactor::CodeMirror = null
         Redactor::lastFocus = null
+        Redactor::lastSection = null
         Redactor::position =
           start:
             x: 0
@@ -126,25 +127,25 @@ define [
           return
 
         Redactor::document.find('.icon-image').off('click').on 'click', ->
-          Redactor::mediaButton($(@), "image", Redactor::template.image)
+          Redactor::mediaButton("image", Redactor::template.image)
           return
 
         Redactor::document.find('.icon-code').off('click').on 'click', ->
-          Redactor::mediaButton($(@), "code", Redactor::template.code, (element)->
+          Redactor::mediaButton("code", Redactor::template.code, (element)->
             Redactor::CodeMirror = CodeMirror.fromTextArea element[0],
               mode: "javascript"
-              lineNumbers: true,
-              matchBrackets: true,
-              styleActiveLine: true,
+              lineNumbers: true
+              matchBrackets: true
+              styleActiveLine: true
+              htmlMode: true
               theme: "3024-day"
-              viewportMargin: Infinity
             return
           )
           Redactor::loadRedactors()
           return
 
         Redactor::document.find('.icon-hr').off('click').on 'click', ->
-          Redactor::mediaButton($(@), "hr", Redactor::template.hr)
+          Redactor::mediaButton("hr", Redactor::template.hr)
           return
 
         Redactor::document.find('.remove').off('click').on 'click', ->
@@ -154,21 +155,42 @@ define [
           return
         return
 
-      Redactor::mediaButton = (element, type, code, call)->
-        parent = element.parent()
-        parent.prev().removeClass('open').addClass('remove')
-        code = $(code)
-        parent.parents(".section").find(".sub-section").addClass("noRedactor").attr("data-type",type).redactor('core.destroy').html(code);
-        Redactor::addListen()
-        call(code, element) if call? and typeof call is "function"
+      Redactor::mediaButton = (type, code, call)->
+        frstSectionArray = []
+        lastSectionArray = []
+        parentSection = Redactor::lastSection.parents(".section:not(.noRedactor)")
+        pos = Redactor::lastSection.parent().find("p").index(Redactor::lastSection.addClass("tempSection"));
+
+        Redactor::lastSection.parent().find("p").each ->
+          if Redactor::lastSection.parent().find("p").index($(@)) < pos
+            frstSectionArray.push($(@))
+          if Redactor::lastSection.parent().find("p").index($(@)) > pos
+            lastSectionArray.push($(@))
+          return
+        Redactor::lastSection.removeClass("tempSection")
+        frstSectionArray = frstSectionArray.map (el) ->
+          el.get()[0].outerHTML
+
+        lastSectionArray = lastSectionArray.map (el) ->
+          el.get()[0].outerHTML
+
+        frstSectionArrayHTML = frstSectionArray.join("")
+        lastSectionArrayHTML = lastSectionArray.join("")
+
+        parentSection.find(".sub-section").redactor("code.set", frstSectionArrayHTML)
+        element = $(code)
+        noRedactorSection = $("<div/>").addClass("section noRedactor").html(element)
+        parentSection.after(noRedactorSection)
+        Redactor::addSection(noRedactorSection, lastSectionArrayHTML)
+
+        call(element, noRedactorSection) if call? and typeof call is "function"
         return
 
-
-      Redactor::addSection = (block)->
+      Redactor::addSection = (block, code)->
         newBlock = $(Redactor::template.empty)
         block.after newBlock
         Redactor::elements = Redactor::document.find(Redactor::nameElement)
-        Redactor::addRedactor newBlock.find(".sub-section:not(.noRedactor)"), true
+        Redactor::addRedactor newBlock.find(".sub-section:not(.noRedactor)"), false, code
         Redactor::addListen()
         return
 
@@ -182,7 +204,7 @@ define [
           return
         return
 
-      Redactor::addRedactor = (element, focus = false) ->
+      Redactor::addRedactor = (element, focus = false, code) ->
         if element?
           _elements = Redactor::elements
           element.redactor
@@ -194,6 +216,7 @@ define [
             shortcutsAdd: 'ctrl+enter': func: 'insertHead.newRedactor'
             initCallback: ->
               Redactor::redactor = @
+              @code.set(code) if code?
               element.off 'click'
               Redactor::activeElement = element
               Redactor::listenEvent element
@@ -253,13 +276,13 @@ define [
         return
 
       Redactor::showPlusButton = (_redactor = Redactor::redactor, focus = false)->
-        block = $(_redactor.selection.getBlock())
-        #active = focus = if !focus and _redactor? then _redactor.focus.isFocused() else focus
-        lnght = $(_redactor.selection.getBlock()).text().trim().length
-        _docum.find("#viewDoc").find(".media-toolbar").toggleClass("active", false)
-        console.log lnght, block.parents(".section")
-        if !lnght
-          $("#media-toolbar").toggleClass("active", true).find(".btn-toggle").removeClass("open")
+        if _redactor? and _redactor.selection?
+          block = $(_redactor.selection.getBlock())
+          Redactor::lastSection = block
+          lnght = $(_redactor.selection.getBlock()).text().trim().length
+          _docum.find("#viewDoc").find(".media-toolbar").toggleClass("active", false)
+          if !lnght and block.length
+            $("#media-toolbar").toggleClass("active", true).css("top", (block.offset().top-83)+"px").find(".btn-toggle").removeClass("open")
         ###_docum.find("#viewDoc").find(".section").each ->
 
           active = _redactor? and !$.trim($(@).find(".sub-section").html()).length and Redactor::lastFocus is _docum.find("#viewDoc").find(".section").index($(@)) if focus
