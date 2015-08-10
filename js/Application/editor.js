@@ -152,7 +152,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         lastSectionArrayHTML = lastSectionArray.join("");
         parentSection.find(".sub-section").redactor("code.set", frstSectionArrayHTML);
         element = $(code);
-        noRedactorSection = $("<div/>").addClass("section noRedactor").html(element);
+        noRedactorSection = $("<div class='section noRedactor'><div class='sub-section'>" + element + "</div></div>");
         parentSection.after(noRedactorSection);
         Redactor.prototype.addSection(noRedactorSection, lastSectionArrayHTML);
         if ((call != null) && typeof call === "function") {
