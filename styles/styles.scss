@@ -190,7 +190,7 @@ img { vertical-align: top; max-width: 100%; }
 
 .link { opacity: 0; visibility: hidden; position: absolute; top: 0; left: 0; z-index: 1;  width: 240px; background-image: linear-gradient(to bottom, rgba(49, 49, 47, 0.99), #262625); border-radius: 5px;
 
-    @include prefix(( transition: all .2s ease ), webkit );
+    @include prefix(( transition: opacity .2s ease 50ms), webkit );
 
     &.active { opacity: 1; visibility: visible; }
 

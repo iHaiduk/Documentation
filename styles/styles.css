@@ -270,8 +270,8 @@ img {
   width: 240px;
   background-image: linear-gradient(to bottom, rgba(49, 49, 47, 0.99), #262625);
   border-radius: 5px;
-  -webkit-transition: all 0.2s ease;
-  transition: all 0.2s ease; }
+  -webkit-transition: opacity 0.2s ease 50ms;
+  transition: opacity 0.2s ease 50ms; }
   .link.active {
     opacity: 1;
     visibility: visible; }
