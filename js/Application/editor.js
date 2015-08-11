@@ -86,7 +86,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         Redactor.prototype.template = {
           empty: "<div class=\"section\">\n    <div class=\"sub-section\"></div>\n    <div class=\"media-toolbar\">\n        <span class=\"btn btn-toggle icon-plus\"></span>\n        <div class=\"menu-toolbar\">\n            <span class=\"btn icon-image\"></span>\n            <span class=\"btn icon-code\"></span>\n            <span class=\"btn icon-hr\"></span>\n        </div>\n    </div>\n</div>",
           image: "<img/>",
-          code: "<textarea class='code'></textarea><ul class=\"language-list\" >\n<li class=\"language\" data-type=\"htmlmixed\">HTML</li>\n<li class=\"language\" data-type=\"CSS\">CSS</li>\n<li class=\"language\" data-type=\"SASS\">SASS</li>\n<li class=\"language\" data-type=\"JavaScript\">JavaScript</li>\n<li class=\"language\" data-type=\"coffeescript\">CoffeeScript</li>\n<li class=\"language\" data-type=\"PHP\">PHP</li>\n<li class=\"language\" data-type=\"SQL\">SQL</li>\n</ul>",
+          code: "<textarea class='code'>fgjfgjfgjfgjfgjfgj</textarea><ul class=\"language-list\" >\n<li class=\"language\" data-type=\"htmlmixed\">HTML</li>\n<li class=\"language\" data-type=\"CSS\">CSS</li>\n<li class=\"language\" data-type=\"SASS\">SASS</li>\n<li class=\"language\" data-type=\"JavaScript\">JavaScript</li>\n<li class=\"language\" data-type=\"coffeescript\">CoffeeScript</li>\n<li class=\"language\" data-type=\"PHP\">PHP</li>\n<li class=\"language\" data-type=\"SQL\">SQL</li>\n</ul>",
           hr: "<hr/>"
         };
       }
@@ -149,10 +149,9 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               htmlMode: true,
               theme: "3024-day"
             });
-            Redactor.prototype.save(false);
             Redactor.prototype.changeTypeListen();
+            Redactor.prototype.loadRedactors();
           });
-          Redactor.prototype.loadRedactors();
         });
         Redactor.prototype.document.find('.icon-hr').off('click').on('click', function() {
           Redactor.prototype.mediaButton("hr", Redactor.prototype.template.hr);
@@ -171,14 +170,19 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         var element, frstSectionArray, frstSectionArrayHTML, lastSectionArray, lastSectionArrayHTML, noRedactorSection, parentSection, pos;
         frstSectionArray = [];
         lastSectionArray = [];
-        parentSection = Redactor.prototype.lastSection.parents(".section:not(.noRedactor)");
-        pos = Redactor.prototype.lastSection.parent().find("p").index(Redactor.prototype.lastSection.addClass("tempSection"));
-        Redactor.prototype.lastSection.parent().find("p").each(function() {
-          if (Redactor.prototype.lastSection.parent().find("p").index($(this)) < pos) {
-            frstSectionArray.push($(this));
-          }
-          if (Redactor.prototype.lastSection.parent().find("p").index($(this)) > pos) {
-            lastSectionArray.push($(this));
+        parentSection = Redactor.prototype.lastSection.parents(".sub-section");
+        pos = parentSection.find("*").index(Redactor.prototype.lastSection.addClass("tempSection"));
+        console.log(Redactor.prototype.lastSection, parentSection);
+        parentSection.find("*").each(function() {
+          if (parentSection.find("p").index($(this)) >= 0) {
+            if (parentSection.find("p").index($(this)) < pos && $(this).text().trim().length) {
+              console.log(parentSection.find("p").index($(this)), pos, $(this).html());
+              frstSectionArray.push($(this));
+            }
+            if (parentSection.find("p").index($(this)) > pos && $(this).text().trim().length) {
+              console.log(parentSection.find("p").index($(this)), pos, $(this).html());
+              lastSectionArray.push($(this));
+            }
           }
         });
         Redactor.prototype.lastSection.removeClass("tempSection");
@@ -188,14 +192,13 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         lastSectionArray = lastSectionArray.map(function(el) {
           return el.get()[0].outerHTML;
         });
-        frstSectionArrayHTML = frstSectionArray.join("");
-        lastSectionArrayHTML = lastSectionArray.join("");
-        if ($(frstSectionArrayHTML).text().trim().length) {
-          parentSection.find(".sub-section").redactor("code.set", frstSectionArrayHTML);
-        }
+        frstSectionArrayHTML = "<p>" + frstSectionArray.join("</p><p>") + "</p>";
+        lastSectionArrayHTML = "<p>" + lastSectionArray.join("</p><p>") + "</p>";
+        parentSection.redactor("code.set", frstSectionArrayHTML);
         element = $(code);
         noRedactorSection = $("<div class='section'><div class='sub-section noRedactor'></div><span class='btn btn-toggle remove'></span></div></div>");
         noRedactorSection.find(".sub-section").html(element);
+        parentSection.find("head1.empty, head2.empty").remove();
         parentSection.after(noRedactorSection);
         if (!$(frstSectionArrayHTML).text().trim().length) {
           parentSection.remove();
@@ -278,6 +281,15 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               }
             },
             keyupCallback: function(e) {
+              var key;
+              key = e.which;
+
+              /*if (e.keyCode is 13)
+                @selection.restore()
+                $(@selection.getCurrent()).replaceWith("<p><br></p>")
+                @code.sync()
+                @observe.load()
+               */
               Redactor.prototype.showPlusButton(this, true);
             },
             focusCallback: function(e) {
@@ -300,9 +312,9 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           focus = false;
         }
         if ((_redactor != null) && (_redactor.selection != null)) {
-          block = $(_redactor.selection.getBlock());
+          block = $(_redactor.selection.getCurrent())[0] != null ? $(_redactor.selection.getCurrent()) : $(_redactor.selection.getBlock());
           Redactor.prototype.lastSection = block;
-          text = $(_redactor.selection.getBlock()).text().trim();
+          text = block.text().trim();
           html = $(_redactor.selection.getBlock()).html();
           if (html != null) {
             html = html.replace(/[\u200B]/g, '');
