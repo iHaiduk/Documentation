@@ -108,6 +108,12 @@ img { vertical-align: top; max-width: 100%; }
 
     &.icon-hr { background-image: url("../img/empty.svg"); }
 
+    &.remove { position: absolute; top: 5px; left: -40px; width: 30px; height: 30px; padding: 0; background-size: 100%; background-color: $white; border: none; background-image: url("../img/plus.svg");
+
+        @include prefix(( transform: rotate(45deg)), webkit );
+
+    }
+
     &.btn-accept { float: right; width: 80px; margin-right: -37px;
 
         &.btn-edit {
@@ -140,7 +146,7 @@ img { vertical-align: top; max-width: 100%; }
 
         @include prefix(( transition: all 250ms ease ), webkit );
 
-        &.open, &.remove {
+        &.open {
 
             @include prefix(( transform: rotate(45deg)), webkit );
 
@@ -191,6 +197,8 @@ body:not(.editing) {
     .CodeMirror { margin-top: 0 !important }
 
     .empty:before { display: none !important; }
+
+    .remove { display: none; }
 
 }
 
@@ -249,7 +257,7 @@ body:not(.editing) {
 
         .section { position: relative;
 
-            .sub-section { min-height: 33px;
+            .sub-section {
 
                 p { font-size: 16px; line-height: 24px; color: fade-out($black, .05); margin: 0;
 

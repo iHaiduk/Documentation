@@ -172,6 +172,19 @@ img {
     background-image: url("../img/code.svg"); }
   .btn.icon-hr {
     background-image: url("../img/empty.svg"); }
+  .btn.remove {
+    position: absolute;
+    top: 5px;
+    left: -40px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    background-size: 100%;
+    background-color: #fff;
+    border: none;
+    background-image: url("../img/plus.svg");
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg); }
   .btn.btn-accept {
     float: right;
     width: 80px;
@@ -210,7 +223,7 @@ img {
     line-height: 26px;
     -webkit-transition: all 250ms ease;
     transition: all 250ms ease; }
-    .media-toolbar .btn-toggle.open, .media-toolbar .btn-toggle.remove {
+    .media-toolbar .btn-toggle.open {
       -webkit-transform: rotate(45deg);
       transform: rotate(45deg); }
     .media-toolbar .btn-toggle.open + .menu-toolbar {
@@ -255,6 +268,8 @@ body:not(.editing) .CodeMirror {
   margin-top: 0 !important; }
 body:not(.editing) .empty:before {
   display: none !important; }
+body:not(.editing) .remove {
+  display: none; }
 
 .footer {
   height: 50px;
@@ -310,58 +325,56 @@ body:not(.editing) .empty:before {
   position: relative; }
   .view .section-wrap .section {
     position: relative; }
-    .view .section-wrap .section .sub-section {
-      min-height: 33px; }
-      .view .section-wrap .section .sub-section p {
-        font-size: 16px;
-        line-height: 24px;
-        color: rgba(0, 0, 0, 0.95);
-        margin: 0; }
-        .view .section-wrap .section .sub-section p.empty:before {
-          content: 'Text...';
-          color: rgba(0, 0, 0, 0.3);
-          position: absolute;
-          z-index: -1;
-          margin-left: 1px; }
-      .view .section-wrap .section .sub-section head1, .view .section-wrap .section .sub-section head2 {
-        display: block;
-        margin: 0;
-        padding: 0 0 18px 0;
-        color: rgba(0, 0, 0, 0.8);
-        font-size: 46px;
-        position: relative;
-        line-height: 1; }
-        .view .section-wrap .section .sub-section head1 strong, .view .section-wrap .section .sub-section head2 strong {
-          font-weight: normal; }
-        .view .section-wrap .section .sub-section head1.empty:before, .view .section-wrap .section .sub-section head2.empty:before {
-          content: 'Text...';
-          color: rgba(0, 0, 0, 0.3);
-          position: absolute;
-          z-index: -1;
-          margin-left: 1px; }
-      .view .section-wrap .section .sub-section head2 {
-        font-size: 30px;
-        line-height: 1.2; }
-      .view .section-wrap .section .sub-section hr {
-        height: 72px;
-        margin: 0;
-        border: none; }
-      .view .section-wrap .section .sub-section .CodeMirror {
-        margin-top: 30px; }
-      .view .section-wrap .section .sub-section .language-list {
+    .view .section-wrap .section .sub-section p {
+      font-size: 16px;
+      line-height: 24px;
+      color: rgba(0, 0, 0, 0.95);
+      margin: 0; }
+      .view .section-wrap .section .sub-section p.empty:before {
+        content: 'Text...';
+        color: rgba(0, 0, 0, 0.3);
         position: absolute;
-        top: -30px;
-        left: 0;
-        padding: 0;
-        margin: 0;
-        z-index: 2;
-        list-style-type: none; }
-        .view .section-wrap .section .sub-section .language-list .language {
-          display: inline-block;
-          vertical-align: top;
-          margin-right: 5px; }
-          .view .section-wrap .section .sub-section .language-list .language:last-child {
-            margin: 0; }
+        z-index: -1;
+        margin-left: 1px; }
+    .view .section-wrap .section .sub-section head1, .view .section-wrap .section .sub-section head2 {
+      display: block;
+      margin: 0;
+      padding: 0 0 18px 0;
+      color: rgba(0, 0, 0, 0.8);
+      font-size: 46px;
+      position: relative;
+      line-height: 1; }
+      .view .section-wrap .section .sub-section head1 strong, .view .section-wrap .section .sub-section head2 strong {
+        font-weight: normal; }
+      .view .section-wrap .section .sub-section head1.empty:before, .view .section-wrap .section .sub-section head2.empty:before {
+        content: 'Text...';
+        color: rgba(0, 0, 0, 0.3);
+        position: absolute;
+        z-index: -1;
+        margin-left: 1px; }
+    .view .section-wrap .section .sub-section head2 {
+      font-size: 30px;
+      line-height: 1.2; }
+    .view .section-wrap .section .sub-section hr {
+      height: 72px;
+      margin: 0;
+      border: none; }
+    .view .section-wrap .section .sub-section .CodeMirror {
+      margin-top: 30px; }
+    .view .section-wrap .section .sub-section .language-list {
+      position: absolute;
+      top: -30px;
+      left: 0;
+      padding: 0;
+      margin: 0;
+      z-index: 2;
+      list-style-type: none; }
+      .view .section-wrap .section .sub-section .language-list .language {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: 5px; }
+        .view .section-wrap .section .sub-section .language-list .language:last-child {
+          margin: 0; }
 
 .editing .section:hover .btn-plus {
   visibility: visible;
