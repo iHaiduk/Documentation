@@ -261,14 +261,20 @@ img {
         transition-delay: 90ms !important; }
 
 .link {
-  display: none;
-  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 1;
   width: 240px;
   background-image: linear-gradient(to bottom, rgba(49, 49, 47, 0.99), #262625);
-  border-radius: 5px; }
+  border-radius: 5px;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease; }
+  .link.active {
+    opacity: 1;
+    visibility: visible; }
   .link .link-val {
     width: 100%;
     height: 42px;
@@ -309,6 +315,9 @@ body:not(.editing) .empty:before {
   display: none !important; }
 body:not(.editing) .remove {
   display: none; }
+body:not(.editing) a[href^=""], body:not(.editing) a[href] {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.95); }
 
 .footer {
   height: 50px;
