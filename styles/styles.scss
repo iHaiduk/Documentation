@@ -188,6 +188,20 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
+.link { display: none; position: absolute; top: 0; left: 0; z-index: 1;  width: 240px; background-image: linear-gradient(to bottom, rgba(49, 49, 47, 0.99), #262625); border-radius: 5px;
+
+    .link-val { width: 100%; height: 42px; padding: 10px 40px 10px 10px; background-color: transparent; border: none; outline: none; color: #fff; font-size: 16px; }
+
+    .close { position: absolute; top: 11px; right: 11px; width: 20px; height: 20px; background: url("../img/plus.svg"); background-size: 20px 20px; cursor: pointer; }
+
+    &:after { content: ''; position: absolute; bottom: -5px; left: 50%; margin-left: -5px; width: 10px; height: 10px; background-color: #262625;
+
+        @include prefix(( transform: rotate(45deg)), webkit );
+
+    }
+
+}
+
 body:not(.editing) {
 
     .media-toolbar { display: none; }
@@ -279,9 +293,11 @@ body:not(.editing) {
 
                 .CodeMirror { margin-top: 30px; }
 
-                .language-list { position: absolute; top: -30px; left: 0; padding: 0; margin: 0; z-index: 2; list-style-type: none;
+                .language-list { position: absolute; top: -30px; left: 0; padding: 0; margin: 0; z-index: 2; list-style-type: none; font-size: 0;
 
-                    .language { display: inline-block; vertical-align: top; margin-right: 5px;
+                    .language { display: inline-block; padding: 4px 10px; vertical-align: top; margin-right: 2px; font-size: 14px; background: $black; color: $white; cursor: pointer;
+
+                        &.active { background: #F7F7F7; color: $black; cursor: default; }
 
                         &:last-child { margin: 0; }
 
