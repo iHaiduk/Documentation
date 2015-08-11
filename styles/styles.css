@@ -17,7 +17,7 @@ html, body {
   height: 100%; }
 
 body {
-  padding-top: 80px;
+  padding-top: 104px;
   margin: 0;
   font-family: "Verdana";
   background: #fff;
@@ -42,7 +42,7 @@ img {
   .main .left-side, .main .right-side {
     display: inline-block;
     width: 25%;
-    padding: 0 45px 0 15px;
+    padding: 10px 45px 0 15px;
     vertical-align: top;
     font-size: 16px; }
   .main .right-side {
@@ -270,8 +270,8 @@ img {
   width: 240px;
   background-image: linear-gradient(to bottom, rgba(49, 49, 47, 0.99), #262625);
   border-radius: 5px;
-  -webkit-transition: all 0.2s ease;
-  transition: all 0.2s ease; }
+  -webkit-transition: opacity 0.2s ease 50ms;
+  transition: opacity 0.2s ease 50ms; }
   .link.active {
     opacity: 1;
     visibility: visible; }
