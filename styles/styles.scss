@@ -212,7 +212,7 @@ body:not(.editing) {
 
     .language-list { display: none; }
 
-    .CodeMirror { margin: 0 0 0 0 !important }
+    .CodeMirror { margin: 0 0 20px 0 !important }
 
     .empty:before { display: none !important; }
 
@@ -279,13 +279,13 @@ body:not(.editing) {
 
             .sub-section {
 
-                p { font-size: 16px; line-height: 24px; color: fade-out($black, .05); margin: 0 0 0 0;
+                p { font-size: 16px; line-height: 24px; color: fade-out($black, .05); margin: 0 0 20px 0;
 
                     &.empty:before { content: 'Text...'; color: fade-out($black, .7); position: absolute; z-index: -1; margin-left: 1px; }
 
                 }
 
-                head1 { display: block; margin: 0 0 0 0; color: fade-out($black, .2); font-size: 40px; position: relative; line-height: 1;
+                head1 { display: block; margin: 0 0 20px 0; color: fade-out($black, .2); font-size: 40px; position: relative; line-height: 1;
 
                     strong { font-weight: normal; }
 
