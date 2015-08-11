@@ -226,7 +226,6 @@ define [
 
       Redactor::addRedactor = (element, focus = false, code) ->
         if element? and !element.hasClass("noRedactor")
-          console.log(element)
           _elements = Redactor::elements
           element.redactor
             iframe: true
@@ -300,6 +299,7 @@ define [
           $("#"+Redactor::lastLinkActive).attr("href",$(@).val())
           Redactor::redactor.code.sync()
           Redactor::redactor.observe.load()
+          return
         )
         element.off('mousedown mouseup').on('mousedown mouseup', (event) ->
           if event.type == 'mousedown'
@@ -322,9 +322,17 @@ define [
         return
 
       Redactor::findLink = (_redactor)->
+        $("#link-toolbar").removeClass("active")
         parent = if (_ref =_redactor.selection.getParent()) then $(_ref) else false
         if parent and parent[0].tagName.toLowerCase() is "a"
           Redactor::lastLinkActive = parent.attr("id")
+          offset = _docum.find(".redactor-toolbar").offset();
+          if offset.left and offset.top
+            $("#link-toolbar").addClass("active").css(
+              "left": parseInt(offset.left) - parseInt($("#viewDoc").offset().left) + "px"
+              "top": parseInt(offset.top) - parseInt($("#viewDoc").offset().top) + "px"
+            )
+            return
 
       Redactor::removeRedactor = (element)->
         Redactor::elements = Redactor::document.find(Redactor::nameElement)

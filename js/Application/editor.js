@@ -207,7 +207,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           focus = false;
         }
         if ((element != null) && !element.hasClass("noRedactor")) {
-          console.log(element);
           _elements = Redactor.prototype.elements;
           element.redactor({
             iframe: true,
@@ -305,7 +304,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         $("#link_value").off('keyup').on('keyup', function(event) {
           $("#" + Redactor.prototype.lastLinkActive).attr("href", $(this).val());
           Redactor.prototype.redactor.code.sync();
-          return Redactor.prototype.redactor.observe.load();
+          Redactor.prototype.redactor.observe.load();
         });
         element.off('mousedown mouseup').on('mousedown mouseup', function(event) {
           if (event.type === 'mousedown') {
@@ -330,10 +329,18 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
       };
 
       Redactor.prototype.findLink = function(_redactor) {
-        var _ref, parent;
+        var _ref, offset, parent;
+        $("#link-toolbar").removeClass("active");
         parent = (_ref = _redactor.selection.getParent()) ? $(_ref) : false;
         if (parent && parent[0].tagName.toLowerCase() === "a") {
-          return Redactor.prototype.lastLinkActive = parent.attr("id");
+          Redactor.prototype.lastLinkActive = parent.attr("id");
+          offset = _docum.find(".redactor-toolbar").offset();
+          if (offset.left && offset.top) {
+            $("#link-toolbar").addClass("active").css({
+              "left": parseInt(offset.left) - parseInt($("#viewDoc").offset().left) + "px",
+              "top": parseInt(offset.top) - parseInt($("#viewDoc").offset().top) + "px"
+            });
+          }
         }
       };
 
@@ -404,18 +411,18 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
 
 
       /*Redactor::viewBox = ()->
-       selection = if not window.getSelection? then window.getSelection() else document.getSelection()
-       console.log(selection.type)
-       if selection.type is 'Range'
-       range = selection.getRangeAt(0)
-       container = $(range.commonAncestorContainer.parentElement)
-       text = container.text()
-       startText = text.substring(0, range.startOffset)
-       endText = text.substring(range.endOffset, text.length)
-       container.html(startText + "<span class='range'>" + selection + "</span>" + endText)
-       setTimeout ->
-       Redactor::redactor.caret.setOffset(40)
-       , 20
+          selection = if not window.getSelection? then window.getSelection() else document.getSelection()
+          console.log(selection.type)
+          if selection.type is 'Range'
+              range = selection.getRangeAt(0)
+              container = $(range.commonAncestorContainer.parentElement)
+              text = container.text()
+              startText = text.substring(0, range.startOffset)
+              endText = text.substring(range.endOffset, text.length)
+              container.html(startText + "<span class='range'>" + selection + "</span>" + endText)
+              setTimeout ->
+                  Redactor::redactor.caret.setOffset(40)
+              , 20
        */
 
       Redactor;
