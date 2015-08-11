@@ -48,10 +48,15 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         link: function() {
           this.selection.restore();
           Redactor.prototype.lastLinkActive = "link_insert_" + (new Date).getTime();
-          this.insert.html('<a id="' + Redactor.prototype.lastLinkActive + '">' + this.selection.getText() + '</a>', false);
+          if (this.selection.getHtml().indexOf("<a id") !== -1) {
+            this.insert.html(this.selection.getText(), false);
+          } else {
+            this.insert.html('<a id="' + Redactor.prototype.lastLinkActive + '">' + this.selection.getText() + '</a>', false);
+          }
           this.code.sync();
           this.observe.load();
-          console.log(this.selection.getBlock());
+          Redactor.prototype.findLink(Redactor.prototype.redactor);
+          $("#link_value").focus();
         }
       };
     };
@@ -63,10 +68,11 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         Redactor.prototype.nameElement = nameElement;
         Redactor.prototype.elements = document.find(nameElement);
         Redactor.prototype.activeElement = null;
-        Redactor.prototype.CodeMirror = null;
+        Redactor.prototype.CodeMirror = {};
         Redactor.prototype.lastFocus = null;
         Redactor.prototype.lastSection = null;
         Redactor.prototype.lastLinkActive = null;
+        Redactor.prototype.editLinkActive = false;
         Redactor.prototype.position = {
           start: {
             x: 0,
@@ -80,7 +86,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         Redactor.prototype.template = {
           empty: "<div class=\"section\">\n    <div class=\"sub-section\"></div>\n    <div class=\"media-toolbar\">\n        <span class=\"btn btn-toggle icon-plus\"></span>\n        <div class=\"menu-toolbar\">\n            <span class=\"btn icon-image\"></span>\n            <span class=\"btn icon-code\"></span>\n            <span class=\"btn icon-hr\"></span>\n        </div>\n    </div>\n</div>",
           image: "<img/>",
-          code: "<textarea class='code'></textarea><ul class=\"language-list\" >\n<li class=\"language\">HTML</li>\n<li class=\"language\">CSS</li>\n<li class=\"language\">SASS</li>\n<li class=\"language\">JavaScript</li>\n<li class=\"language\">CoffeScript</li>\n<li class=\"language\">PHP</li>\n<li class=\"language\">SQL</li>\n</ul>",
+          code: "<textarea class='code'></textarea><ul class=\"language-list\" >\n<li class=\"language\" data-type=\"htmlmixed\">HTML</li>\n<li class=\"language\" data-type=\"CSS\">CSS</li>\n<li class=\"language\" data-type=\"SASS\">SASS</li>\n<li class=\"language\" data-type=\"JavaScript\">JavaScript</li>\n<li class=\"language\" data-type=\"coffeescript\">CoffeeScript</li>\n<li class=\"language\" data-type=\"PHP\">PHP</li>\n<li class=\"language\" data-type=\"SQL\">SQL</li>\n</ul>",
           hr: "<hr/>"
         };
       }
@@ -109,6 +115,20 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
       };
 
       Redactor.prototype.addListen = function() {
+        $("#link-toolbar").on("click", function(e) {
+          if (!$(e.target).hasClass("close")) {
+            Redactor.prototype.editLinkActive = true;
+            $(this).addClass("active");
+          }
+        });
+        $("#link_close").on("click", function() {
+          $(this).parent().removeClass("active");
+          Redactor.prototype.editLinkActive = false;
+        });
+        $("#link_value").on("click, keydown, keyup", function() {
+          Redactor.prototype.editLinkActive = true;
+          $(this).parent().addClass("active");
+        });
         Redactor.prototype.document.find('.btn-toggle').off('click').on('click', function() {
           $(this).toggleClass('open');
         });
@@ -117,14 +137,20 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         });
         Redactor.prototype.document.find('.icon-code').off('click').on('click', function() {
           Redactor.prototype.mediaButton("code", Redactor.prototype.template.code, function(element) {
-            Redactor.prototype.CodeMirror = CodeMirror.fromTextArea(element[0], {
-              mode: "javascript",
+            var param_id;
+            param_id = "redactor_" + (new Date).getTime();
+            $(element[0]).attr("id", param_id);
+            $(element[1]).attr("data-id", param_id);
+            Redactor.prototype.CodeMirror[param_id] = CodeMirror.fromTextArea(element[0], {
+              mode: "sass",
               lineNumbers: true,
               matchBrackets: true,
               styleActiveLine: true,
               htmlMode: true,
               theme: "3024-day"
             });
+            Redactor.prototype.save(false);
+            Redactor.prototype.changeTypeListen();
           });
           Redactor.prototype.loadRedactors();
         });
@@ -135,7 +161,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           var _this;
           _this = $(this);
           _this.parents(".section").find(".sub-section").removeClass("noRedactor").html('<p></p>');
-          console.log(_this.parents(".section").find(".sub-section"));
           Redactor.prototype.addRedactor(_this.parents(".section").find(".sub-section"), true);
           Redactor.prototype.addListen();
           _this.remove();
@@ -207,7 +232,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           focus = false;
         }
         if ((element != null) && !element.hasClass("noRedactor")) {
-          console.log(element);
           _elements = Redactor.prototype.elements;
           element.redactor({
             iframe: true,
@@ -237,9 +261,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
                 _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
               }
             },
-            clickCallback: function() {
-              return console.log(e);
-            },
             blurCallback: function() {
               var redactor;
               this.$element.removeClass("focus");
@@ -254,9 +275,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               key = e.which;
               if ((e.keyCode === 8 || e.keyCode === 46) && this.code.get() === "") {
                 Redactor.prototype.removeRedactor(this.$element);
-              }
-              if (key === this.keyCode.ENTER && (e.ctrlKey || e.shiftKey)) {
-                Redactor.prototype.addSection(this.$element.parents(".section"), true);
               }
             },
             keyupCallback: function(e) {
@@ -282,7 +300,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           focus = false;
         }
         if ((_redactor != null) && (_redactor.selection != null)) {
-          Redactor.prototype.findLink(_redactor);
           block = $(_redactor.selection.getBlock());
           Redactor.prototype.lastSection = block;
           text = $(_redactor.selection.getBlock()).text().trim();
@@ -294,10 +311,9 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           _docum.find("#viewDoc").find(".media-toolbar").toggleClass("active", false);
           _docum.find("#viewDoc").find("p").toggleClass("empty", false);
           if ((!lnght || (lnght && !html.length)) && block.length) {
-            $("#media-toolbar").toggleClass("active", true).css("top", (block.offset().top - 83) + "px").find(".btn-toggle").removeClass("open");
+            $("#media-toolbar").toggleClass("active", true).css("top", (block.offset().top - 107) + "px").find(".btn-toggle").removeClass("open");
             block.toggleClass("empty", true);
           }
-          return;
         }
       };
 
@@ -305,7 +321,8 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         $("#link_value").off('keyup').on('keyup', function(event) {
           $("#" + Redactor.prototype.lastLinkActive).attr("href", $(this).val());
           Redactor.prototype.redactor.code.sync();
-          return Redactor.prototype.redactor.observe.load();
+          Redactor.prototype.redactor.observe.load();
+          Redactor.prototype.listenEvent(element);
         });
         element.off('mousedown mouseup').on('mousedown mouseup', function(event) {
           if (event.type === 'mousedown') {
@@ -315,9 +332,19 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             Redactor.prototype.position.end.y = event.pageY;
             Redactor.prototype.position.end.x = event.pageX;
           }
-        }).off('click').on('click', function() {
-          var selection, toolbar;
+        }).off('click').on('click', function(e) {
+          var elem, offset, selection, toolbar;
           Redactor.prototype.showPlusButton(null, true);
+          $("#link-toolbar").removeClass("active").find("#link_value").val("");
+          elem = $(e.target);
+          if (elem[0].tagName.toLowerCase() === "a") {
+            offset = elem.offset();
+            Redactor.prototype.lastLinkActive = elem.attr("id");
+            $("#link_value").val(elem.attr("href"));
+            offset.top = parseInt(offset.top) - 57;
+            offset.left = parseInt(offset.left) - 120 + elem.width() / 2;
+            Redactor.prototype.linkShow(offset);
+          }
           selection = window.getSelection == null ? window.getSelection() : document.getSelection();
           if (selection.type === 'Range') {
             toolbar = $(this).prev();
@@ -330,10 +357,27 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
       };
 
       Redactor.prototype.findLink = function(_redactor) {
-        var _ref, parent;
+        var _ref, offset, parent;
         parent = (_ref = _redactor.selection.getParent()) ? $(_ref) : false;
+        $("#link-toolbar").removeClass("active");
         if (parent && parent[0].tagName.toLowerCase() === "a") {
-          return Redactor.prototype.lastLinkActive = parent.attr("id");
+          Redactor.prototype.lastLinkActive = parent.attr("id");
+          offset = _docum.find(".redactor-toolbar").offset();
+          Redactor.prototype.linkShow(offset);
+        } else {
+          if (!Redactor.prototype.editLinkActive) {
+            $("#link-toolbar").removeClass("active");
+          }
+        }
+      };
+
+      Redactor.prototype.linkShow = function(offset) {
+        if (offset.left && offset.top) {
+          Redactor.prototype.editLinkActive = true;
+          $("#link-toolbar").addClass("active").css({
+            "left": parseInt(offset.left) - parseInt($("#viewDoc").offset().left) + "px",
+            "top": parseInt(offset.top) - parseInt($("#viewDoc").offset().top) + "px"
+          });
         }
       };
 
@@ -345,25 +389,43 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         }
       };
 
-      Redactor.prototype.save = function(element) {
+      Redactor.prototype.save = function(codeSave) {
+        if (codeSave == null) {
+          codeSave = true;
+        }
+        if (codeSave) {
+          Redactor.prototype.codeSave();
+        }
         Redactor.prototype.elements = Redactor.prototype.document.find(Redactor.prototype.nameElement);
         Redactor.prototype.elements.each(function() {
           if ($(this).hasClass("redactor-editor") && !$(this).hasClass("noRedactor")) {
             if ($.trim($(this).redactor('code.get')) === "") {
-              Redactor.prototype.removeRedactor($(this));
+              return Redactor.prototype.removeRedactor($(this));
             } else {
-              $(this).redactor("core.destroy");
+              return $(this).redactor("core.destroy");
             }
-          }
-          if ($(this).hasClass("noRedactor")) {
-            $(this).find(".code").each(function() {
-              Redactor.prototype.CodeMirror.setOption("readOnly", true);
-            });
           }
         });
         setTimeout(function() {
           app.Menu.treeGenerate();
         }, 250);
+      };
+
+      Redactor.prototype.codeSave = function() {
+        $.each(Redactor.prototype.CodeMirror, function(val) {
+          Redactor.prototype.CodeMirror[val].setOption("readOnly", true);
+        });
+      };
+
+      Redactor.prototype.changeTypeListen = function() {
+        _docum.find(".language-list").find(".language").off("click").on("click", function() {
+          Redactor.prototype.changeTypeCode($(this).parent().data().id, $(this).data().type);
+        });
+      };
+
+      Redactor.prototype.changeTypeCode = function(id, type) {
+        console.log(Redactor.prototype.CodeMirror[id]);
+        Redactor.prototype.CodeMirror[id].setOption("mode", type.toLowerCase());
       };
 
       Redactor.prototype.toolbarPosition = function(toolbar) {
@@ -373,10 +435,10 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         }
         readTop = Redactor.prototype.position.start.y < Redactor.prototype.position.end.y ? 'start' : 'end';
         if (toolbar.next().length) {
-          top = Redactor.prototype.position[readTop].y - (toolbar.next().offset().top) - toolbar.height() * 2 + 'px';
-          left = Math.abs(Redactor.prototype.position.start.x + Redactor.prototype.position.end.x) / 2 - (toolbar.next().offset().left) - (toolbar.width() / 2) + 'px';
-          if ((Math.abs(Redactor.prototype.position.start.x + Redactor.prototype.position.end.x) / 2 + (toolbar.next().offset().left) - (toolbar.width() / 2)) >= $(window).width()) {
-            left = $(window).width() - 5 - toolbar.width() - toolbar.next().offset().left + "px";
+          top = Redactor.prototype.position[readTop].y - (toolbar.next().offset().top) - toolbar.height() * 1.7 + 'px';
+          left = Math.abs(Redactor.prototype.position.start.x + Redactor.prototype.position.end.x) / 2 - (toolbar.next().offset().left) - (toolbar.width() / 2) - 42 + 'px';
+          if ((parseInt(left) + toolbar.width() + parseInt($("#viewDoc").offset().left) + 90) >= $(window).width()) {
+            left = $(window).width() - toolbar.width() - toolbar.next().offset().left - 90 + "px";
           }
           if (toolbar.is(':visible') && (toolbar.next().offset() != null)) {
             toolbar.stop().animate({
@@ -392,31 +454,19 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               }).find(".redactor-act").removeClass("redactor-act");
             }
           }
-          toolbar.find(".re-header1, .re-header2").removeClass("redactor-act");
-          if (Redactor.prototype.redactor.selection.getHtml().indexOf("head1") !== -1) {
+          toolbar.find(".re-header1, .re-header2, .re-link").removeClass("redactor-act");
+          $("#link-toolbar").removeClass("active");
+          if (Redactor.prototype.redactor.selection.getHtml().indexOf("<head1") !== -1 || Redactor.prototype.redactor.selection.getParent().tagName.toLowerCase() === "head1") {
             toolbar.find(".re-header1").addClass("redactor-act");
           }
-          if (Redactor.prototype.redactor.selection.getHtml().indexOf("head2") !== -1) {
+          if (Redactor.prototype.redactor.selection.getHtml().indexOf("<head2") !== -1 || Redactor.prototype.redactor.selection.getParent().tagName.toLowerCase() === "head2") {
             toolbar.find(".re-header2").addClass("redactor-act");
+          }
+          if (Redactor.prototype.redactor.selection.getHtml().indexOf("<a") !== -1 || Redactor.prototype.redactor.selection.getParent().tagName.toLowerCase() === "a") {
+            toolbar.find(".re-link").addClass("redactor-act");
           }
         }
       };
-
-
-      /*Redactor::viewBox = ()->
-       selection = if not window.getSelection? then window.getSelection() else document.getSelection()
-       console.log(selection.type)
-       if selection.type is 'Range'
-       range = selection.getRangeAt(0)
-       container = $(range.commonAncestorContainer.parentElement)
-       text = container.text()
-       startText = text.substring(0, range.startOffset)
-       endText = text.substring(range.endOffset, text.length)
-       container.html(startText + "<span class='range'>" + selection + "</span>" + endText)
-       setTimeout ->
-       Redactor::redactor.caret.setOffset(40)
-       , 20
-       */
 
       Redactor;
 
