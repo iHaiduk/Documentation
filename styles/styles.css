@@ -42,12 +42,12 @@ img {
   .main .left-side, .main .right-side {
     display: inline-block;
     width: 25%;
-    padding: 10px 45px 0 15px;
+    padding: 7px 45px 0 15px;
     vertical-align: top;
     font-size: 16px; }
   .main .right-side {
     width: 75%;
-    padding: 0 15px 25px 0; }
+    padding: 0 15px 0 0; }
   .main:after {
     content: '';
     display: block;
@@ -310,7 +310,7 @@ body:not(.editing) .media-toolbar {
 body:not(.editing) .language-list {
   display: none; }
 body:not(.editing) .CodeMirror {
-  margin-top: 0 !important; }
+  margin: 0 0 0 0 !important; }
 body:not(.editing) .empty:before {
   display: none !important; }
 body:not(.editing) .remove {
@@ -377,7 +377,7 @@ body:not(.editing) a[href^=""], body:not(.editing) a[href] {
       font-size: 16px;
       line-height: 24px;
       color: rgba(0, 0, 0, 0.95);
-      margin: 0; }
+      margin: 0 0 0 0; }
       .view .section-wrap .section .sub-section p.empty:before {
         content: 'Text...';
         color: rgba(0, 0, 0, 0.3);
@@ -386,10 +386,9 @@ body:not(.editing) a[href^=""], body:not(.editing) a[href] {
         margin-left: 1px; }
     .view .section-wrap .section .sub-section head1, .view .section-wrap .section .sub-section head2 {
       display: block;
-      margin: 0;
-      padding: 0 0 18px 0;
+      margin: 0 0 0 0;
       color: rgba(0, 0, 0, 0.8);
-      font-size: 46px;
+      font-size: 40px;
       position: relative;
       line-height: 1; }
       .view .section-wrap .section .sub-section head1 strong, .view .section-wrap .section .sub-section head2 strong {
@@ -404,7 +403,7 @@ body:not(.editing) a[href^=""], body:not(.editing) a[href] {
       font-size: 30px;
       line-height: 1.2; }
     .view .section-wrap .section .sub-section hr {
-      height: 72px;
+      height: 52px;
       margin: 0;
       border: none; }
     .view .section-wrap .section .sub-section .CodeMirror {

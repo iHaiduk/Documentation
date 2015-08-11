@@ -28,9 +28,9 @@ img { vertical-align: top; max-width: 100%; }
 
 .main { min-height: 100%; margin-bottom: -50px; position: relative; font-size: 0;
 
-    .left-side { display: inline-block; width: 25%; padding: 10px 45px 0 15px; vertical-align: top; font-size: 16px; }
+    .left-side { display: inline-block; width: 25%; padding: 7px 45px 0 15px; vertical-align: top; font-size: 16px; }
 
-    .right-side { @extend .left-side; width: 75%; padding: 0 15px 25px 0; }
+    .right-side { @extend .left-side; width: 75%; padding: 0 15px 0 0; }
 
     &:after { content: ''; display: block; height: 50px; }
 
@@ -212,7 +212,7 @@ body:not(.editing) {
 
     .language-list { display: none; }
 
-    .CodeMirror { margin-top: 0 !important }
+    .CodeMirror { margin: 0 0 0 0 !important }
 
     .empty:before { display: none !important; }
 
@@ -279,13 +279,13 @@ body:not(.editing) {
 
             .sub-section {
 
-                p { font-size: 16px; line-height: 24px; color: fade-out($black, .05); margin: 0;
+                p { font-size: 16px; line-height: 24px; color: fade-out($black, .05); margin: 0 0 0 0;
 
                     &.empty:before { content: 'Text...'; color: fade-out($black, .7); position: absolute; z-index: -1; margin-left: 1px; }
 
                 }
 
-                head1 { display: block; margin:0; padding: 0 0 18px 0; color: fade-out($black, .2); font-size: 46px; position: relative; line-height: 1;
+                head1 { display: block; margin: 0 0 0 0; color: fade-out($black, .2); font-size: 40px; position: relative; line-height: 1;
 
                     strong { font-weight: normal; }
 
@@ -295,7 +295,7 @@ body:not(.editing) {
 
                 head2 { @extend head1; font-size: 30px; line-height: 1.2; }
 
-                hr { height: 72px; margin: 0; border: none; }
+                hr { height: 52px; margin: 0; border: none; }
 
                 .CodeMirror { margin-top: 30px; }
 
