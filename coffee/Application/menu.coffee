@@ -84,7 +84,7 @@ define [ 'jquery', 'Application/editor' ], ($) ->
           Menu::lock = true
           Menu::navigation.find(".active").removeClass 'active'
           $("html, body").stop().animate({
-            scrollTop: _document.find("#" + $(@).data().id).offset().top - _document.find(".header").height() - 34
+            scrollTop: _document.find("#" + $(@).data().id).offset().top - _document.find(".header").height() - 58
           },500, ->
             Menu::lock = false
             return
