@@ -51,7 +51,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           this.insert.html('<a id="' + Redactor.prototype.lastLinkActive + '">' + this.selection.getText() + '</a>', false);
           this.code.sync();
           this.observe.load();
-          console.log(this.selection.getBlock());
+          Redactor.prototype.findLink(Redactor.prototype.redactor);
         }
       };
     };
@@ -67,6 +67,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         Redactor.prototype.lastFocus = null;
         Redactor.prototype.lastSection = null;
         Redactor.prototype.lastLinkActive = null;
+        Redactor.prototype.editLinkActive = false;
         Redactor.prototype.position = {
           start: {
             x: 0,
@@ -109,6 +110,20 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
       };
 
       Redactor.prototype.addListen = function() {
+        $("#link-toolbar").on("click", function(e) {
+          if (!$(e.target).hasClass("close")) {
+            Redactor.prototype.editLinkActive = true;
+            $(this).addClass("active");
+          }
+        });
+        $("#link_close").on("click", function() {
+          $(this).parent().removeClass("active");
+          Redactor.prototype.editLinkActive = false;
+        });
+        $("#link_value").on("click, keydown, keyup", function() {
+          Redactor.prototype.editLinkActive = true;
+          $(this).parent().addClass("active");
+        });
         Redactor.prototype.document.find('.btn-toggle').off('click').on('click', function() {
           $(this).toggleClass('open');
         });
@@ -118,13 +133,14 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         Redactor.prototype.document.find('.icon-code').off('click').on('click', function() {
           Redactor.prototype.mediaButton("code", Redactor.prototype.template.code, function(element) {
             Redactor.prototype.CodeMirror = CodeMirror.fromTextArea(element[0], {
-              mode: "javascript",
+              mode: "sass",
               lineNumbers: true,
               matchBrackets: true,
               styleActiveLine: true,
               htmlMode: true,
               theme: "3024-day"
             });
+            Redactor.prototype.save();
           });
           Redactor.prototype.loadRedactors();
         });
@@ -135,7 +151,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           var _this;
           _this = $(this);
           _this.parents(".section").find(".sub-section").removeClass("noRedactor").html('<p></p>');
-          console.log(_this.parents(".section").find(".sub-section"));
           Redactor.prototype.addRedactor(_this.parents(".section").find(".sub-section"), true);
           Redactor.prototype.addListen();
           _this.remove();
@@ -236,9 +251,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
                 _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
               }
             },
-            clickCallback: function() {
-              return console.log(e);
-            },
             blurCallback: function() {
               var redactor;
               this.$element.removeClass("focus");
@@ -253,9 +265,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               key = e.which;
               if ((e.keyCode === 8 || e.keyCode === 46) && this.code.get() === "") {
                 Redactor.prototype.removeRedactor(this.$element);
-              }
-              if (key === this.keyCode.ENTER && (e.ctrlKey || e.shiftKey)) {
-                Redactor.prototype.addSection(this.$element.parents(".section"), true);
               }
             },
             keyupCallback: function(e) {
@@ -281,7 +290,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           focus = false;
         }
         if ((_redactor != null) && (_redactor.selection != null)) {
-          Redactor.prototype.findLink(_redactor);
           block = $(_redactor.selection.getBlock());
           Redactor.prototype.lastSection = block;
           text = $(_redactor.selection.getBlock()).text().trim();
@@ -314,9 +322,10 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             Redactor.prototype.position.end.y = event.pageY;
             Redactor.prototype.position.end.x = event.pageX;
           }
-        }).off('click').on('click', function() {
+        }).off('click').on('click', function(e) {
           var selection, toolbar;
           Redactor.prototype.showPlusButton(null, true);
+          $("#link-toolbar").removeClass("active");
           selection = window.getSelection == null ? window.getSelection() : document.getSelection();
           if (selection.type === 'Range') {
             toolbar = $(this).prev();
@@ -330,17 +339,26 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
 
       Redactor.prototype.findLink = function(_redactor) {
         var _ref, offset, parent;
-        $("#link-toolbar").removeClass("active");
         parent = (_ref = _redactor.selection.getParent()) ? $(_ref) : false;
+        $("#link-toolbar").removeClass("active");
         if (parent && parent[0].tagName.toLowerCase() === "a") {
           Redactor.prototype.lastLinkActive = parent.attr("id");
           offset = _docum.find(".redactor-toolbar").offset();
-          if (offset.left && offset.top) {
-            $("#link-toolbar").addClass("active").css({
-              "left": parseInt(offset.left) - parseInt($("#viewDoc").offset().left) + "px",
-              "top": parseInt(offset.top) - parseInt($("#viewDoc").offset().top) + "px"
-            });
+          return Redactor.prototype.linkShow(offset);
+        } else {
+          if (!Redactor.prototype.editLinkActive) {
+            $("#link-toolbar").removeClass("active");
           }
+        }
+      };
+
+      Redactor.prototype.linkShow = function(offset) {
+        if (offset.left && offset.top) {
+          Redactor.prototype.editLinkActive = true;
+          $("#link-toolbar").addClass("active").css({
+            "left": parseInt(offset.left) - parseInt($("#viewDoc").offset().left) + "px",
+            "top": parseInt(offset.top) - parseInt($("#viewDoc").offset().top) + "px"
+          });
         }
       };
 
@@ -352,7 +370,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         }
       };
 
-      Redactor.prototype.save = function(element) {
+      Redactor.prototype.save = function() {
         Redactor.prototype.elements = Redactor.prototype.document.find(Redactor.prototype.nameElement);
         Redactor.prototype.elements.each(function() {
           if ($(this).hasClass("redactor-editor") && !$(this).hasClass("noRedactor")) {
@@ -363,9 +381,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             }
           }
           if ($(this).hasClass("noRedactor")) {
-            $(this).find(".code").each(function() {
-              Redactor.prototype.CodeMirror.setOption("readOnly", true);
-            });
+            $(this).find(".code").each(function() {});
           }
         });
         setTimeout(function() {
@@ -400,6 +416,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             }
           }
           toolbar.find(".re-header1, .re-header2").removeClass("redactor-act");
+          $("#link-toolbar").removeClass("active");
           if (Redactor.prototype.redactor.selection.getHtml().indexOf("head1") !== -1) {
             toolbar.find(".re-header1").addClass("redactor-act");
           }

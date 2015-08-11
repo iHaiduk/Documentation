@@ -60,7 +60,7 @@ define [
         @insert.html('<a id="'+Redactor::lastLinkActive+'">'+@selection.getText()+'</a>', false)
         @code.sync()
         @observe.load()
-        console.log(@selection.getBlock())
+        Redactor::findLink(Redactor::redactor)
         return
 
       }
@@ -77,6 +77,7 @@ define [
         Redactor::lastFocus = null
         Redactor::lastSection = null
         Redactor::lastLinkActive = null
+        Redactor::editLinkActive = false
         Redactor::position =
           start:
             x: 0
@@ -134,6 +135,22 @@ define [
 
       Redactor::addListen = ()->
 
+        $("#link-toolbar").on "click", (e)->
+          if !$(e.target).hasClass("close")
+            Redactor::editLinkActive = true
+            $(@).addClass "active"
+          return
+
+        $("#link_close").on "click", ()->
+          $(@).parent().removeClass "active"
+          Redactor::editLinkActive = false
+          return
+
+        $("#link_value").on "click, keydown, keyup", ->
+          Redactor::editLinkActive = true
+          $(@).parent().addClass "active"
+          return
+
         Redactor::document.find('.btn-toggle').off('click').on 'click', ->
           $(@).toggleClass 'open'
           return
@@ -145,12 +162,13 @@ define [
         Redactor::document.find('.icon-code').off('click').on 'click', ->
           Redactor::mediaButton("code", Redactor::template.code, (element)->
             Redactor::CodeMirror = CodeMirror.fromTextArea element[0],
-              mode: "javascript"
+              mode: "sass"
               lineNumbers: true
               matchBrackets: true
               styleActiveLine: true
               htmlMode: true
               theme: "3024-day"
+            Redactor::save()
             return
           )
           Redactor::loadRedactors()
@@ -163,7 +181,6 @@ define [
         Redactor::document.find('.remove').off('click').on 'click', ->
           _this = $(@)
           _this.parents(".section").find(".sub-section").removeClass("noRedactor").html('<p></p>')
-          console.log(_this.parents(".section").find(".sub-section"))
           Redactor::addRedactor(_this.parents(".section").find(".sub-section"), true);
           Redactor::addListen()
           _this.remove()
@@ -247,8 +264,6 @@ define [
               Redactor::showPlusButton(@, true)
               _elements.parent().find('.redactor-toolbar').stop().fadeOut 400 if @sel.type isnt "Range"
               return
-            clickCallback: ->
-              console.log(e)
             blurCallback: () ->
               @$element.removeClass("focus")
               _elements.parent().find('.redactor-toolbar').stop().fadeOut 400
@@ -261,8 +276,6 @@ define [
             keydownCallback: (e) ->
               key = e.which
               Redactor::removeRedactor(@$element) if (e.keyCode is 8 or e.keyCode is 46) and @code.get() is ""
-              if key is @keyCode.ENTER and (e.ctrlKey or e.shiftKey)
-                Redactor::addSection(@$element.parents(".section"), true)
               return
             keyupCallback: (e) ->
               Redactor::showPlusButton(@, true)
@@ -279,7 +292,6 @@ define [
 
       Redactor::showPlusButton = (_redactor = Redactor::redactor, focus = false)->
         if _redactor? and _redactor.selection?
-          Redactor::findLink(_redactor)
           block = $(_redactor.selection.getBlock())
           Redactor::lastSection = block
           text = $(_redactor.selection.getBlock()).text().trim()
@@ -309,8 +321,9 @@ define [
             Redactor::position.end.y = event.pageY
             Redactor::position.end.x = event.pageX
           return
-        ).off('click').on 'click', ->
+        ).off('click').on 'click', (e)->
           Redactor::showPlusButton(null, true)
+          $("#link-toolbar").removeClass("active")
           selection = if not window.getSelection? then window.getSelection() else document.getSelection()
           if selection.type is 'Range'
             toolbar = $(@).prev()
@@ -322,17 +335,24 @@ define [
         return
 
       Redactor::findLink = (_redactor)->
-        $("#link-toolbar").removeClass("active")
         parent = if (_ref =_redactor.selection.getParent()) then $(_ref) else false
+        $("#link-toolbar").removeClass("active")
         if parent and parent[0].tagName.toLowerCase() is "a"
           Redactor::lastLinkActive = parent.attr("id")
           offset = _docum.find(".redactor-toolbar").offset();
-          if offset.left and offset.top
-            $("#link-toolbar").addClass("active").css(
-              "left": parseInt(offset.left) - parseInt($("#viewDoc").offset().left) + "px"
-              "top": parseInt(offset.top) - parseInt($("#viewDoc").offset().top) + "px"
-            )
-            return
+          Redactor::linkShow(offset)
+        else
+          $("#link-toolbar").removeClass("active") if !Redactor::editLinkActive
+          return
+
+      Redactor::linkShow = (offset)->
+        if offset.left and offset.top
+          Redactor::editLinkActive = true
+          $("#link-toolbar").addClass("active").css(
+            "left": parseInt(offset.left) - parseInt($("#viewDoc").offset().left) + "px"
+            "top": parseInt(offset.top) - parseInt($("#viewDoc").offset().top) + "px"
+          )
+          return
 
       Redactor::removeRedactor = (element)->
         Redactor::elements = Redactor::document.find(Redactor::nameElement)
@@ -341,7 +361,7 @@ define [
           element.parents(".section").remove()
           return
 
-      Redactor::save = (element)->
+      Redactor::save = ()->
         Redactor::elements = Redactor::document.find(Redactor::nameElement)
         Redactor::elements.each ->
           if $(@).hasClass("redactor-editor") and !$(@).hasClass("noRedactor")
@@ -351,7 +371,7 @@ define [
               $(@).redactor("core.destroy")
           if $(@).hasClass("noRedactor")
             $(@).find(".code").each ->
-              Redactor::CodeMirror.setOption("readOnly", true)
+              #Redactor::CodeMirror.setOption("readOnly", true)
               return
             return
 
@@ -387,6 +407,8 @@ define [
 
 
           toolbar.find(".re-header1, .re-header2").removeClass("redactor-act")
+
+          $("#link-toolbar").removeClass("active")
 
           toolbar.find(".re-header1").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("head1") isnt -1
           toolbar.find(".re-header2").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("head2") isnt -1
