@@ -57,10 +57,14 @@ define [
       link: ->
         @selection.restore();
         Redactor::lastLinkActive = "link_insert_"+(new Date).getTime();
-        @insert.html('<a id="'+Redactor::lastLinkActive+'">'+@selection.getText()+'</a>', false)
+        if @selection.getHtml().indexOf("<a id") isnt -1
+          @insert.html(@selection.getText(), false)
+        else
+          @insert.html('<a id="'+Redactor::lastLinkActive+'">'+@selection.getText()+'</a>', false)
         @code.sync()
         @observe.load()
         Redactor::findLink(Redactor::redactor)
+        $("#link_value").focus()
         return
 
       }
@@ -73,7 +77,7 @@ define [
         Redactor::nameElement = nameElement
         Redactor::elements = document.find(nameElement)
         Redactor::activeElement = null
-        Redactor::CodeMirror = null
+        Redactor::CodeMirror = {}
         Redactor::lastFocus = null
         Redactor::lastSection = null
         Redactor::lastLinkActive = null
@@ -99,13 +103,13 @@ define [
                         </div>"""
           image: """<img/>"""
           code: """<textarea class='code'></textarea><ul class="language-list" >
-          <li class="language">HTML</li>
-          <li class="language">CSS</li>
-          <li class="language">SASS</li>
-          <li class="language">JavaScript</li>
-          <li class="language">CoffeScript</li>
-          <li class="language">PHP</li>
-          <li class="language">SQL</li>
+          <li class="language" data-type="htmlmixed">HTML</li>
+          <li class="language" data-type="CSS">CSS</li>
+          <li class="language" data-type="SASS">SASS</li>
+          <li class="language" data-type="JavaScript">JavaScript</li>
+          <li class="language" data-type="coffeescript">CoffeeScript</li>
+          <li class="language" data-type="PHP">PHP</li>
+          <li class="language" data-type="SQL">SQL</li>
 </ul>"""
           hr: """<hr/>"""
 
@@ -134,7 +138,6 @@ define [
         return
 
       Redactor::addListen = ()->
-
         $("#link-toolbar").on "click", (e)->
           if !$(e.target).hasClass("close")
             Redactor::editLinkActive = true
@@ -161,14 +164,18 @@ define [
 
         Redactor::document.find('.icon-code').off('click').on 'click', ->
           Redactor::mediaButton("code", Redactor::template.code, (element)->
-            Redactor::CodeMirror = CodeMirror.fromTextArea element[0],
+            param_id = "redactor_"+(new Date).getTime()
+            $(element[0]).attr("id", param_id)
+            $(element[1]).attr("data-id", param_id)
+            Redactor::CodeMirror[param_id] = CodeMirror.fromTextArea element[0],
               mode: "sass"
               lineNumbers: true
               matchBrackets: true
               styleActiveLine: true
               htmlMode: true
               theme: "3024-day"
-            Redactor::save()
+            Redactor::save(false)
+            Redactor::changeTypeListen()
             return
           )
           Redactor::loadRedactors()
@@ -301,9 +308,8 @@ define [
           _docum.find("#viewDoc").find(".media-toolbar").toggleClass("active", false)
           _docum.find("#viewDoc").find("p").toggleClass("empty", false)
           if (!lnght or (lnght and !html.length)) and block.length
-            $("#media-toolbar").toggleClass("active", true).css("top", (block.offset().top-83)+"px").find(".btn-toggle").removeClass("open")
+            $("#media-toolbar").toggleClass("active", true).css("top", (block.offset().top-107)+"px").find(".btn-toggle").removeClass("open")
             block.toggleClass("empty", true)
-          return
         return
 
       Redactor::listenEvent = (element)->
@@ -311,6 +317,7 @@ define [
           $("#"+Redactor::lastLinkActive).attr("href",$(@).val())
           Redactor::redactor.code.sync()
           Redactor::redactor.observe.load()
+          Redactor::listenEvent(element)
           return
         )
         element.off('mousedown mouseup').on('mousedown mouseup', (event) ->
@@ -323,7 +330,17 @@ define [
           return
         ).off('click').on 'click', (e)->
           Redactor::showPlusButton(null, true)
-          $("#link-toolbar").removeClass("active")
+
+          $("#link-toolbar").removeClass("active").find("#link_value").val("")
+          elem = $(e.target)
+          if elem[0].tagName.toLowerCase() == "a"
+            offset = elem.offset()
+            Redactor::lastLinkActive = elem.attr("id")
+            $("#link_value").val(elem.attr("href"))
+            offset.top = parseInt(offset.top) - 57
+            offset.left = parseInt(offset.left) - 120 + elem.width()/2
+            Redactor::linkShow(offset)
+
           selection = if not window.getSelection? then window.getSelection() else document.getSelection()
           if selection.type is 'Range'
             toolbar = $(@).prev()
@@ -341,6 +358,7 @@ define [
           Redactor::lastLinkActive = parent.attr("id")
           offset = _docum.find(".redactor-toolbar").offset();
           Redactor::linkShow(offset)
+          return
         else
           $("#link-toolbar").removeClass("active") if !Redactor::editLinkActive
           return
@@ -361,7 +379,8 @@ define [
           element.parents(".section").remove()
           return
 
-      Redactor::save = ()->
+      Redactor::save = (codeSave = true)->
+        Redactor::codeSave() if codeSave
         Redactor::elements = Redactor::document.find(Redactor::nameElement)
         Redactor::elements.each ->
           if $(@).hasClass("redactor-editor") and !$(@).hasClass("noRedactor")
@@ -369,27 +388,38 @@ define [
               Redactor::removeRedactor $(@)
             else
               $(@).redactor("core.destroy")
-          if $(@).hasClass("noRedactor")
-            $(@).find(".code").each ->
-              #Redactor::CodeMirror.setOption("readOnly", true)
-              return
-            return
-
         setTimeout(->
           app.Menu.treeGenerate()
           return
         , 250)
         return
 
+      Redactor::codeSave = ->
+        $.each Redactor::CodeMirror, (val)->
+          Redactor::CodeMirror[val].setOption("readOnly", true)
+          return
+        return
+
+      Redactor::changeTypeListen = ->
+        _docum.find(".language-list").find(".language").off("click").on "click", ->
+          Redactor::changeTypeCode($(@).parent().data().id, $(@).data().type)
+          return
+        return
+
+      Redactor::changeTypeCode = (id, type)->
+        console.log(Redactor::CodeMirror[id], )
+        Redactor::CodeMirror[id].setOption("mode", type.toLowerCase())
+        return
+
       Redactor::toolbarPosition = (toolbar = Redactor::toolbar)->
         readTop = if Redactor::position.start.y < Redactor::position.end.y then 'start' else 'end'
 
         if toolbar.next().length
-          top = Redactor::position[readTop].y - (toolbar.next().offset().top) - toolbar.height()*2+ 'px'
-          left = Math.abs(Redactor::position.start.x + Redactor::position.end.x) / 2 - (toolbar.next().offset().left) - (toolbar.width() / 2) + 'px'
+          top = Redactor::position[readTop].y - (toolbar.next().offset().top) - toolbar.height()*1.7+ 'px'
+          left = Math.abs(Redactor::position.start.x + Redactor::position.end.x) / 2 - (toolbar.next().offset().left) - (toolbar.width() / 2) - 42 + 'px'
 
-          if ((Math.abs(Redactor::position.start.x + Redactor::position.end.x) / 2 + (toolbar.next().offset().left) - (toolbar.width() / 2)) >= $(window).width() )
-            left = $(window).width() - 5 - toolbar.width() - toolbar.next().offset().left + "px"
+          if ((parseInt(left) + toolbar.width() + parseInt($("#viewDoc").offset().left) + 90) >= $(window).width() )
+            left = $(window).width() - toolbar.width() - toolbar.next().offset().left - 90 + "px"
 
           if toolbar.is(':visible') and toolbar.next().offset()?
             toolbar.stop().animate {
@@ -406,28 +436,13 @@ define [
               }).find(".redactor-act").removeClass("redactor-act")
 
 
-          toolbar.find(".re-header1, .re-header2").removeClass("redactor-act")
-
+          toolbar.find(".re-header1, .re-header2, .re-link").removeClass("redactor-act")
           $("#link-toolbar").removeClass("active")
 
-          toolbar.find(".re-header1").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("head1") isnt -1
-          toolbar.find(".re-header2").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("head2") isnt -1
+          toolbar.find(".re-header1").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("<head1") isnt -1 or Redactor::redactor.selection.getParent().tagName.toLowerCase() == "head1"
+          toolbar.find(".re-header2").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("<head2") isnt -1 or Redactor::redactor.selection.getParent().tagName.toLowerCase() == "head2"
+          toolbar.find(".re-link").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("<a") isnt -1 or Redactor::redactor.selection.getParent().tagName.toLowerCase() == "a"
           return
-
-      ###Redactor::viewBox = ()->
-          selection = if not window.getSelection? then window.getSelection() else document.getSelection()
-          console.log(selection.type)
-          if selection.type is 'Range'
-              range = selection.getRangeAt(0)
-              container = $(range.commonAncestorContainer.parentElement)
-              text = container.text()
-              startText = text.substring(0, range.startOffset)
-              endText = text.substring(range.endOffset, text.length)
-              container.html(startText + "<span class='range'>" + selection + "</span>" + endText)
-              setTimeout ->
-                  Redactor::redactor.caret.setOffset(40)
-              , 20###
-
 
       Redactor
     redactor = new Redactor(_docum, '.sub-section')
