@@ -6967,7 +6967,7 @@
 				},
 				links: function()
 				{
-					if (!this.opts.linkTooltip) return;
+					return;
 
 					this.$editor.find('a').on('touchstart.redactor.' + this.uuid + ' click.redactor.' + this.uuid, $.proxy(this.observe.showTooltip, this));
 					this.$editor.on('touchstart.redactor.' + this.uuid + ' click.redactor.' + this.uuid, $.proxy(this.observe.closeTooltip, this));

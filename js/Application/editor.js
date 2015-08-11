@@ -6,17 +6,20 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
   var _docum;
   _docum = $(document);
   _docum.ready(function() {
-    var Redactor, redactor;
+    var Redactor, link_insert, redactor;
+    link_insert = 0;
     $.Redactor.prototype.insertHead = function() {
       return {
         init: function() {
-          var button, button2, button3;
+          var button, button2, button3, button4;
           button = this.button.add('header1');
           this.button.addCallback(button, this.insertHead.insertH1);
           button2 = this.button.add('header2');
           this.button.addCallback(button2, this.insertHead.insertH2);
           button3 = this.button.add('alignment');
           this.button.addCallback(button3, this.insertHead.center);
+          button4 = this.button.add('link');
+          this.button.addCallback(button4, this.insertHead.link);
         },
         insertH1: function(key) {
           this.inline.format('head1');
@@ -41,6 +44,13 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           this.inline.format('center');
           this.code.sync();
           this.observe.load();
+        },
+        link: function() {
+          this.selection.restore();
+          this.insert.html('<a id="link_insert_' + (new Date).getTime() + '">' + this.selection.getText() + '</a>', false);
+          this.code.sync();
+          this.observe.load();
+          console.log(this.selection.getBlock());
         }
       };
     };
@@ -202,7 +212,8 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             cleanStyleOnEnter: false,
             focus: focus,
             tabAsSpaces: 4,
-            buttons: ['bold', 'italic', 'deleted', 'link'],
+            linkTooltip: false,
+            buttons: ['bold', 'italic', 'deleted'],
             plugins: ['insertHead'],
             shortcutsAdd: {
               'ctrl+enter': {

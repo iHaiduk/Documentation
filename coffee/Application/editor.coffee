@@ -20,6 +20,7 @@ define [
   _docum = $(document)
   _docum.ready ->
 
+    link_insert = 0
     $.Redactor::insertHead = ->
       {
       init: ->
@@ -30,6 +31,8 @@ define [
         @button.addCallback button2, @insertHead.insertH2
         button3 = @button.add('alignment')
         @button.addCallback button3, @insertHead.center
+        button4 = @button.add('link')
+        @button.addCallback button4, @insertHead.link
         return
       insertH1: (key)->
         @inline.format('head1')
@@ -50,6 +53,13 @@ define [
         @inline.format('center')
         @code.sync()
         @observe.load()
+        return
+      link: ->
+        @selection.restore();
+        @insert.html('<a id="link_insert_'+(new Date).getTime()+'">'+@selection.getText()+'</a>', false)
+        @code.sync()
+        @observe.load()
+        console.log(@selection.getBlock())
         return
 
       }
@@ -221,7 +231,8 @@ define [
             cleanStyleOnEnter: false
             focus: focus
             tabAsSpaces: 4
-            buttons: ['bold', 'italic', 'deleted', 'link']
+            linkTooltip: false
+            buttons: ['bold', 'italic', 'deleted']
             plugins: ['insertHead']
             shortcutsAdd: 'ctrl+enter': func: 'insertHead.newRedactor'
             initCallback: ->
