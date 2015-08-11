@@ -86,7 +86,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         Redactor.prototype.template = {
           empty: "<div class=\"section\">\n    <div class=\"sub-section\"></div>\n    <div class=\"media-toolbar\">\n        <span class=\"btn btn-toggle icon-plus\"></span>\n        <div class=\"menu-toolbar\">\n            <span class=\"btn icon-image\"></span>\n            <span class=\"btn icon-code\"></span>\n            <span class=\"btn icon-hr\"></span>\n        </div>\n    </div>\n</div>",
           image: "<img/>",
-          code: "<textarea class='code'>fgjfgjfgjfgjfgjfgj</textarea><ul class=\"language-list\" >\n<li class=\"language\" data-type=\"htmlmixed\">HTML</li>\n<li class=\"language\" data-type=\"CSS\">CSS</li>\n<li class=\"language\" data-type=\"SASS\">SASS</li>\n<li class=\"language\" data-type=\"JavaScript\">JavaScript</li>\n<li class=\"language\" data-type=\"coffeescript\">CoffeeScript</li>\n<li class=\"language\" data-type=\"PHP\">PHP</li>\n<li class=\"language\" data-type=\"SQL\">SQL</li>\n</ul>",
+          code: "<textarea class='code'></textarea><ul class=\"language-list\" >\n<li class=\"language\" data-type=\"htmlmixed\">HTML</li>\n<li class=\"language\" data-type=\"CSS\">CSS</li>\n<li class=\"language\" data-type=\"SASS\">SASS</li>\n<li class=\"language\" data-type=\"JavaScript\">JavaScript</li>\n<li class=\"language\" data-type=\"coffeescript\">CoffeeScript</li>\n<li class=\"language\" data-type=\"PHP\">PHP</li>\n<li class=\"language\" data-type=\"SQL\">SQL</li>\n</ul>",
           hr: "<hr/>"
         };
       }
@@ -159,8 +159,11 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         Redactor.prototype.document.find('.remove').off('click').on('click', function() {
           var _this;
           _this = $(this);
-          _this.parents(".section").find(".sub-section").removeClass("noRedactor").html('<p></p>');
-          Redactor.prototype.addRedactor(_this.parents(".section").find(".sub-section"), true);
+          _this.parent(".section").remove();
+
+          /*_this.parent(".section").find(".sub-section").removeClass("noRedactor").html('<p></p>')
+          Redactor::addRedactor(_this.parent(".section").find(".sub-section"), true);
+           */
           Redactor.prototype.addListen();
           _this.remove();
         });
@@ -174,13 +177,11 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         pos = parentSection.find("*").index(Redactor.prototype.lastSection.addClass("tempSection"));
         console.log(Redactor.prototype.lastSection, parentSection);
         parentSection.find("*").each(function() {
-          if (parentSection.find("p").index($(this)) >= 0) {
-            if (parentSection.find("p").index($(this)) < pos && $(this).text().trim().length) {
-              console.log(parentSection.find("p").index($(this)), pos, $(this).html());
+          if (parentSection.find("*").index($(this)) >= 0) {
+            if (parentSection.find("*").index($(this)) < pos && $(this).text().trim().length) {
               frstSectionArray.push($(this));
             }
-            if (parentSection.find("p").index($(this)) > pos && $(this).text().trim().length) {
-              console.log(parentSection.find("p").index($(this)), pos, $(this).html());
+            if (parentSection.find("*").index($(this)) > pos && $(this).text().trim().length) {
               lastSectionArray.push($(this));
             }
           }
@@ -192,8 +193,9 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         lastSectionArray = lastSectionArray.map(function(el) {
           return el.get()[0].outerHTML;
         });
-        frstSectionArrayHTML = "<p>" + frstSectionArray.join("</p><p>") + "</p>";
+        frstSectionArrayHTML = frstSectionArray.join("");
         lastSectionArrayHTML = "<p>" + lastSectionArray.join("</p><p>") + "</p>";
+        console.log(frstSectionArrayHTML);
         parentSection.redactor("code.set", frstSectionArrayHTML);
         element = $(code);
         noRedactorSection = $("<div class='section'><div class='sub-section noRedactor'></div><span class='btn btn-toggle remove'></span></div></div>");

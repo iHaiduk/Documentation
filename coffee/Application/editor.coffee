@@ -102,7 +102,7 @@ define [
                             </div>
                         </div>"""
           image: """<img/>"""
-          code: """<textarea class='code'>fgjfgjfgjfgjfgjfgj</textarea><ul class="language-list" >
+          code: """<textarea class='code'></textarea><ul class="language-list" >
           <li class="language" data-type="htmlmixed">HTML</li>
           <li class="language" data-type="CSS">CSS</li>
           <li class="language" data-type="SASS">SASS</li>
@@ -186,8 +186,9 @@ define [
 
         Redactor::document.find('.remove').off('click').on 'click', ->
           _this = $(@)
-          _this.parents(".section").find(".sub-section").removeClass("noRedactor").html('<p></p>')
-          Redactor::addRedactor(_this.parents(".section").find(".sub-section"), true);
+          _this.parent(".section").remove()
+          ###_this.parent(".section").find(".sub-section").removeClass("noRedactor").html('<p></p>')
+          Redactor::addRedactor(_this.parent(".section").find(".sub-section"), true);###
           Redactor::addListen()
           _this.remove()
           return
@@ -201,12 +202,10 @@ define [
         console.log(Redactor::lastSection, parentSection)
 
         parentSection.find("*").each ->
-          if parentSection.find("p").index($(@)) >= 0
-            if parentSection.find("p").index($(@)) < pos and $(@).text().trim().length
-              console.log(parentSection.find("p").index($(@)), pos, $(@).html())
+          if parentSection.find("*").index($(@)) >= 0
+            if parentSection.find("*").index($(@)) < pos and $(@).text().trim().length
               frstSectionArray.push($(@))
-            if parentSection.find("p").index($(@)) > pos and $(@).text().trim().length
-              console.log(parentSection.find("p").index($(@)), pos, $(@).html())
+            if parentSection.find("*").index($(@)) > pos and $(@).text().trim().length
               lastSectionArray.push($(@))
             return
         Redactor::lastSection.removeClass("tempSection")
@@ -216,8 +215,10 @@ define [
         lastSectionArray = lastSectionArray.map (el) ->
           el.get()[0].outerHTML
 
-        frstSectionArrayHTML = "<p>"+frstSectionArray.join("</p><p>")+"</p>"
+        frstSectionArrayHTML = frstSectionArray.join("")
         lastSectionArrayHTML = "<p>"+lastSectionArray.join("</p><p>")+"</p>"
+
+        console.log(frstSectionArrayHTML)
 
         parentSection.redactor("code.set", frstSectionArrayHTML)
         element = $(code)
