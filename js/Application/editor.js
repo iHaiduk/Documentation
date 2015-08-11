@@ -47,7 +47,8 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         },
         link: function() {
           this.selection.restore();
-          this.insert.html('<a id="link_insert_' + (new Date).getTime() + '">' + this.selection.getText() + '</a>', false);
+          Redactor.prototype.lastLinkActive = "link_insert_" + (new Date).getTime();
+          this.insert.html('<a id="' + Redactor.prototype.lastLinkActive + '">' + this.selection.getText() + '</a>', false);
           this.code.sync();
           this.observe.load();
           console.log(this.selection.getBlock());
@@ -65,6 +66,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         Redactor.prototype.CodeMirror = null;
         Redactor.prototype.lastFocus = null;
         Redactor.prototype.lastSection = null;
+        Redactor.prototype.lastLinkActive = null;
         Redactor.prototype.position = {
           start: {
             x: 0,
@@ -212,7 +214,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             cleanStyleOnEnter: false,
             focus: focus,
             tabAsSpaces: 4,
-            linkTooltip: false,
             buttons: ['bold', 'italic', 'deleted'],
             plugins: ['insertHead'],
             shortcutsAdd: {
@@ -281,6 +282,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           focus = false;
         }
         if ((_redactor != null) && (_redactor.selection != null)) {
+          Redactor.prototype.findLink(_redactor);
           block = $(_redactor.selection.getBlock());
           Redactor.prototype.lastSection = block;
           text = $(_redactor.selection.getBlock()).text().trim();
@@ -300,6 +302,11 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
       };
 
       Redactor.prototype.listenEvent = function(element) {
+        $("#link_value").off('keyup').on('keyup', function(event) {
+          $("#" + Redactor.prototype.lastLinkActive).attr("href", $(this).val());
+          Redactor.prototype.redactor.code.sync();
+          return Redactor.prototype.redactor.observe.load();
+        });
         element.off('mousedown mouseup').on('mousedown mouseup', function(event) {
           if (event.type === 'mousedown') {
             Redactor.prototype.position.start.y = event.pageY;
@@ -320,6 +327,14 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             element.parent().find('.redactor-toolbar').hide();
           }
         });
+      };
+
+      Redactor.prototype.findLink = function(_redactor) {
+        var _ref, parent;
+        parent = (_ref = _redactor.selection.getParent()) ? $(_ref) : false;
+        if (parent && parent[0].tagName.toLowerCase() === "a") {
+          return Redactor.prototype.lastLinkActive = parent.attr("id");
+        }
       };
 
       Redactor.prototype.removeRedactor = function(element) {

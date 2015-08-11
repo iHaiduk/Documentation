@@ -56,7 +56,8 @@ define [
         return
       link: ->
         @selection.restore();
-        @insert.html('<a id="link_insert_'+(new Date).getTime()+'">'+@selection.getText()+'</a>', false)
+        Redactor::lastLinkActive = "link_insert_"+(new Date).getTime();
+        @insert.html('<a id="'+Redactor::lastLinkActive+'">'+@selection.getText()+'</a>', false)
         @code.sync()
         @observe.load()
         console.log(@selection.getBlock())
@@ -75,6 +76,7 @@ define [
         Redactor::CodeMirror = null
         Redactor::lastFocus = null
         Redactor::lastSection = null
+        Redactor::lastLinkActive = null
         Redactor::position =
           start:
             x: 0
@@ -231,7 +233,6 @@ define [
             cleanStyleOnEnter: false
             focus: focus
             tabAsSpaces: 4
-            linkTooltip: false
             buttons: ['bold', 'italic', 'deleted']
             plugins: ['insertHead']
             shortcutsAdd: 'ctrl+enter': func: 'insertHead.newRedactor'
@@ -279,6 +280,7 @@ define [
 
       Redactor::showPlusButton = (_redactor = Redactor::redactor, focus = false)->
         if _redactor? and _redactor.selection?
+          Redactor::findLink(_redactor)
           block = $(_redactor.selection.getBlock())
           Redactor::lastSection = block
           text = $(_redactor.selection.getBlock()).text().trim()
@@ -294,6 +296,11 @@ define [
         return
 
       Redactor::listenEvent = (element)->
+        $("#link_value").off('keyup').on('keyup', (event) ->
+          $("#"+Redactor::lastLinkActive).attr("href",$(@).val())
+          Redactor::redactor.code.sync()
+          Redactor::redactor.observe.load()
+        )
         element.off('mousedown mouseup').on('mousedown mouseup', (event) ->
           if event.type == 'mousedown'
             Redactor::position.start.y = event.pageY
@@ -313,6 +320,11 @@ define [
             element.parent().find('.redactor-toolbar').hide()
           return
         return
+
+      Redactor::findLink = (_redactor)->
+        parent = if (_ref =_redactor.selection.getParent()) then $(_ref) else false
+        if parent and parent[0].tagName.toLowerCase() is "a"
+          Redactor::lastLinkActive = parent.attr("id")
 
       Redactor::removeRedactor = (element)->
         Redactor::elements = Redactor::document.find(Redactor::nameElement)
