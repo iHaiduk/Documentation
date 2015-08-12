@@ -11,11 +11,15 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
     $.Redactor.prototype.insertHead = function() {
       return {
         init: function() {
-          var button, button2, button3, button4;
+          var button, button2, button3, button4, button5, button6;
           button = this.button.add('header1');
           this.button.addCallback(button, this.insertHead.insertH1);
           button2 = this.button.add('header2');
           this.button.addCallback(button2, this.insertHead.insertH2);
+          button5 = this.button.add('blockquote');
+          this.button.addCallback(button5, this.insertHead.blockquote);
+          button6 = this.button.add('clear');
+          this.button.addCallback(button6, this.insertHead.clear);
           button3 = this.button.add('alignment');
           this.button.addCallback(button3, this.insertHead.center);
           button4 = this.button.add('link');
@@ -29,6 +33,9 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           if (this.selection.getParent() && $(this.selection.getParent())[0].tagName.toLowerCase() === 'sub') {
             this.inline.format('sub');
           }
+          if (this.selection.getParent() && $(this.selection.getParent())[0].tagName.toLowerCase() === 'blockquote') {
+            this.inline.format('blockquote');
+          }
         },
         insertH2: function(key) {
           this.inline.format('sub');
@@ -37,6 +44,9 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           this.observe.load();
           if (this.selection.getParent() && $(this.selection.getParent())[0].tagName.toLowerCase() === 'sup') {
             this.inline.format('sup');
+          }
+          if (this.selection.getParent() && $(this.selection.getParent())[0].tagName.toLowerCase() === 'blockquote') {
+            this.inline.format('blockquote');
           }
         },
         center: function() {
@@ -57,6 +67,24 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           this.observe.load();
           Redactor.prototype.findLink(Redactor.prototype.redactor);
           $("#link_value").focus();
+        },
+        blockquote: function() {
+          this.inline.format('blockquote');
+          this.selection.restore();
+          this.code.sync();
+          this.observe.load();
+          if (this.selection.getParent() && $(this.selection.getParent())[0].tagName.toLowerCase() === 'sup') {
+            this.inline.format('sup');
+          }
+          if (this.selection.getParent() && $(this.selection.getParent())[0].tagName.toLowerCase() === 'sub') {
+            this.inline.format('sub');
+          }
+        },
+        clear: function() {
+          this.selection.restore();
+          this.insert.html(this.selection.getText(), false);
+          this.code.sync();
+          this.observe.load();
         }
       };
     };
@@ -85,7 +113,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         };
         Redactor.prototype.template = {
           empty: "<div class=\"section\">\n    <div class=\"sub-section\"></div>\n    <div class=\"media-toolbar\">\n        <span class=\"btn btn-toggle icon-plus\"></span>\n        <div class=\"menu-toolbar\">\n            <span class=\"btn icon-image\"></span>\n            <span class=\"btn icon-code\"></span>\n            <span class=\"btn icon-hr\"></span>\n        </div>\n    </div>\n</div>",
-          image: "<img/>",
+          image: "<form id=\"form1\" runat=\"server\">\n<label for='imgInp' id='uploadImage'></label>\n    <input type='file' id=\"imgInp\" />\n</form>\n    <img src=\"\" />",
           code: "<textarea class='code'></textarea><ul class=\"language-list\" >\n<li class=\"language\" data-type=\"htmlmixed\">HTML</li>\n<li class=\"language\" data-type=\"CSS\">CSS</li>\n<li class=\"language\" data-type=\"SASS\">SASS</li>\n<li class=\"language\" data-type=\"JavaScript\">JavaScript</li>\n<li class=\"language\" data-type=\"coffeescript\">CoffeeScript</li>\n<li class=\"language\" data-type=\"PHP\">PHP</li>\n<li class=\"language\" data-type=\"SQL\">SQL</li>\n</ul>",
           hr: "<hr/>"
         };
@@ -144,8 +172,29 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           $(this).toggleClass('open');
         });
         Redactor.prototype.document.find('.icon-image').off('click').on('click', function() {
-          Redactor.prototype.mediaButton("image", Redactor.prototype.template.image);
+          Redactor.prototype.mediaButton("image", Redactor.prototype.template.image, function(element) {
+            Redactor.prototype.preUploadImage(element);
+            $("#media-toolbar").removeClass("active");
+            $("#uploadImage").click();
+          });
         });
+        Redactor.prototype.preUploadImage = function(element) {
+          $("#imgInp").on("change", function(e) {
+            var file, imageType, reader;
+            element = $(element[2]);
+            file = e.target.files[0];
+            imageType = /image.*/;
+            if (!file.type.match(imageType)) {
+              return;
+            }
+            reader = new FileReader;
+            reader.onload = function(e) {
+              $("#form1").remove();
+              element.attr("src", e.target.result);
+            };
+            reader.readAsDataURL(file);
+          });
+        };
         Redactor.prototype.document.find('.icon-code').off('click').on('click', function() {
           Redactor.prototype.mediaButton("code", Redactor.prototype.template.code, function(element) {
             var param_id;
@@ -249,7 +298,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           _elements = Redactor.prototype.elements;
           element.redactor({
             iframe: true,
-            cleanStyleOnEnter: true,
+            cleanStyleOnEnter: false,
             focus: focus,
             tabAsSpaces: 4,
             buttons: ['bold', 'italic', 'deleted'],
@@ -273,20 +322,25 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
                   $(this).remove();
                 }
               });
+              this.$element.find("p").each(function() {
+                if ($(this).text().length && !$(this).html().replace(/\u200B/g, '').length) {
+                  return $(this).html("<br/>");
+                }
+              });
               this.code.sync();
               this.observe.load();
             },
             changeCallback: function() {
+              this.$element.find("p").each(function() {
+                if ($(this).text().length && !$(this).html().replace(/\u200B/g, '').length) {
+                  return $(this).html("<br/>");
+                }
+              });
               Redactor.prototype.showPlusButton(this, true);
               if (this.sel.type !== "Range") {
                 _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
               }
-              this.$element.find("br").each(function() {
-                if ($(this).parent().hasClass("sub-section")) {
-                  $(this).wrap("<p class='empty'></p>");
-                  $(this).parent().click();
-                }
-              });
+              $("#viewDoc").find(".section-wrap > span").remove();
             },
             blurCallback: function() {
               var redactor;
