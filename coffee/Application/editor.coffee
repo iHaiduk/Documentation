@@ -61,7 +61,7 @@ define [
         if @selection.getHtml().indexOf("<a id") isnt -1
           @insert.html(@selection.getText(), false)
         else
-          @insert.html('<a id="'+Redactor::lastLinkActive+'">'+@selection.getText()+'</a>', false)
+          @insert.html('<a id="'+Redactor::lastLinkActive+'" href="">'+@selection.getText()+'</a>', false)
         @code.sync()
         @observe.load()
         Redactor::findLink(Redactor::redactor)
@@ -210,7 +210,7 @@ define [
         frstSectionArray = []
         lastSectionArray = []
         parentSection = if Redactor::lastSection.hasClass("sub-section") then Redactor::lastSection else Redactor::lastSection.parents(".sub-section")
-        pos = parentSection.find("p").index(if Redactor::lastSection[0].tagName.toLowerCase() is "p" then Redactor::lastSection else Redactor::lastSection.parent("p"))
+        pos = parentSection.find("p").index(parentSection.find(".empty"))
 
         parentSection.find("p").each ->
           if parentSection.find("p").index($(@)) >= 0
@@ -235,7 +235,7 @@ define [
         parentSection.find(".empty").remove()
         parentSection.parents(".section").after(noRedactorSection)
         parentSection.remove() if !$(frstSectionArrayHTML).text().trim().length
-        lastSectionArrayHTML = "<p><br></p>" if !$(lastSectionArrayHTML).text().trim().length
+        lastSectionArrayHTML = "<p class='empty'></p>" if !$(lastSectionArrayHTML).text().trim().length
         Redactor::addSection(noRedactorSection, lastSectionArrayHTML)
         Redactor::addListen()
 
@@ -259,7 +259,6 @@ define [
 
       Redactor::loadRedactors = ->
         Redactor::elements.not(".noRedactor").each ->
-          console.log(@)
           Redactor::addRedactor $(@)
           return
         return
@@ -269,7 +268,7 @@ define [
           _elements = Redactor::elements
           element.redactor
             iframe: true
-            cleanStyleOnEnter: false
+            cleanStyleOnEnter: true
             focus: focus
             tabAsSpaces: 4
             buttons: ['bold', 'italic', 'deleted']
@@ -282,10 +281,20 @@ define [
               Redactor::activeElement = element
               Redactor::listenEvent element
               Redactor::showPlusButton(@)
+              @$element.find("p, br").each ->
+                $(@).remove() if !$(@).text().trim().length
+                return
+              @code.sync()
+              @observe.load()
               return
             changeCallback: ()->
               Redactor::showPlusButton(@, true)
               _elements.parent().find('.redactor-toolbar').stop().fadeOut 400 if @sel.type isnt "Range"
+              @$element.find("br").each ->
+                if $(this).parent().hasClass("sub-section")
+                  $(this).wrap("<p class='empty'></p>")
+                  $(this).parent().click()
+                  return
               return
             blurCallback: () ->
               @$element.removeClass("focus")
@@ -298,14 +307,17 @@ define [
               return
             keydownCallback: (e) ->
               key = e.which
-              Redactor::removeRedactor(@$element) if (e.keyCode is 8 or e.keyCode is 46) and @code.get() is ""
+              if (e.keyCode is 8 or e.keyCode is 46) and $(@selection.getBlock()).hasClass("empty")
+                $(@selection.getBlock()).remove()
+                if !@$element.find("p:not(.empty)").length and ($("#viewDoc").find(".sub-section:not(.noRedactor)").length-1)
+                  @$element.parents(".section").remove()
               return
             keyupCallback: (e) ->
               key = e.which
               Redactor::lastSection = $(@selection.getBlock())
               if (e.keyCode is 13)
                 @selection.restore()
-                $(@selection.getBlock()).toggleClass("empty", true) if $(@selection.getBlock()).text().trim() is ""
+                $(@selection.getBlock()).parent().toggleClass("empty", true) if $(@selection.getBlock()).text().trim() is ""
                 @code.sync()
                 @observe.load()
               return
@@ -324,7 +336,8 @@ define [
           block = if $(_redactor.selection.getCurrent())[0]? then $(_redactor.selection.getCurrent()) else $(_redactor.selection.getBlock())
           _docum.find("#viewDoc").find(".media-toolbar").toggleClass("active", false)
           _docum.find("#viewDoc").find(".empty").toggleClass("empty", false)
-          if Redactor::isEmpty(_redactor)
+          if Redactor::isEmpty(block, true)
+            block = block.parent() unless block[0].tagName?
             $("#media-toolbar").toggleClass("active", true).css("top", (block.offset().top-107)+"px").find(".btn-toggle").removeClass("open")
             block.toggleClass("empty", true)
         return
@@ -347,7 +360,7 @@ define [
           return
         ).off('click').on 'click', (e)->
           Redactor::showPlusButton(null, true)
-
+          Redactor::lastSection = $(@)
           $("#link-toolbar").removeClass("active").find("#link_value").val("")
           elem = $(e.target)
           if elem[0].tagName.toLowerCase() == "a"
@@ -437,10 +450,10 @@ define [
           html = $(_redactor.selection.getBlock()).html()
 
         text = block.text().trim()
-        html = html.html().replace(/[\u200B]/g, '') if html? and typeof html is "object"
+        html = html.html().replace(/[\u200B]/g, '').trim() if typeof html is "object" and html.html()?
         lnght = text.length
 
-        (!lnght or (lnght and !html.length)) and block.length
+        ((!lnght or !html[0]? or (lnght and !(html[0].length))) and block.length)
 
       Redactor::toolbarPosition = (toolbar = Redactor::toolbar)->
         readTop = if Redactor::position.start.y < Redactor::position.end.y then 'start' else 'end'

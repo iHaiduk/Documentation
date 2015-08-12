@@ -51,7 +51,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           if (this.selection.getHtml().indexOf("<a id") !== -1) {
             this.insert.html(this.selection.getText(), false);
           } else {
-            this.insert.html('<a id="' + Redactor.prototype.lastLinkActive + '">' + this.selection.getText() + '</a>', false);
+            this.insert.html('<a id="' + Redactor.prototype.lastLinkActive + '" href="">' + this.selection.getText() + '</a>', false);
           }
           this.code.sync();
           this.observe.load();
@@ -181,7 +181,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         frstSectionArray = [];
         lastSectionArray = [];
         parentSection = Redactor.prototype.lastSection.hasClass("sub-section") ? Redactor.prototype.lastSection : Redactor.prototype.lastSection.parents(".sub-section");
-        pos = parentSection.find("p").index(Redactor.prototype.lastSection[0].tagName.toLowerCase() === "p" ? Redactor.prototype.lastSection : Redactor.prototype.lastSection.parent("p"));
+        pos = parentSection.find("p").index(parentSection.find(".empty"));
         parentSection.find("p").each(function() {
           if (parentSection.find("p").index($(this)) >= 0) {
             if (parentSection.find("p").index($(this)) < pos) {
@@ -210,7 +210,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           parentSection.remove();
         }
         if (!$(lastSectionArrayHTML).text().trim().length) {
-          lastSectionArrayHTML = "<p><br></p>";
+          lastSectionArrayHTML = "<p class='empty'></p>";
         }
         Redactor.prototype.addSection(noRedactorSection, lastSectionArrayHTML);
         Redactor.prototype.addListen();
@@ -236,7 +236,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
 
       Redactor.prototype.loadRedactors = function() {
         Redactor.prototype.elements.not(".noRedactor").each(function() {
-          console.log(this);
           Redactor.prototype.addRedactor($(this));
         });
       };
@@ -250,7 +249,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           _elements = Redactor.prototype.elements;
           element.redactor({
             iframe: true,
-            cleanStyleOnEnter: false,
+            cleanStyleOnEnter: true,
             focus: focus,
             tabAsSpaces: 4,
             buttons: ['bold', 'italic', 'deleted'],
@@ -269,12 +268,25 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               Redactor.prototype.activeElement = element;
               Redactor.prototype.listenEvent(element);
               Redactor.prototype.showPlusButton(this);
+              this.$element.find("p, br").each(function() {
+                if (!$(this).text().trim().length) {
+                  $(this).remove();
+                }
+              });
+              this.code.sync();
+              this.observe.load();
             },
             changeCallback: function() {
               Redactor.prototype.showPlusButton(this, true);
               if (this.sel.type !== "Range") {
                 _elements.parent().find('.redactor-toolbar').stop().fadeOut(400);
               }
+              this.$element.find("br").each(function() {
+                if ($(this).parent().hasClass("sub-section")) {
+                  $(this).wrap("<p class='empty'></p>");
+                  $(this).parent().click();
+                }
+              });
             },
             blurCallback: function() {
               var redactor;
@@ -288,8 +300,11 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             keydownCallback: function(e) {
               var key;
               key = e.which;
-              if ((e.keyCode === 8 || e.keyCode === 46) && this.code.get() === "") {
-                Redactor.prototype.removeRedactor(this.$element);
+              if ((e.keyCode === 8 || e.keyCode === 46) && $(this.selection.getBlock()).hasClass("empty")) {
+                $(this.selection.getBlock()).remove();
+                if (!this.$element.find("p:not(.empty)").length && ($("#viewDoc").find(".sub-section:not(.noRedactor)").length - 1)) {
+                  this.$element.parents(".section").remove();
+                }
               }
             },
             keyupCallback: function(e) {
@@ -299,7 +314,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
               if (e.keyCode === 13) {
                 this.selection.restore();
                 if ($(this.selection.getBlock()).text().trim() === "") {
-                  $(this.selection.getBlock()).toggleClass("empty", true);
+                  $(this.selection.getBlock()).parent().toggleClass("empty", true);
                 }
                 this.code.sync();
                 this.observe.load();
@@ -328,7 +343,10 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           block = $(_redactor.selection.getCurrent())[0] != null ? $(_redactor.selection.getCurrent()) : $(_redactor.selection.getBlock());
           _docum.find("#viewDoc").find(".media-toolbar").toggleClass("active", false);
           _docum.find("#viewDoc").find(".empty").toggleClass("empty", false);
-          if (Redactor.prototype.isEmpty(_redactor)) {
+          if (Redactor.prototype.isEmpty(block, true)) {
+            if (block[0].tagName == null) {
+              block = block.parent();
+            }
             $("#media-toolbar").toggleClass("active", true).css("top", (block.offset().top - 107) + "px").find(".btn-toggle").removeClass("open");
             block.toggleClass("empty", true);
           }
@@ -353,6 +371,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         }).off('click').on('click', function(e) {
           var elem, offset, selection, toolbar;
           Redactor.prototype.showPlusButton(null, true);
+          Redactor.prototype.lastSection = $(this);
           $("#link-toolbar").removeClass("active").find("#link_value").val("");
           elem = $(e.target);
           if (elem[0].tagName.toLowerCase() === "a") {
@@ -457,11 +476,11 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           html = $(_redactor.selection.getBlock()).html();
         }
         text = block.text().trim();
-        if ((html != null) && typeof html === "object") {
-          html = html.html().replace(/[\u200B]/g, '');
+        if (typeof html === "object" && (html.html() != null)) {
+          html = html.html().replace(/[\u200B]/g, '').trim();
         }
         lnght = text.length;
-        return (!lnght || (lnght && !html.length)) && block.length;
+        return (!lnght || (html[0] == null) || (lnght && !html[0].length)) && block.length;
       };
 
       Redactor.prototype.toolbarPosition = function(toolbar) {
