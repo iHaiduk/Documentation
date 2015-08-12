@@ -34,7 +34,7 @@ define [ 'jquery', 'Application/editor' ], ($) ->
 
       Menu::addBottomPadding = () ->
         return
-        arr = jQuery.grep(_document.find("#viewDoc").find("head1,head2"), (val) ->
+        arr = jQuery.grep(_document.find("#viewDoc").find("sup,sub"), (val) ->
           true
         )
         summ = $(arr[arr.length - 1]).parents(".section").height()
@@ -51,8 +51,8 @@ define [ 'jquery', 'Application/editor' ], ($) ->
         Menu::lastIdHeading = -1
         Menu::HeadingCnt = 0
         Menu::MenuHeadingCnt = 0
-        _document.find("#viewDoc").find("head1,head2").each ->
-          if($(@)[0].tagName.toLowerCase() is "head1")
+        _document.find("#viewDoc").find("sup,sub").each ->
+          if($(@)[0].tagName.toLowerCase() is "sup")
             Menu::lastIdHeading++;
             Menu::tree.push(
               element: $(@).attr("id", "header"+Menu::HeadingCnt)
@@ -115,15 +115,15 @@ define [ 'jquery', 'Application/editor' ], ($) ->
 
       Menu::offsetTop = ()->
         return if Menu::lock
-        arr = jQuery.grep(_document.find("#viewDoc").find("head1,head2"), (val) ->
+        arr = jQuery.grep(_document.find("#viewDoc").find("sup,sub"), (val) ->
           $(val).offset().top-$(window).scrollTop()-_document.find(".header").height() >= 0
         )
         if arr.length
           Menu::navigation.find(".active").removeClass 'active'
-          if(arr[0].tagName.toLowerCase() is "head1")
-            Menu::navigation.find(".nav > .nav-list").eq(_document.find("#viewDoc").find("head1").index($(arr[0]))).addClass('active')
+          if(arr[0].tagName.toLowerCase() is "sup")
+            Menu::navigation.find(".nav > .nav-list").eq(_document.find("#viewDoc").find("sup").index($(arr[0]))).addClass('active')
           else
-            Menu::navigation.find(".sub-nav > .nav-list").eq(_document.find("#viewDoc").find("head2").index($(arr[0]))).addClass('active').parents(".nav-list").addClass('active')
+            Menu::navigation.find(".sub-nav > .nav-list").eq(_document.find("#viewDoc").find("sub").index($(arr[0]))).addClass('active').parents(".nav-list").addClass('active')
         return
 
 

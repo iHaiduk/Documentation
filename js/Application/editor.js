@@ -22,21 +22,21 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           this.button.addCallback(button4, this.insertHead.link);
         },
         insertH1: function(key) {
-          this.inline.format('head1');
+          this.inline.format('sup');
           this.selection.restore();
           this.code.sync();
           this.observe.load();
-          if (this.selection.getParent() && $(this.selection.getParent())[0].tagName.toLowerCase() === 'head2') {
-            this.inline.format('head2');
+          if (this.selection.getParent() && $(this.selection.getParent())[0].tagName.toLowerCase() === 'sub') {
+            this.inline.format('sub');
           }
         },
         insertH2: function(key) {
-          this.inline.format('head2');
+          this.inline.format('sub');
           this.selection.restore();
           this.code.sync();
           this.observe.load();
-          if (this.selection.getParent() && $(this.selection.getParent())[0].tagName.toLowerCase() === 'head1') {
-            this.inline.format('head1');
+          if (this.selection.getParent() && $(this.selection.getParent())[0].tagName.toLowerCase() === 'sup') {
+            this.inline.format('sup');
           }
         },
         center: function() {
@@ -160,10 +160,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           var _this;
           _this = $(this);
           _this.parent(".section").remove();
-
-          /*_this.parent(".section").find(".sub-section").removeClass("noRedactor").html('<p></p>')
-          Redactor::addRedactor(_this.parent(".section").find(".sub-section"), true);
-           */
           Redactor.prototype.addListen();
           _this.remove();
         });
@@ -173,20 +169,18 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         var element, frstSectionArray, frstSectionArrayHTML, lastSectionArray, lastSectionArrayHTML, noRedactorSection, parentSection, pos;
         frstSectionArray = [];
         lastSectionArray = [];
-        parentSection = Redactor.prototype.lastSection.parents(".sub-section");
-        pos = parentSection.find("*").index(Redactor.prototype.lastSection.addClass("tempSection"));
-        console.log(Redactor.prototype.lastSection, parentSection);
-        parentSection.find("*").each(function() {
-          if (parentSection.find("*").index($(this)) >= 0) {
-            if (parentSection.find("*").index($(this)) < pos && $(this).text().trim().length) {
+        parentSection = Redactor.prototype.lastSection.hasClass("sub-section") ? Redactor.prototype.lastSection : Redactor.prototype.lastSection.parents(".sub-section");
+        pos = parentSection.find("p").index(Redactor.prototype.lastSection[0].tagName.toLowerCase() === "p" ? Redactor.prototype.lastSection : Redactor.prototype.lastSection.parent("p"));
+        parentSection.find("p").each(function() {
+          if (parentSection.find("p").index($(this)) >= 0) {
+            if (parentSection.find("p").index($(this)) < pos) {
               frstSectionArray.push($(this));
             }
-            if (parentSection.find("*").index($(this)) > pos && $(this).text().trim().length) {
+            if (parentSection.find("p").index($(this)) > pos) {
               lastSectionArray.push($(this));
             }
           }
         });
-        Redactor.prototype.lastSection.removeClass("tempSection");
         frstSectionArray = frstSectionArray.map(function(el) {
           return el.get()[0].outerHTML;
         });
@@ -194,18 +188,21 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           return el.get()[0].outerHTML;
         });
         frstSectionArrayHTML = frstSectionArray.join("");
-        lastSectionArrayHTML = "<p>" + lastSectionArray.join("</p><p>") + "</p>";
-        console.log(frstSectionArrayHTML);
-        parentSection.redactor("code.set", frstSectionArrayHTML);
+        lastSectionArrayHTML = lastSectionArray.join("");
+        parentSection.html(frstSectionArrayHTML);
         element = $(code);
         noRedactorSection = $("<div class='section'><div class='sub-section noRedactor'></div><span class='btn btn-toggle remove'></span></div></div>");
         noRedactorSection.find(".sub-section").html(element);
-        parentSection.find("head1.empty, head2.empty").remove();
-        parentSection.after(noRedactorSection);
+        parentSection.find(".empty").remove();
+        parentSection.parents(".section").after(noRedactorSection);
         if (!$(frstSectionArrayHTML).text().trim().length) {
           parentSection.remove();
         }
+        if (!$(lastSectionArrayHTML).text().trim().length) {
+          lastSectionArrayHTML = "<p><br></p>";
+        }
         Redactor.prototype.addSection(noRedactorSection, lastSectionArrayHTML);
+        Redactor.prototype.addListen();
         $("#media-toolbar").find(".btn-toggle").removeClass("open");
         if ((call != null) && typeof call === "function") {
           call(element, noRedactorSection);
@@ -217,6 +214,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         newBlock = $(Redactor.prototype.template.empty);
         block.after(newBlock);
         Redactor.prototype.elements = Redactor.prototype.document.find(Redactor.prototype.nameElement + ":not(.noRedactor)");
+        Redactor.prototype.lastSection = newBlock.find(".sub-section");
         Redactor.prototype.addRedactor(newBlock.find(".sub-section:not(.noRedactor)"), false, code);
         Redactor.prototype.addListen();
       };
@@ -285,14 +283,15 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             keyupCallback: function(e) {
               var key;
               key = e.which;
-
-              /*if (e.keyCode is 13)
-                @selection.restore()
-                $(@selection.getCurrent()).replaceWith("<p><br></p>")
-                @code.sync()
-                @observe.load()
-               */
-              Redactor.prototype.showPlusButton(this, true);
+              Redactor.prototype.lastSection = $(this.selection.getBlock());
+              if (e.keyCode === 13) {
+                this.selection.restore();
+                if ($(this.selection.getBlock()).text().trim() === "") {
+                  $(this.selection.getBlock()).toggleClass("empty", true);
+                }
+                this.code.sync();
+                this.observe.load();
+              }
             },
             focusCallback: function(e) {
               Redactor.prototype.lastFocus = _docum.find("#viewDoc").find(".section").index(this.$element.parent().parent());
@@ -306,7 +305,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
       };
 
       Redactor.prototype.showPlusButton = function(_redactor, focus) {
-        var block, html, lnght, text;
+        var block;
         if (_redactor == null) {
           _redactor = Redactor.prototype.redactor;
         }
@@ -315,16 +314,9 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         }
         if ((_redactor != null) && (_redactor.selection != null)) {
           block = $(_redactor.selection.getCurrent())[0] != null ? $(_redactor.selection.getCurrent()) : $(_redactor.selection.getBlock());
-          Redactor.prototype.lastSection = block;
-          text = block.text().trim();
-          html = $(_redactor.selection.getBlock()).html();
-          if (html != null) {
-            html = html.replace(/[\u200B]/g, '');
-          }
-          lnght = text.length;
           _docum.find("#viewDoc").find(".media-toolbar").toggleClass("active", false);
-          _docum.find("#viewDoc").find("p").toggleClass("empty", false);
-          if ((!lnght || (lnght && !html.length)) && block.length) {
+          _docum.find("#viewDoc").find(".empty").toggleClass("empty", false);
+          if (Redactor.prototype.isEmpty(_redactor)) {
             $("#media-toolbar").toggleClass("active", true).css("top", (block.offset().top - 107) + "px").find(".btn-toggle").removeClass("open");
             block.toggleClass("empty", true);
           }
@@ -397,7 +389,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
 
       Redactor.prototype.removeRedactor = function(element) {
         Redactor.prototype.elements = Redactor.prototype.document.find(Redactor.prototype.nameElement);
-        if ((element != null) && Redactor.prototype.elements.length > 1) {
+        if ((element != null) && Redactor.prototype.elements.length > 1 && element.hasClass("redactor-editor")) {
           element.redactor('core.destroy');
           element.parents(".section").remove();
         }
@@ -414,9 +406,9 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
         Redactor.prototype.elements.each(function() {
           if ($(this).hasClass("redactor-editor") && !$(this).hasClass("noRedactor")) {
             if ($.trim($(this).redactor('code.get')) === "") {
-              return Redactor.prototype.removeRedactor($(this));
+              Redactor.prototype.removeRedactor($(this));
             } else {
-              return $(this).redactor("core.destroy");
+              $(this).redactor("core.destroy");
             }
           }
         });
@@ -438,8 +430,26 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
       };
 
       Redactor.prototype.changeTypeCode = function(id, type) {
-        console.log(Redactor.prototype.CodeMirror[id]);
         Redactor.prototype.CodeMirror[id].setOption("mode", type.toLowerCase());
+      };
+
+      Redactor.prototype.isEmpty = function(_redactor, element) {
+        var block, html, lnght, text;
+        if (element == null) {
+          element = false;
+        }
+        if (element) {
+          block = html = _redactor;
+        } else {
+          block = $(_redactor.selection.getCurrent())[0] != null ? $(_redactor.selection.getCurrent()) : $(_redactor.selection.getBlock());
+          html = $(_redactor.selection.getBlock()).html();
+        }
+        text = block.text().trim();
+        if ((html != null) && typeof html === "object") {
+          html = html.html().replace(/[\u200B]/g, '');
+        }
+        lnght = text.length;
+        return (!lnght || (lnght && !html.length)) && block.length;
       };
 
       Redactor.prototype.toolbarPosition = function(toolbar) {
@@ -470,10 +480,10 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           }
           toolbar.find(".re-header1, .re-header2, .re-link").removeClass("redactor-act");
           $("#link-toolbar").removeClass("active");
-          if (Redactor.prototype.redactor.selection.getHtml().indexOf("<head1") !== -1 || Redactor.prototype.redactor.selection.getParent().tagName.toLowerCase() === "head1") {
+          if (Redactor.prototype.redactor.selection.getHtml().indexOf("<sup") !== -1 || Redactor.prototype.redactor.selection.getParent().tagName.toLowerCase() === "sup") {
             toolbar.find(".re-header1").addClass("redactor-act");
           }
-          if (Redactor.prototype.redactor.selection.getHtml().indexOf("<head2") !== -1 || Redactor.prototype.redactor.selection.getParent().tagName.toLowerCase() === "head2") {
+          if (Redactor.prototype.redactor.selection.getHtml().indexOf("<sub") !== -1 || Redactor.prototype.redactor.selection.getParent().tagName.toLowerCase() === "sub") {
             toolbar.find(".re-header2").addClass("redactor-act");
           }
           if (Redactor.prototype.redactor.selection.getHtml().indexOf("<a") !== -1 || Redactor.prototype.redactor.selection.getParent().tagName.toLowerCase() === "a") {

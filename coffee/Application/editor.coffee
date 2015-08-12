@@ -35,18 +35,18 @@ define [
         @button.addCallback button4, @insertHead.link
         return
       insertH1: (key)->
-        @inline.format('head1')
+        @inline.format('sup')
         @selection.restore()
         @code.sync()
         @observe.load()
-        @inline.format('head2') if @.selection.getParent() and $(@.selection.getParent())[0].tagName.toLowerCase() =='head2'
+        @inline.format('sub') if @.selection.getParent() and $(@.selection.getParent())[0].tagName.toLowerCase() =='sub'
         return
       insertH2: (key)->
-        @inline.format('head2')
+        @inline.format('sub')
         @selection.restore()
         @code.sync()
         @observe.load()
-        @inline.format('head1') if @.selection.getParent() and $(@.selection.getParent())[0].tagName.toLowerCase() =='head1'
+        @inline.format('sup') if @.selection.getParent() and $(@.selection.getParent())[0].tagName.toLowerCase() =='sup'
         return
       center: ->
         @selection.restore();
@@ -187,8 +187,6 @@ define [
         Redactor::document.find('.remove').off('click').on 'click', ->
           _this = $(@)
           _this.parent(".section").remove()
-          ###_this.parent(".section").find(".sub-section").removeClass("noRedactor").html('<p></p>')
-          Redactor::addRedactor(_this.parent(".section").find(".sub-section"), true);###
           Redactor::addListen()
           _this.remove()
           return
@@ -197,18 +195,16 @@ define [
       Redactor::mediaButton = (type, code, call)->
         frstSectionArray = []
         lastSectionArray = []
-        parentSection = Redactor::lastSection.parents(".sub-section")
-        pos = parentSection.find("*").index(Redactor::lastSection.addClass("tempSection"))
-        console.log(Redactor::lastSection, parentSection)
+        parentSection = if Redactor::lastSection.hasClass("sub-section") then Redactor::lastSection else Redactor::lastSection.parents(".sub-section")
+        pos = parentSection.find("p").index(if Redactor::lastSection[0].tagName.toLowerCase() is "p" then Redactor::lastSection else Redactor::lastSection.parent("p"))
 
-        parentSection.find("*").each ->
-          if parentSection.find("*").index($(@)) >= 0
-            if parentSection.find("*").index($(@)) < pos and $(@).text().trim().length
+        parentSection.find("p").each ->
+          if parentSection.find("p").index($(@)) >= 0
+            if parentSection.find("p").index($(@)) < pos
               frstSectionArray.push($(@))
-            if parentSection.find("*").index($(@)) > pos and $(@).text().trim().length
+            if parentSection.find("p").index($(@)) > pos
               lastSectionArray.push($(@))
             return
-        Redactor::lastSection.removeClass("tempSection")
         frstSectionArray = frstSectionArray.map (el) ->
           el.get()[0].outerHTML
 
@@ -216,18 +212,18 @@ define [
           el.get()[0].outerHTML
 
         frstSectionArrayHTML = frstSectionArray.join("")
-        lastSectionArrayHTML = "<p>"+lastSectionArray.join("</p><p>")+"</p>"
+        lastSectionArrayHTML = lastSectionArray.join("")
 
-        console.log(frstSectionArrayHTML)
-
-        parentSection.redactor("code.set", frstSectionArrayHTML)
+        parentSection.html(frstSectionArrayHTML)
         element = $(code)
         noRedactorSection = $("<div class='section'><div class='sub-section noRedactor'></div><span class='btn btn-toggle remove'></span></div></div>")
         noRedactorSection.find(".sub-section").html(element)
-        parentSection.find("head1.empty, head2.empty").remove()
-        parentSection.after(noRedactorSection)
+        parentSection.find(".empty").remove()
+        parentSection.parents(".section").after(noRedactorSection)
         parentSection.remove() if !$(frstSectionArrayHTML).text().trim().length
+        lastSectionArrayHTML = "<p><br></p>" if !$(lastSectionArrayHTML).text().trim().length
         Redactor::addSection(noRedactorSection, lastSectionArrayHTML)
+        Redactor::addListen()
 
         $("#media-toolbar").find(".btn-toggle").removeClass("open")
 
@@ -238,6 +234,7 @@ define [
         newBlock = $(Redactor::template.empty)
         block.after newBlock
         Redactor::elements = Redactor::document.find(Redactor::nameElement+":not(.noRedactor)")
+        Redactor::lastSection = newBlock.find(".sub-section")
         Redactor::addRedactor newBlock.find(".sub-section:not(.noRedactor)"), false, code
         Redactor::addListen()
         return
@@ -290,12 +287,12 @@ define [
               return
             keyupCallback: (e) ->
               key = e.which
-              ###if (e.keyCode is 13)
+              Redactor::lastSection = $(@selection.getBlock())
+              if (e.keyCode is 13)
                 @selection.restore()
-                $(@selection.getCurrent()).replaceWith("<p><br></p>")
+                $(@selection.getBlock()).toggleClass("empty", true) if $(@selection.getBlock()).text().trim() is ""
                 @code.sync()
-                @observe.load()###
-              Redactor::showPlusButton(@, true)
+                @observe.load()
               return
             focusCallback: (e)->
               Redactor::lastFocus = _docum.find("#viewDoc").find(".section").index(@$element.parent().parent())
@@ -310,14 +307,9 @@ define [
       Redactor::showPlusButton = (_redactor = Redactor::redactor, focus = false)->
         if _redactor? and _redactor.selection?
           block = if $(_redactor.selection.getCurrent())[0]? then $(_redactor.selection.getCurrent()) else $(_redactor.selection.getBlock())
-          Redactor::lastSection = block
-          text = block.text().trim()
-          html = $(_redactor.selection.getBlock()).html()
-          html = html.replace(/[\u200B]/g, '') if html?
-          lnght = text.length
           _docum.find("#viewDoc").find(".media-toolbar").toggleClass("active", false)
-          _docum.find("#viewDoc").find("p").toggleClass("empty", false)
-          if (!lnght or (lnght and !html.length)) and block.length
+          _docum.find("#viewDoc").find(".empty").toggleClass("empty", false)
+          if Redactor::isEmpty(_redactor)
             $("#media-toolbar").toggleClass("active", true).css("top", (block.offset().top-107)+"px").find(".btn-toggle").removeClass("open")
             block.toggleClass("empty", true)
         return
@@ -384,7 +376,7 @@ define [
 
       Redactor::removeRedactor = (element)->
         Redactor::elements = Redactor::document.find(Redactor::nameElement)
-        if element? and Redactor::elements.length > 1
+        if element? and Redactor::elements.length > 1 and element.hasClass("redactor-editor")
           element.redactor 'core.destroy'
           element.parents(".section").remove()
           return
@@ -396,8 +388,10 @@ define [
           if $(@).hasClass("redactor-editor") and !$(@).hasClass("noRedactor")
             if $.trim($(@).redactor('code.get')) is ""
               Redactor::removeRedactor $(@)
+              return
             else
               $(@).redactor("core.destroy")
+              return
         setTimeout(->
           app.Menu.treeGenerate()
           return
@@ -417,9 +411,21 @@ define [
         return
 
       Redactor::changeTypeCode = (id, type)->
-        console.log(Redactor::CodeMirror[id], )
         Redactor::CodeMirror[id].setOption("mode", type.toLowerCase())
         return
+
+      Redactor::isEmpty = (_redactor, element = false)->
+        if element
+          block = html = _redactor
+        else
+          block = if $(_redactor.selection.getCurrent())[0]? then $(_redactor.selection.getCurrent()) else $(_redactor.selection.getBlock())
+          html = $(_redactor.selection.getBlock()).html()
+
+        text = block.text().trim()
+        html = html.html().replace(/[\u200B]/g, '') if html? and typeof html is "object"
+        lnght = text.length
+
+        (!lnght or (lnght and !html.length)) and block.length
 
       Redactor::toolbarPosition = (toolbar = Redactor::toolbar)->
         readTop = if Redactor::position.start.y < Redactor::position.end.y then 'start' else 'end'
@@ -449,8 +455,8 @@ define [
           toolbar.find(".re-header1, .re-header2, .re-link").removeClass("redactor-act")
           $("#link-toolbar").removeClass("active")
 
-          toolbar.find(".re-header1").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("<head1") isnt -1 or Redactor::redactor.selection.getParent().tagName.toLowerCase() == "head1"
-          toolbar.find(".re-header2").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("<head2") isnt -1 or Redactor::redactor.selection.getParent().tagName.toLowerCase() == "head2"
+          toolbar.find(".re-header1").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("<sup") isnt -1 or Redactor::redactor.selection.getParent().tagName.toLowerCase() == "sup"
+          toolbar.find(".re-header2").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("<sub") isnt -1 or Redactor::redactor.selection.getParent().tagName.toLowerCase() == "sub"
           toolbar.find(".re-link").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("<a") isnt -1 or Redactor::redactor.selection.getParent().tagName.toLowerCase() == "a"
           return
 
