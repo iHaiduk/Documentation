@@ -352,6 +352,8 @@ body .redactor-box-fullscreen {
 }
 .re-alignment { width: 17px; background: url("../img/center.svg") center no-repeat; background-size: 17px 21px; }
 
+.re-blockquote { width: 17px; background: url("../img/center.svg") center no-repeat; background-size: 17px 21px; }
+
 .re-link { width: 18px; background: url("../img/link.svg") center no-repeat; background-size: 18px 21px; }
 
 .re-italic { width: 6px; background: url("../img/i.svg") center no-repeat; background-size: 6px 21px; }
