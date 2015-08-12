@@ -20,6 +20,7 @@ define [
   _docum = $(document)
   _docum.ready ->
 
+
     link_insert = 0
     $.Redactor::insertHead = ->
       {
@@ -128,6 +129,19 @@ define [
             $("body").removeClass "editing"
             Redactor::save()
             return
+
+        Redactor::document.find(".code").each ->
+
+          CodeMirror.fromTextArea @,
+            mode: $(@).data().type
+            lineNumbers: true
+            matchBrackets: true
+            styleActiveLine: true
+            htmlMode: true
+            readOnly: true
+            theme: "3024-day"
+          return
+
         Redactor::addListen()
         return
 
@@ -245,6 +259,7 @@ define [
 
       Redactor::loadRedactors = ->
         Redactor::elements.not(".noRedactor").each ->
+          console.log(@)
           Redactor::addRedactor $(@)
           return
         return
