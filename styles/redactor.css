@@ -118,11 +118,11 @@ body .redactor-box-fullscreen {
 	Toolbar
 */
 .redactor-toolbar {
-  width: 240px !important;
+  width: 282px !important;
   display: none;
   position: absolute !important;
   margin: 0 !important;
-  padding: 0 0 0 85px !important;
+  padding: 0 0 0 108px !important;
   list-style: none !important;
   font-size: 14px !important;
   line-height: 1 !important;
@@ -350,9 +350,11 @@ body .redactor-box-fullscreen {
 .re-gallery:before {
   content: "\e61f";
 }
-.re-alignment { width: 17px; background: url("../img/center.svg") center no-repeat; background-size: 17px 21px; }
+.re-clear { width: 15px; position: absolute; top: 2px; left: 82px; margin: 0 !important; background: url("../img/p.svg") center no-repeat; background-size: 7px 21px;  }
 
-.re-blockquote { width: 17px; background: url("../img/center.svg") center no-repeat; background-size: 17px 21px; }
+.re-alignment { width: 15px; background: url("../img/center.svg") center no-repeat; background-size: 15px 21px; }
+
+.re-blockquote { width: 17px; background: url("../img/blockquote.svg") center no-repeat; background-size: 17px 21px; }
 
 .re-link { width: 18px; background: url("../img/link.svg") center no-repeat; background-size: 18px 21px; }
 
