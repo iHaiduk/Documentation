@@ -385,7 +385,7 @@ define [
           _docum.find("#viewDoc").find(".media-toolbar").toggleClass("active", false)
           _docum.find("#viewDoc").find(".empty").toggleClass("empty", false)
           if Redactor::isEmpty(block, true)
-            block = block.parent() unless block[0].tagName? or block[0].tagName.toLowerCase() is "p"
+            block = block.parent() unless block[0].tagName?
             block = block.parent() if block[0].tagName.toLowerCase() isnt "p"
             $("#media-toolbar").toggleClass("active", true).css("top", (block.offset().top-107)+"px").find(".btn-toggle").removeClass("open")
             block.toggleClass("empty", true)
@@ -471,8 +471,14 @@ define [
               return
         setTimeout(->
           app.Menu.treeGenerate()
+          cnt = $("#viewDoc").find("p").length
+          $($("#viewDoc").find("p").get().reverse()).each ->
+            if !$(@).text().trim().length and cnt > 1
+              $(@).remove()
+              cnt--
+            return
           return
-        , 250)
+        , 10)
         return
 
       Redactor::codeSave = ->

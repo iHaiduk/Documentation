@@ -398,7 +398,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           _docum.find("#viewDoc").find(".media-toolbar").toggleClass("active", false);
           _docum.find("#viewDoc").find(".empty").toggleClass("empty", false);
           if (Redactor.prototype.isEmpty(block, true)) {
-            if (!((block[0].tagName != null) || block[0].tagName.toLowerCase() === "p")) {
+            if (block[0].tagName == null) {
               block = block.parent();
             }
             if (block[0].tagName.toLowerCase() !== "p") {
@@ -501,8 +501,16 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           }
         });
         setTimeout(function() {
+          var cnt;
           app.Menu.treeGenerate();
-        }, 250);
+          cnt = $("#viewDoc").find("p").length;
+          $($("#viewDoc").find("p").get().reverse()).each(function() {
+            if (!$(this).text().trim().length && cnt > 1) {
+              $(this).remove();
+              cnt--;
+            }
+          });
+        }, 10);
       };
 
       Redactor.prototype.codeSave = function() {
