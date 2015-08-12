@@ -286,15 +286,15 @@ body .redactor-box-fullscreen {
 .re-orderedlist:before {
   content: "\e60a";
 }
-.re-link:before {
-  content: "\e60b";
-}
+/*.re-link:before {*/
+  /*content: "\e60b";*/
+/*}*/
 .re-horizontalrule:before {
   content: "\e60c";
 }
-.re-italic:before {
-  content: "\e60d";
-}
+/*.re-italic:before {*/
+  /*content: "\e60d";*/
+/*}*/
 .re-indent:before {
   content: "\e60e";
 }
@@ -325,9 +325,9 @@ body .redactor-box-fullscreen {
 .re-clips:before {
   content: "\e617";
 }
-.re-bold:before {
-  content: "\e618";
-}
+/*.re-bold:before {*/
+  /*content: "\e618";*/
+/*}*/
 .re-backcolor:before {
   content: "\e619";
 }
@@ -337,10 +337,10 @@ body .redactor-box-fullscreen {
 .re-alignright:before {
   content: "\e61b";
 }
-.re-alignment:before,
-.re-alignleft:before {
-  content: "\e61c";
-}
+/*.re-alignment:before,*/
+/*.re-alignleft:before {*/
+  /*content: "\e61c";*/
+/*}*/
 .re-alignjustify:before {
   content: "\e61d";
 }
@@ -350,19 +350,17 @@ body .redactor-box-fullscreen {
 .re-gallery:before {
   content: "\e61f";
 }
-.re-header1:before {
-    content: 'H1';
-}
-.re-header2:before {
-    content: 'H2';
-}
-.re-center:before {
-    content: 'C';
-}
+.re-alignment { width: 17px; background: url("../img/center.svg") center no-repeat; background-size: 17px 21px; }
 
-.re-header1 { position: absolute; top: 0; left: 15px; margin: 0 !important; }
+.re-link { width: 18px; background: url("../img/link.svg") center no-repeat; background-size: 18px 21px; }
 
-.re-header2 { position: absolute; top: 0; left: 50px; margin: 0 !important; }
+.re-italic { width: 6px; background: url("../img/i.svg") center no-repeat; background-size: 6px 21px; }
+
+.re-bold { width: 10px; background: url("../img/B.svg") center no-repeat; background-size: 10px 21px; }
+
+.re-header1, .re-header2 { position: absolute; top: 0; left: 15px; margin: 0 !important; width: 21px; background: url("../img/h1.svg") center no-repeat; background-size: 21px 21px;}
+
+.re-header2 { left: 50px; background-image: url("../img/h2.svg"); }
 /*
 	Toolbar tooltip
 */
@@ -835,10 +833,6 @@ body .redactor-box-fullscreen {
 .redactor-editor pre {
   font-size: 14px;
   line-height: 1.6em;
-}
-.redactor-editor a {
-  color: #15c;
-  text-decoration: underline;
 }
 .redactor-editor object,
 .redactor-editor embed,

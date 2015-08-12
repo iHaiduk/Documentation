@@ -28,9 +28,9 @@ img { vertical-align: top; max-width: 100%; }
 
 .main { min-height: 100%; margin-bottom: -50px; position: relative; font-size: 0;
 
-    .left-side { display: inline-block; width: 25%; padding: 7px 45px 0 15px; vertical-align: top; font-size: 16px; }
+    .left-side { display: inline-block; width: 30%; padding: 7px 7% 0 15px; vertical-align: top; font-size: 16px; }
 
-    .right-side { @extend .left-side; width: 75%; padding: 0 15px 0 0; }
+    .right-side { @extend .left-side; width: 70%; padding: 0 15px 0 0; }
 
     &:after { content: ''; display: block; height: 50px; }
 
@@ -136,15 +136,19 @@ img { vertical-align: top; max-width: 100%; }
 
 }
 
-.media-toolbar { display: none; position: absolute; top: 0; left: 0; margin-left: -40px; z-index: 1; height: 30px; overflow: hidden;
+.media-toolbar { display: none; position: absolute; top: 0; left: 0; margin-left: -55px; z-index: 1; height: 30px; overflow: hidden;
 
-    .btn { width: 30px; height: 30px; padding: 0; background-size: 100%; background-color: $white; border: none; }
+    .btn { width: 30px; height: 30px; padding: 0; background-size: 100%; background-color: $white; border: none; opacity: .6;
+
+        &:hover { opacity: 1; }
+
+    }
 
     &.active { display: block; }
 
     .btn-toggle { font-size: 26px; line-height: 26px;
 
-        @include prefix(( transition: all 250ms ease ), webkit );
+        @include prefix(( transition: transform .2s linear ), webkit );
 
         &.open {
 
@@ -156,7 +160,7 @@ img { vertical-align: top; max-width: 100%; }
 
             .btn {
 
-                @include prefix(( transform: scale(1), transition: all .2s ease ), webkit );
+                @include prefix(( transform: scale(1), transition: transform .2s ease ), webkit );
 
             }
 
@@ -196,7 +200,7 @@ img { vertical-align: top; max-width: 100%; }
 
     .link-val { width: 100%; height: 42px; padding: 10px 40px 10px 10px; background-color: transparent; border: none; outline: none; color: #fff; font-size: 16px; }
 
-    .close { position: absolute; top: 11px; right: 11px; width: 20px; height: 20px; background: url("../img/plus.svg"); background-size: 20px 20px; cursor: pointer; }
+    .close { position: absolute; top: 11px; right: 8px; width: 20px; height: 20px; background: url("../img/close.svg") center no-repeat; background-size: 10px 10px; cursor: pointer; }
 
     &:after { content: ''; position: absolute; bottom: -5px; left: 50%; margin-left: -5px; width: 10px; height: 10px; background-color: #262625;
 
@@ -212,13 +216,13 @@ body:not(.editing) {
 
     .language-list { display: none; }
 
-    .CodeMirror { margin: 0 0 20px 0 !important }
-
     .empty:before { display: none !important; }
 
     .remove { display: none; }
 
-    a[href^=""], a[href] { text-decoration: none; color: rgba(0, 0, 0, 0.95); }
+    a[href=""] { text-decoration: none; color: rgba(0, 0, 0, 0.95) !important; cursor: text; }
+
+    .CodeMirror-cursors { visibility: hidden !important; }
 
 }
 
@@ -285,7 +289,7 @@ body:not(.editing) {
 
                 }
 
-                head1 { display: block; margin: 0 0 20px 0; color: fade-out($black, .2); font-size: 40px; position: relative; line-height: 1;
+                sup { display: block; margin: 0 0 20px 0; color: fade-out($black, .2); font-size: 40px; position: relative; line-height: 1; vertical-align: baseline;
 
                     strong { font-weight: normal; }
 
@@ -293,11 +297,13 @@ body:not(.editing) {
 
                 }
 
-                head2 { @extend head1; font-size: 30px; line-height: 1.2; }
+                sub { @extend sup; font-size: 30px; line-height: 1.2; }
 
-                hr { height: 52px; margin: 0; border: none; }
+                hr { height: 30px; margin: 0; border: none; }
 
-                .CodeMirror { margin-top: 30px; }
+                a { color: #15c; }
+
+                .CodeMirror { margin: 30px 0; }
 
                 .language-list { position: absolute; top: -30px; left: 0; padding: 0; margin: 0; z-index: 2; list-style-type: none; font-size: 0;
 
@@ -327,11 +333,11 @@ body:not(.editing) {
 
     &.visible { visibility: visible; opacity: 1; z-index: 10000; }
 
-    .close { position: absolute; top: 20px; right: 20px; cursor: pointer; width: 30px; height: 30px; color: $black; border-radius: 100%; border: 1px solid $black; font-size: 28px; text-align: center;
+    .close { position: absolute; top: 20px; right: 20px; cursor: pointer; width: 30px; height: 30px; text-indent: -9999px; opacity: .5; background: url("../img/plus.svg"); background-size: 30px 30px;
 
-        line-height: 28px; opacity: .5;
+        @include prefix(( transform: rotate(45deg)), webkit );
 
-        @include prefix(( transition: all .3s ease ), webkit );
+        @include prefix(( transition: opacity .3s ease ), webkit );
 
         &:hover { opacity: 1; }
 

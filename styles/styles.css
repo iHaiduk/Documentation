@@ -41,12 +41,12 @@ img {
   font-size: 0; }
   .main .left-side, .main .right-side {
     display: inline-block;
-    width: 25%;
-    padding: 7px 45px 0 15px;
+    width: 30%;
+    padding: 7px 7% 0 15px;
     vertical-align: top;
     font-size: 16px; }
   .main .right-side {
-    width: 75%;
+    width: 70%;
     padding: 0 15px 0 0; }
   .main:after {
     content: '';
@@ -205,7 +205,7 @@ img {
   position: absolute;
   top: 0;
   left: 0;
-  margin-left: -40px;
+  margin-left: -55px;
   z-index: 1;
   height: 30px;
   overflow: hidden; }
@@ -215,14 +215,17 @@ img {
     padding: 0;
     background-size: 100%;
     background-color: #fff;
-    border: none; }
+    border: none;
+    opacity: .6; }
+    .media-toolbar .btn:hover {
+      opacity: 1; }
   .media-toolbar.active {
     display: block; }
   .media-toolbar .btn-toggle {
     font-size: 26px;
     line-height: 26px;
-    -webkit-transition: all 250ms ease;
-    transition: all 250ms ease; }
+    -webkit-transition: transform 0.2s linear;
+    transition: transform 0.2s linear; }
     .media-toolbar .btn-toggle.open {
       -webkit-transform: rotate(45deg);
       transform: rotate(45deg); }
@@ -233,8 +236,8 @@ img {
       .media-toolbar .btn-toggle.open + .menu-toolbar .btn {
         -webkit-transform: scale(1);
         transform: scale(1);
-        -webkit-transition: all 0.2s ease;
-        transition: all 0.2s ease; }
+        -webkit-transition: transform 0.2s ease;
+        transition: transform 0.2s ease; }
   .media-toolbar .menu-toolbar {
     visibility: hidden;
     display: inline-block;
@@ -287,11 +290,11 @@ img {
   .link .close {
     position: absolute;
     top: 11px;
-    right: 11px;
+    right: 8px;
     width: 20px;
     height: 20px;
-    background: url("../img/plus.svg");
-    background-size: 20px 20px;
+    background: url("../img/close.svg") center no-repeat;
+    background-size: 10px 10px;
     cursor: pointer; }
   .link:after {
     content: '';
@@ -309,15 +312,16 @@ body:not(.editing) .media-toolbar {
   display: none; }
 body:not(.editing) .language-list {
   display: none; }
-body:not(.editing) .CodeMirror {
-  margin: 0 0 20px 0 !important; }
 body:not(.editing) .empty:before {
   display: none !important; }
 body:not(.editing) .remove {
   display: none; }
-body:not(.editing) a[href^=""], body:not(.editing) a[href] {
+body:not(.editing) a[href=""] {
   text-decoration: none;
-  color: rgba(0, 0, 0, 0.95); }
+  color: rgba(0, 0, 0, 0.95) !important;
+  cursor: text; }
+body:not(.editing) .CodeMirror-cursors {
+  visibility: hidden !important; }
 
 .footer {
   height: 50px;
@@ -384,30 +388,33 @@ body:not(.editing) a[href^=""], body:not(.editing) a[href] {
         position: absolute;
         z-index: -1;
         margin-left: 1px; }
-    .view .section-wrap .section .sub-section head1, .view .section-wrap .section .sub-section head2 {
+    .view .section-wrap .section .sub-section sup, .view .section-wrap .section .sub-section sub {
       display: block;
       margin: 0 0 20px 0;
       color: rgba(0, 0, 0, 0.8);
       font-size: 40px;
       position: relative;
-      line-height: 1; }
-      .view .section-wrap .section .sub-section head1 strong, .view .section-wrap .section .sub-section head2 strong {
+      line-height: 1;
+      vertical-align: baseline; }
+      .view .section-wrap .section .sub-section sup strong, .view .section-wrap .section .sub-section sub strong {
         font-weight: normal; }
-      .view .section-wrap .section .sub-section head1.empty:before, .view .section-wrap .section .sub-section head2.empty:before {
+      .view .section-wrap .section .sub-section sup.empty:before, .view .section-wrap .section .sub-section sub.empty:before {
         content: 'Text...';
         color: rgba(0, 0, 0, 0.3);
         position: absolute;
         z-index: -1;
         margin-left: 1px; }
-    .view .section-wrap .section .sub-section head2 {
+    .view .section-wrap .section .sub-section sub {
       font-size: 30px;
       line-height: 1.2; }
     .view .section-wrap .section .sub-section hr {
-      height: 52px;
+      height: 30px;
       margin: 0;
       border: none; }
+    .view .section-wrap .section .sub-section a {
+      color: #15c; }
     .view .section-wrap .section .sub-section .CodeMirror {
-      margin-top: 30px; }
+      margin: 30px 0; }
     .view .section-wrap .section .sub-section .language-list {
       position: absolute;
       top: -30px;
@@ -462,15 +469,14 @@ body:not(.editing) a[href^=""], body:not(.editing) a[href] {
     cursor: pointer;
     width: 30px;
     height: 30px;
-    color: #000;
-    border-radius: 100%;
-    border: 1px solid #000;
-    font-size: 28px;
-    text-align: center;
-    line-height: 28px;
+    text-indent: -9999px;
     opacity: .5;
-    -webkit-transition: all 0.3s ease;
-    transition: all 0.3s ease; }
+    background: url("../img/plus.svg");
+    background-size: 30px 30px;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    -webkit-transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease; }
     .popup .close:hover {
       opacity: 1; }
   .popup .popup-title {
