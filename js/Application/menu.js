@@ -90,7 +90,7 @@ define(['jquery', 'Application/editor'], function($) {
           Menu.prototype.lock = true;
           Menu.prototype.navigation.find(".active").removeClass('active');
           $("html, body").stop().animate({
-            scrollTop: _document.find("#" + $(this).data().id).offset().top - _document.find(".header").height() - 34
+            scrollTop: _document.find("#" + $(this).data().id).offset().top - _document.find(".header").height() - 58
           }, 500, function() {
             Menu.prototype.lock = false;
           });

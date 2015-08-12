@@ -174,11 +174,10 @@ define [
               styleActiveLine: true
               htmlMode: true
               theme: "3024-day"
-            Redactor::save(false)
             Redactor::changeTypeListen()
+            Redactor::loadRedactors()
             return
           )
-          Redactor::loadRedactors()
           return
 
         Redactor::document.find('.icon-hr').off('click').on 'click', ->
@@ -187,8 +186,9 @@ define [
 
         Redactor::document.find('.remove').off('click').on 'click', ->
           _this = $(@)
-          _this.parents(".section").find(".sub-section").removeClass("noRedactor").html('<p></p>')
-          Redactor::addRedactor(_this.parents(".section").find(".sub-section"), true);
+          _this.parent(".section").remove()
+          ###_this.parent(".section").find(".sub-section").removeClass("noRedactor").html('<p></p>')
+          Redactor::addRedactor(_this.parent(".section").find(".sub-section"), true);###
           Redactor::addListen()
           _this.remove()
           return
@@ -197,15 +197,17 @@ define [
       Redactor::mediaButton = (type, code, call)->
         frstSectionArray = []
         lastSectionArray = []
-        parentSection = Redactor::lastSection.parents(".section:not(.noRedactor)")
-        pos = Redactor::lastSection.parent().find("p").index(Redactor::lastSection.addClass("tempSection"));
+        parentSection = Redactor::lastSection.parents(".sub-section")
+        pos = parentSection.find("*").index(Redactor::lastSection.addClass("tempSection"))
+        console.log(Redactor::lastSection, parentSection)
 
-        Redactor::lastSection.parent().find("p").each ->
-          if Redactor::lastSection.parent().find("p").index($(@)) < pos
-            frstSectionArray.push($(@))
-          if Redactor::lastSection.parent().find("p").index($(@)) > pos
-            lastSectionArray.push($(@))
-          return
+        parentSection.find("*").each ->
+          if parentSection.find("*").index($(@)) >= 0
+            if parentSection.find("*").index($(@)) < pos and $(@).text().trim().length
+              frstSectionArray.push($(@))
+            if parentSection.find("*").index($(@)) > pos and $(@).text().trim().length
+              lastSectionArray.push($(@))
+            return
         Redactor::lastSection.removeClass("tempSection")
         frstSectionArray = frstSectionArray.map (el) ->
           el.get()[0].outerHTML
@@ -214,13 +216,15 @@ define [
           el.get()[0].outerHTML
 
         frstSectionArrayHTML = frstSectionArray.join("")
-        lastSectionArrayHTML = lastSectionArray.join("")
+        lastSectionArrayHTML = "<p>"+lastSectionArray.join("</p><p>")+"</p>"
 
-        if $(frstSectionArrayHTML).text().trim().length
-          parentSection.find(".sub-section").redactor("code.set", frstSectionArrayHTML)
+        console.log(frstSectionArrayHTML)
+
+        parentSection.redactor("code.set", frstSectionArrayHTML)
         element = $(code)
         noRedactorSection = $("<div class='section'><div class='sub-section noRedactor'></div><span class='btn btn-toggle remove'></span></div></div>")
         noRedactorSection.find(".sub-section").html(element)
+        parentSection.find("head1.empty, head2.empty").remove()
         parentSection.after(noRedactorSection)
         parentSection.remove() if !$(frstSectionArrayHTML).text().trim().length
         Redactor::addSection(noRedactorSection, lastSectionArrayHTML)
@@ -285,6 +289,12 @@ define [
               Redactor::removeRedactor(@$element) if (e.keyCode is 8 or e.keyCode is 46) and @code.get() is ""
               return
             keyupCallback: (e) ->
+              key = e.which
+              ###if (e.keyCode is 13)
+                @selection.restore()
+                $(@selection.getCurrent()).replaceWith("<p><br></p>")
+                @code.sync()
+                @observe.load()###
               Redactor::showPlusButton(@, true)
               return
             focusCallback: (e)->
@@ -299,9 +309,9 @@ define [
 
       Redactor::showPlusButton = (_redactor = Redactor::redactor, focus = false)->
         if _redactor? and _redactor.selection?
-          block = $(_redactor.selection.getBlock())
+          block = if $(_redactor.selection.getCurrent())[0]? then $(_redactor.selection.getCurrent()) else $(_redactor.selection.getBlock())
           Redactor::lastSection = block
-          text = $(_redactor.selection.getBlock()).text().trim()
+          text = block.text().trim()
           html = $(_redactor.selection.getBlock()).html()
           html = html.replace(/[\u200B]/g, '') if html?
           lnght = text.length
