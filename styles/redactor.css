@@ -316,9 +316,6 @@ body .redactor-box-fullscreen {
 .re-fontfamily:before {
   content: "\e614";
 }
-.re-deleted:before {
-  content: "\e615";
-}
 .re-html:before {
   content: "\e616";
 }
@@ -350,6 +347,8 @@ body .redactor-box-fullscreen {
 .re-gallery:before {
   content: "\e61f";
 }
+.re-deleted { width: 13px; background: url("../img/strike.svg") center no-repeat; background-size: 13px 21px;  }
+
 .re-clear { width: 15px; position: absolute; top: 2px; left: 82px; margin: 0 !important; background: url("../img/p.svg") center no-repeat; background-size: 7px 21px;  }
 
 .re-alignment { width: 15px; background: url("../img/center.svg") center no-repeat; background-size: 15px 21px; }
