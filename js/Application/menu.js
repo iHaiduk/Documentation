@@ -41,7 +41,7 @@ define(['jquery', 'Application/editor'], function($) {
       Menu.prototype.addBottomPadding = function() {
         var arr, summ;
         return;
-        arr = jQuery.grep(_document.find("#viewDoc").find("head1,head2"), function(val) {
+        arr = jQuery.grep(_document.find("#viewDoc").find("sup,sub"), function(val) {
           return true;
         });
         summ = $(arr[arr.length - 1]).parents(".section").height();
@@ -58,8 +58,8 @@ define(['jquery', 'Application/editor'], function($) {
         Menu.prototype.lastIdHeading = -1;
         Menu.prototype.HeadingCnt = 0;
         Menu.prototype.MenuHeadingCnt = 0;
-        _document.find("#viewDoc").find("head1,head2").each(function() {
-          if ($(this)[0].tagName.toLowerCase() === "head1") {
+        _document.find("#viewDoc").find("sup,sub").each(function() {
+          if ($(this)[0].tagName.toLowerCase() === "sup") {
             Menu.prototype.lastIdHeading++;
             Menu.prototype.tree.push({
               element: $(this).attr("id", "header" + Menu.prototype.HeadingCnt),
@@ -127,15 +127,15 @@ define(['jquery', 'Application/editor'], function($) {
         if (Menu.prototype.lock) {
           return;
         }
-        arr = jQuery.grep(_document.find("#viewDoc").find("head1,head2"), function(val) {
+        arr = jQuery.grep(_document.find("#viewDoc").find("sup,sub"), function(val) {
           return $(val).offset().top - $(window).scrollTop() - _document.find(".header").height() >= 0;
         });
         if (arr.length) {
           Menu.prototype.navigation.find(".active").removeClass('active');
-          if (arr[0].tagName.toLowerCase() === "head1") {
-            Menu.prototype.navigation.find(".nav > .nav-list").eq(_document.find("#viewDoc").find("head1").index($(arr[0]))).addClass('active');
+          if (arr[0].tagName.toLowerCase() === "sup") {
+            Menu.prototype.navigation.find(".nav > .nav-list").eq(_document.find("#viewDoc").find("sup").index($(arr[0]))).addClass('active');
           } else {
-            Menu.prototype.navigation.find(".sub-nav > .nav-list").eq(_document.find("#viewDoc").find("head2").index($(arr[0]))).addClass('active').parents(".nav-list").addClass('active');
+            Menu.prototype.navigation.find(".sub-nav > .nav-list").eq(_document.find("#viewDoc").find("sub").index($(arr[0]))).addClass('active').parents(".nav-list").addClass('active');
           }
         }
       };
