@@ -385,7 +385,8 @@ define [
           _docum.find("#viewDoc").find(".media-toolbar").toggleClass("active", false)
           _docum.find("#viewDoc").find(".empty").toggleClass("empty", false)
           if Redactor::isEmpty(block, true)
-            block = block.parent() unless block[0].tagName?
+            block = block.parent() unless block[0].tagName? or block[0].tagName.toLowerCase() is "p"
+            block = block.parent() if block[0].tagName.toLowerCase() isnt "p"
             $("#media-toolbar").toggleClass("active", true).css("top", (block.offset().top-107)+"px").find(".btn-toggle").removeClass("open")
             block.toggleClass("empty", true)
         return
