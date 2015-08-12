@@ -30,6 +30,10 @@ define [
         @button.addCallback button, @insertHead.insertH1
         button2 = @button.add('header2')
         @button.addCallback button2, @insertHead.insertH2
+        button5 = @button.add('blockquote')
+        @button.addCallback button5, @insertHead.blockquote
+        button6 = @button.add('clear')
+        @button.addCallback button6, @insertHead.clear
         button3 = @button.add('alignment')
         @button.addCallback button3, @insertHead.center
         button4 = @button.add('link')
@@ -41,6 +45,7 @@ define [
         @code.sync()
         @observe.load()
         @inline.format('sub') if @.selection.getParent() and $(@.selection.getParent())[0].tagName.toLowerCase() =='sub'
+        @inline.format('blockquote') if @.selection.getParent() and $(@.selection.getParent())[0].tagName.toLowerCase() =='blockquote'
         return
       insertH2: (key)->
         @inline.format('sub')
@@ -48,6 +53,7 @@ define [
         @code.sync()
         @observe.load()
         @inline.format('sup') if @.selection.getParent() and $(@.selection.getParent())[0].tagName.toLowerCase() =='sup'
+        @inline.format('blockquote') if @.selection.getParent() and $(@.selection.getParent())[0].tagName.toLowerCase() =='blockquote'
         return
       center: ->
         @selection.restore();
@@ -61,11 +67,25 @@ define [
         if @selection.getHtml().indexOf("<a id") isnt -1
           @insert.html(@selection.getText(), false)
         else
-          @insert.html('<a id="'+Redactor::lastLinkActive+'">'+@selection.getText()+'</a>', false)
+          @insert.html('<a id="'+Redactor::lastLinkActive+'" href="">'+@selection.getText()+'</a>', false)
         @code.sync()
         @observe.load()
         Redactor::findLink(Redactor::redactor)
         $("#link_value").focus()
+        return
+      blockquote: ->
+        @inline.format('blockquote')
+        @selection.restore()
+        @code.sync()
+        @observe.load()
+        @inline.format('sup') if @.selection.getParent() and $(@.selection.getParent())[0].tagName.toLowerCase() =='sup'
+        @inline.format('sub') if @.selection.getParent() and $(@.selection.getParent())[0].tagName.toLowerCase() =='sub'
+        return
+      clear: ->
+        @selection.restore();
+        @insert.html(@selection.getText(), false)
+        @code.sync()
+        @observe.load()
         return
 
       }
@@ -102,7 +122,11 @@ define [
                                 </div>
                             </div>
                         </div>"""
-          image: """<img/>"""
+          image: """<form id="form1" runat="server">
+<label for='imgInp' id='uploadImage'></label>
+    <input type='file' id="imgInp" />
+</form>
+    <img src="" />"""
           code: """<textarea class='code'></textarea><ul class="language-list" >
           <li class="language" data-type="htmlmixed">HTML</li>
           <li class="language" data-type="CSS">CSS</li>
@@ -173,8 +197,30 @@ define [
           return
 
         Redactor::document.find('.icon-image').off('click').on 'click', ->
-          Redactor::mediaButton("image", Redactor::template.image)
+          Redactor::mediaButton "image", Redactor::template.image, (element)->
+            Redactor::preUploadImage(element)
+            $("#media-toolbar").removeClass("active")
+            $("#uploadImage").click()
+            return
           return
+
+        Redactor::preUploadImage = (element) ->
+          $("#imgInp").on "change", (e)->
+            element = $(element[2])
+            file = e.target.files[0]
+            imageType = /image.*/
+            if !file.type.match(imageType)
+              return
+            reader = new FileReader
+            reader.onload = (e)->
+              $("#form1").remove()
+              element.attr("src", e.target.result)
+              return
+            reader.readAsDataURL file
+            return
+          return
+
+
 
         Redactor::document.find('.icon-code').off('click').on 'click', ->
           Redactor::mediaButton("code", Redactor::template.code, (element)->
@@ -210,7 +256,7 @@ define [
         frstSectionArray = []
         lastSectionArray = []
         parentSection = if Redactor::lastSection.hasClass("sub-section") then Redactor::lastSection else Redactor::lastSection.parents(".sub-section")
-        pos = parentSection.find("p").index(if Redactor::lastSection[0].tagName.toLowerCase() is "p" then Redactor::lastSection else Redactor::lastSection.parent("p"))
+        pos = parentSection.find("p").index(parentSection.find(".empty"))
 
         parentSection.find("p").each ->
           if parentSection.find("p").index($(@)) >= 0
@@ -235,7 +281,7 @@ define [
         parentSection.find(".empty").remove()
         parentSection.parents(".section").after(noRedactorSection)
         parentSection.remove() if !$(frstSectionArrayHTML).text().trim().length
-        lastSectionArrayHTML = "<p><br></p>" if !$(lastSectionArrayHTML).text().trim().length
+        lastSectionArrayHTML = "<p class='empty'></p>" if !$(lastSectionArrayHTML).text().trim().length
         Redactor::addSection(noRedactorSection, lastSectionArrayHTML)
         Redactor::addListen()
 
@@ -259,7 +305,6 @@ define [
 
       Redactor::loadRedactors = ->
         Redactor::elements.not(".noRedactor").each ->
-          console.log(@)
           Redactor::addRedactor $(@)
           return
         return
@@ -282,10 +327,22 @@ define [
               Redactor::activeElement = element
               Redactor::listenEvent element
               Redactor::showPlusButton(@)
+              @$element.find("p, br").each ->
+                $(@).remove() if !$(@).text().trim().length
+                return
+              @$element.find("p").each ->
+                if $(@).text().length and !$(@).html().replace(/\u200B/g, '').length
+                  $(@).html("<br/>")
+              @code.sync()
+              @observe.load()
               return
             changeCallback: ()->
+              @$element.find("p").each ->
+                if $(@).text().length and !$(@).html().replace(/\u200B/g, '').length
+                  $(@).html("<br/>")
               Redactor::showPlusButton(@, true)
               _elements.parent().find('.redactor-toolbar').stop().fadeOut 400 if @sel.type isnt "Range"
+              $("#viewDoc").find(".section-wrap > span").remove()
               return
             blurCallback: () ->
               @$element.removeClass("focus")
@@ -298,14 +355,17 @@ define [
               return
             keydownCallback: (e) ->
               key = e.which
-              Redactor::removeRedactor(@$element) if (e.keyCode is 8 or e.keyCode is 46) and @code.get() is ""
+              if (e.keyCode is 8 or e.keyCode is 46) and $(@selection.getBlock()).hasClass("empty")
+                $(@selection.getBlock()).remove()
+                if !@$element.find("p:not(.empty)").length and ($("#viewDoc").find(".sub-section:not(.noRedactor)").length-1)
+                  @$element.parents(".section").remove()
               return
             keyupCallback: (e) ->
               key = e.which
               Redactor::lastSection = $(@selection.getBlock())
               if (e.keyCode is 13)
                 @selection.restore()
-                $(@selection.getBlock()).toggleClass("empty", true) if $(@selection.getBlock()).text().trim() is ""
+                $(@selection.getBlock()).parent().toggleClass("empty", true) if $(@selection.getBlock()).text().trim() is ""
                 @code.sync()
                 @observe.load()
               return
@@ -324,7 +384,8 @@ define [
           block = if $(_redactor.selection.getCurrent())[0]? then $(_redactor.selection.getCurrent()) else $(_redactor.selection.getBlock())
           _docum.find("#viewDoc").find(".media-toolbar").toggleClass("active", false)
           _docum.find("#viewDoc").find(".empty").toggleClass("empty", false)
-          if Redactor::isEmpty(_redactor)
+          if Redactor::isEmpty(block, true)
+            block = block.parent() unless block[0].tagName?
             $("#media-toolbar").toggleClass("active", true).css("top", (block.offset().top-107)+"px").find(".btn-toggle").removeClass("open")
             block.toggleClass("empty", true)
         return
@@ -347,7 +408,7 @@ define [
           return
         ).off('click').on 'click', (e)->
           Redactor::showPlusButton(null, true)
-
+          Redactor::lastSection = $(@)
           $("#link-toolbar").removeClass("active").find("#link_value").val("")
           elem = $(e.target)
           if elem[0].tagName.toLowerCase() == "a"
@@ -437,10 +498,10 @@ define [
           html = $(_redactor.selection.getBlock()).html()
 
         text = block.text().trim()
-        html = html.html().replace(/[\u200B]/g, '') if html? and typeof html is "object"
+        html = html.html().replace(/[\u200B]/g, '').trim() if typeof html is "object" and html.html()?
         lnght = text.length
 
-        (!lnght or (lnght and !html.length)) and block.length
+        ((!lnght or !html[0]? or (lnght and !(html[0].length))) and block.length)
 
       Redactor::toolbarPosition = (toolbar = Redactor::toolbar)->
         readTop = if Redactor::position.start.y < Redactor::position.end.y then 'start' else 'end'
