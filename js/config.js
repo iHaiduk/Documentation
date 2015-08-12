@@ -5,8 +5,9 @@
 var app;
 
 app = {
-  editor: null,
+  Editor: null,
   Menu: null,
+  Image: null,
   path: "../"
 };
 
@@ -14,7 +15,8 @@ require.config({
   waitSeconds: 200,
   paths: {
     "jquery": "Library/jquery.min",
-    "redactor": "Library/redactor"
+    "redactor": "Library/redactor",
+    "taggd": "Library/jquery.taggd.min"
   },
   shim: {
     "jquery": {
