@@ -389,7 +389,7 @@ body:not(.editing) .CodeMirror-cursors {
         z-index: -1;
         margin-left: 1px; }
     .view .section-wrap .section .sub-section sup, .view .section-wrap .section .sub-section sub {
-      display: block;
+      display: inline;
       margin: 0 0 20px 0;
       color: rgba(0, 0, 0, 0.8);
       font-size: 40px;

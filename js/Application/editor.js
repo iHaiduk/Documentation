@@ -401,6 +401,9 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             if (block[0].tagName == null) {
               block = block.parent();
             }
+            if (block[0].tagName.toLowerCase() !== "p") {
+              block = block.parent();
+            }
             $("#media-toolbar").toggleClass("active", true).css("top", (block.offset().top - 107) + "px").find(".btn-toggle").removeClass("open");
             block.toggleClass("empty", true);
           }
@@ -498,8 +501,16 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
           }
         });
         setTimeout(function() {
+          var cnt;
           app.Menu.treeGenerate();
-        }, 250);
+          cnt = $("#viewDoc").find("p").length;
+          $($("#viewDoc").find("p").get().reverse()).each(function() {
+            if (!$(this).text().trim().length && cnt > 1) {
+              $(this).remove();
+              cnt--;
+            }
+          });
+        }, 10);
       };
 
       Redactor.prototype.codeSave = function() {
