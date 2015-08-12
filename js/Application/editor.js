@@ -105,6 +105,17 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
             Redactor.prototype.save();
           }
         });
+        Redactor.prototype.document.find(".code").each(function() {
+          CodeMirror.fromTextArea(this, {
+            mode: $(this).data().type,
+            lineNumbers: true,
+            matchBrackets: true,
+            styleActiveLine: true,
+            htmlMode: true,
+            readOnly: true,
+            theme: "3024-day"
+          });
+        });
         Redactor.prototype.addListen();
       };
 
@@ -225,6 +236,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
 
       Redactor.prototype.loadRedactors = function() {
         Redactor.prototype.elements.not(".noRedactor").each(function() {
+          console.log(this);
           Redactor.prototype.addRedactor($(this));
         });
       };
