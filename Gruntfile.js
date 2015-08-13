@@ -41,7 +41,7 @@ module.exports = function(grunt) {
         },
         watch:{
             options:{
-                livereload: true
+                livereload: 333
             },
             scripts:{
                 files: ['coffee/Application/*.coffee', 'coffee/*.coffee'],

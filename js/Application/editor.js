@@ -122,7 +122,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'Application/ima
 
       Redactor.prototype.init = function() {
         Redactor.prototype.document.find("#initRedactor").off('click').on('click', function() {
-          console.log(app.Image);
           if ($(this).hasClass("btn-edit")) {
             $(this).removeClass("btn-edit").addClass("btn-save");
             $("body").addClass("editing");
