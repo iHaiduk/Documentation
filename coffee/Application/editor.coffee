@@ -234,6 +234,7 @@ define [
                 parent.after("""<span class="btn btn-toggle remove"></span>""")
                 app.Video.activate(parent.find(".videoView"))
                 Redactor::addListen()
+                return
             return
           return
 
@@ -250,7 +251,6 @@ define [
               htmlMode: true
               theme: "3024-day"
             Redactor::changeTypeListen()
-            Redactor::loadRedactors()
             return
           return
 
@@ -347,6 +347,7 @@ define [
               @$element.find("p").each ->
                 if $(@).text().length and !$(@).html().replace(/\u200B/g, '').length
                   $(@).html("<br/>")
+                  return
               @code.sync()
               @observe.load()
               return
@@ -354,6 +355,7 @@ define [
               @$element.find("p").each ->
                 if $(@).text().length and !$(@).html().replace(/\u200B/g, '').length
                   $(@).html("<br/>")
+                  return
               Redactor::showPlusButton(@, true)
               _elements.parent().find('.redactor-toolbar').stop().fadeOut 400 if @sel.type isnt "Range"
               $("#viewDoc").find(".section-wrap > span").remove()
@@ -367,19 +369,20 @@ define [
                 return
               , 10)
               return
-            keydownCallback: (e) ->
-              key = e.which
-              if (e.keyCode is 8 or e.keyCode is 46) and $(@selection.getBlock()).hasClass("empty")
-                $(@selection.getBlock()).remove()
-                if !@$element.find("p:not(.empty)").length and ($("#viewDoc").find(".sub-section:not(.noRedactor)").length-1)
-                  @$element.parents(".section").remove()
-              return
             keyupCallback: (e) ->
               key = e.which
               Redactor::lastSection = $(@selection.getBlock())
+              if (e.keyCode is 8) and $(@selection.getBlock()).hasClass("empty")
+                $(@selection.getBlock()).remove()
+                if !@$element.find("p:not(.empty)").length and ($("#viewDoc").find(".sub-section:not(.noRedactor)").length-1)
+                  @$element.parents(".section").remove()
+                return
               if (e.keyCode is 13)
                 @selection.restore()
-                $(@selection.getBlock()).parent().toggleClass("empty", true) if $(@selection.getBlock()).text().trim() is ""
+                aselect = $(@selection.getBlock()).parent()
+                if $(@selection.getBlock()).text().trim() is ""
+                  aselect.toggleClass("empty", true)
+                  $(@selection.getBlock()).html("<br/>")
                 @code.sync()
                 @observe.load()
               return
@@ -420,29 +423,28 @@ define [
           else
             Redactor::position.end.y = event.pageY
             Redactor::position.end.x = event.pageX
-          return
-        ).off('click').on 'click', (e)->
-          Redactor::showPlusButton(null, true)
-          Redactor::lastSection = $(@)
-          $("#link-toolbar").removeClass("active").find("#link_value").val("")
-          elem = $(e.target)
-          if elem[0].tagName.toLowerCase() == "a"
-            offset = elem.offset()
-            Redactor::lastLinkActive = elem.attr("id")
-            $("#link_value").val(elem.attr("href"))
-            offset.top = parseInt(offset.top) - 57
-            offset.left = parseInt(offset.left) - 120 + elem.width()/2
-            Redactor::linkShow(offset)
+            Redactor::showPlusButton(null, true)
+            Redactor::lastSection = $(@)
+            $("#link-toolbar").removeClass("active").find("#link_value").val("")
+            elem = $(event.target)
+            if elem[0].tagName.toLowerCase() == "a"
+              offset = elem.offset()
+              Redactor::lastLinkActive = elem.attr("id")
+              $("#link_value").val(elem.attr("href"))
+              offset.top = parseInt(offset.top) - 57
+              offset.left = parseInt(offset.left) - 120 + elem.width()/2
+              Redactor::linkShow(offset)
 
-          selection = if not window.getSelection? then window.getSelection() else document.getSelection()
-          if selection.type is 'Range'
-            toolbar = $(@).prev()
-            Redactor::toolbar = toolbar
-            Redactor::toolbarPosition(toolbar)
-          else
-            element.parent().find('.redactor-toolbar').hide()
+            selection = if not window.getSelection? then window.getSelection() else document.getSelection()
+            if selection.type is 'Range'
+              toolbar = $(@).prev()
+              Redactor::toolbar = toolbar
+              Redactor::toolbarPosition(toolbar)
+            else
+              element.parent().find('.redactor-toolbar').hide()
+
           return
-        return
+        )
 
       Redactor::findLink = (_redactor)->
         parent = if (_ref =_redactor.selection.getParent()) then $(_ref) else false
@@ -549,12 +551,17 @@ define [
               }).find(".redactor-act").removeClass("redactor-act")
 
 
-          toolbar.find(".re-header1, .re-header2, .re-link").removeClass("redactor-act")
+          toolbar.find(".redactor-act").removeClass("redactor-act")
           $("#link-toolbar").removeClass("active")
 
           toolbar.find(".re-header1").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("<sup") isnt -1 or Redactor::redactor.selection.getParent().tagName.toLowerCase() == "sup"
           toolbar.find(".re-header2").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("<sub") isnt -1 or Redactor::redactor.selection.getParent().tagName.toLowerCase() == "sub"
           toolbar.find(".re-link").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("<a") isnt -1 or Redactor::redactor.selection.getParent().tagName.toLowerCase() == "a"
+          toolbar.find(".re-bold").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("<strong") isnt -1 or Redactor::redactor.selection.getParent().tagName.toLowerCase() == "strong"
+          toolbar.find(".re-italic").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("<em") isnt -1 or Redactor::redactor.selection.getParent().tagName.toLowerCase() == "em"
+          toolbar.find(".re-deleted").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("<del") isnt -1 or Redactor::redactor.selection.getParent().tagName.toLowerCase() == "del"
+          toolbar.find(".re-blockquote").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("<blockquote") isnt -1 or Redactor::redactor.selection.getParent().tagName.toLowerCase() == "blockquote"
+          toolbar.find(".re-alignment").addClass("redactor-act") if Redactor::redactor.selection.getHtml().indexOf("<center") isnt -1 or Redactor::redactor.selection.getParent().tagName.toLowerCase() == "center"
           return
 
       Redactor
