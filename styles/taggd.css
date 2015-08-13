@@ -22,6 +22,25 @@
 
 .taggd-wrapper .taggd-item.active,
 .taggd-wrapper .taggd-item:hover { background-color: rgba(219, 50, 92, 0.75); }
+.taggd-wrapper .taggd-item:before {
+	-webkit-transition: opacity .2s ease 50ms;
+	-moz-transition: opacity .2s ease 50ms;
+	transition: opacity .2s ease 50ms;
+	opacity: 0;
+	visibility: hidden;
+}
+.taggd-wrapper .taggd-item.active:before{
+	content: ''; position: absolute;
+	top: -30px; left: 50%;
+	margin-left: -5px;
+	width: 10px;
+	height: 10px;
+	opacity: 1;
+	visibility: visible;
+	background-color: #262625;
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
 
 .taggd-wrapper .taggd-item-hover {
 	display: block;
@@ -42,16 +61,6 @@
 	-webkit-transition: opacity .2s ease 50ms;
 	-moz-transition: opacity .2s ease 50ms;
 	transition: opacity .2s ease 50ms;
-}
-.taggd-wrapper .taggd-item-hover:after {
-	content: ''; position: absolute;
-	bottom: -5px; left: 50%;
-	margin-left: -5px;
-	width: 10px;
-	height: 10px;
-	background-color: #262625;
-	-webkit-transform: rotate(45deg);
-	transform: rotate(45deg);
 }
 
 .taggd-wrapper .taggd-item-hover.show {
