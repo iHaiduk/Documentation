@@ -21,7 +21,9 @@ define(['jquery', 'taggd', 'Application/editor'], function($, taggd) {
       }
 
       ImageTolltip.prototype.init = function() {
-        ImageTolltip.prototype.tag = _docum.find('.taggd').taggd(ImageTolltip.prototype.option, ImageTolltip.prototype.data);
+        if (_docum.find('.taggd').length) {
+          ImageTolltip.prototype.tag = _docum.find('.taggd').taggd(ImageTolltip.prototype.option, ImageTolltip.prototype.data);
+        }
         return this;
       };
 
@@ -40,26 +42,32 @@ define(['jquery', 'taggd', 'Application/editor'], function($, taggd) {
             click: 'toggle'
           }
         };
-        ImageTolltip.prototype.tag = ImageTolltip.prototype.tag.taggd(options, ImageTolltip.prototype.data);
-        return ImageTolltip.prototype.tag.on('change', function() {
-          return ImageTolltip.prototype.data = ImageTolltip.prototype.tag.data;
-        });
+        if (ImageTolltip.prototype.tag != null) {
+          ImageTolltip.prototype.tag = ImageTolltip.prototype.tag.taggd(options, ImageTolltip.prototype.data);
+          return ImageTolltip.prototype.tag.on('change', function() {
+            return ImageTolltip.prototype.data = ImageTolltip.prototype.tag.data;
+          });
+        }
       };
 
       ImageTolltip.prototype.save = function() {
         ImageTolltip.prototype.destroy();
-        return ImageTolltip.prototype.tag.taggd(ImageTolltip.prototype.option, ImageTolltip.prototype.data);
+        if (ImageTolltip.prototype.tag != null) {
+          return ImageTolltip.prototype.tag.taggd(ImageTolltip.prototype.option, ImageTolltip.prototype.data);
+        }
       };
 
       ImageTolltip.prototype.destroy = function() {
         var img;
-        if (ImageTolltip.prototype.tag.wrapper != null) {
-          img = ImageTolltip.prototype.tag.wrapper.find("img");
-        } else {
-          img = ImageTolltip.prototype.tag;
+        if (ImageTolltip.prototype.tag != null) {
+          if (ImageTolltip.prototype.tag.wrapper != null) {
+            img = ImageTolltip.prototype.tag.wrapper.find("img");
+          } else {
+            img = ImageTolltip.prototype.tag;
+          }
+          img.parents(".sub-section").html(img);
+          return ImageTolltip.prototype.tag = img;
         }
-        img.parents(".sub-section").html(img);
-        return ImageTolltip.prototype.tag = img;
       };
 
       return ImageTolltip;

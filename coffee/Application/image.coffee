@@ -17,7 +17,8 @@ define [
             click: 'toggle'
 
       ImageTolltip::init = ->
-        ImageTolltip::tag = _docum.find('.taggd').taggd ImageTolltip::option, ImageTolltip::data
+        if _docum.find('.taggd').length
+          ImageTolltip::tag = _docum.find('.taggd').taggd ImageTolltip::option, ImageTolltip::data
         @
 
       ImageTolltip::edit = ->
@@ -28,21 +29,24 @@ define [
           offset: top: -35
           handlers:
             click: 'toggle'
-        ImageTolltip::tag = ImageTolltip::tag.taggd options, ImageTolltip::data
-        ImageTolltip::tag.on 'change', ->
-          ImageTolltip::data = ImageTolltip::tag.data
+        if ImageTolltip::tag?
+          ImageTolltip::tag = ImageTolltip::tag.taggd options, ImageTolltip::data
+          ImageTolltip::tag.on 'change', ->
+            ImageTolltip::data = ImageTolltip::tag.data
 
       ImageTolltip::save = ->
         ImageTolltip::destroy()
-        ImageTolltip::tag.taggd ImageTolltip::option, ImageTolltip::data
+        if ImageTolltip::tag?
+          ImageTolltip::tag.taggd ImageTolltip::option, ImageTolltip::data
 
       ImageTolltip::destroy = ->
-        if ImageTolltip::tag.wrapper?
-          img = ImageTolltip::tag.wrapper.find("img")
-        else
-          img = ImageTolltip::tag
-        img.parents(".sub-section").html(img)
-        ImageTolltip::tag = img
+        if ImageTolltip::tag?
+          if ImageTolltip::tag.wrapper?
+            img = ImageTolltip::tag.wrapper.find("img")
+          else
+            img = ImageTolltip::tag
+          img.parents(".sub-section").html(img)
+          ImageTolltip::tag = img
 
 
 
