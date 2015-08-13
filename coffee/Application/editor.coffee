@@ -144,7 +144,6 @@ define [
       Redactor::init = ->
 
         Redactor::document.find("#initRedactor").off('click').on 'click', ->
-          console.log(app.Image)
           if $(@).hasClass("btn-edit")
             $(@).removeClass("btn-edit").addClass "btn-save"
             $("body").addClass "editing"
