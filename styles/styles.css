@@ -332,6 +332,8 @@ body:not(.editing) a[href=""] {
   cursor: text; }
 body:not(.editing) .CodeMirror-cursors {
   visibility: hidden !important; }
+body:not(.editing) .taggd-wrapper .taggd-item-hover {
+  white-space: normal; }
 
 .footer {
   height: 50px;
