@@ -207,7 +207,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'Application/ima
                 parent.html("<div class=\"videoView\" data-youtube-id='" + $(this).val() + "' data-ratio=\"16:9\"></div>");
                 parent.after("<span class=\"btn btn-toggle remove\"></span>");
                 app.Video.activate(parent.find(".videoView"));
-                return Redactor.prototype.addListen();
+                Redactor.prototype.addListen();
               }
             });
           });
@@ -227,7 +227,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'Application/ima
               theme: "3024-day"
             });
             Redactor.prototype.changeTypeListen();
-            Redactor.prototype.loadRedactors();
           });
         });
         Redactor.prototype.document.find('.icon-hr').off('click').on('click', function() {
@@ -341,7 +340,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'Application/ima
               });
               this.$element.find("p").each(function() {
                 if ($(this).text().length && !$(this).html().replace(/\u200B/g, '').length) {
-                  return $(this).html("<br/>");
+                  $(this).html("<br/>");
                 }
               });
               this.code.sync();
@@ -350,7 +349,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'Application/ima
             changeCallback: function() {
               this.$element.find("p").each(function() {
                 if ($(this).text().length && !$(this).html().replace(/\u200B/g, '').length) {
-                  return $(this).html("<br/>");
+                  $(this).html("<br/>");
                 }
               });
               Redactor.prototype.showPlusButton(this, true);

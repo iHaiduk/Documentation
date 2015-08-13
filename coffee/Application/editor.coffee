@@ -234,6 +234,7 @@ define [
                 parent.after("""<span class="btn btn-toggle remove"></span>""")
                 app.Video.activate(parent.find(".videoView"))
                 Redactor::addListen()
+                return
             return
           return
 
@@ -250,7 +251,6 @@ define [
               htmlMode: true
               theme: "3024-day"
             Redactor::changeTypeListen()
-            Redactor::loadRedactors()
             return
           return
 
@@ -347,6 +347,7 @@ define [
               @$element.find("p").each ->
                 if $(@).text().length and !$(@).html().replace(/\u200B/g, '').length
                   $(@).html("<br/>")
+                  return
               @code.sync()
               @observe.load()
               return
@@ -354,6 +355,7 @@ define [
               @$element.find("p").each ->
                 if $(@).text().length and !$(@).html().replace(/\u200B/g, '').length
                   $(@).html("<br/>")
+                  return
               Redactor::showPlusButton(@, true)
               _elements.parent().find('.redactor-toolbar').stop().fadeOut 400 if @sel.type isnt "Range"
               $("#viewDoc").find(".section-wrap > span").remove()
