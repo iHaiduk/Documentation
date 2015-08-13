@@ -83,8 +83,9 @@ define [ 'jquery', 'Application/editor' ], ($) ->
         Menu::navigation.find('.nav-item').off('click').on 'click', (e)->
           Menu::lock = true
           Menu::navigation.find(".active").removeClass 'active'
+          console.log(_document.find("#" + $(@).data().id).offset().top, _document.find("#" + $(@).data().id).outerHeight(), _document.find(".header").height())
           $("html, body").stop().animate({
-            scrollTop: _document.find("#" + $(@).data().id).offset().top - _document.find(".header").height() - 58
+            scrollTop: _document.find("#" + $(@).data().id).offset().top + _document.find("#" + $(@).data().id).outerHeight() - _document.find("#" + $(@).data().id).height() - _document.find(".main.wrap").offset().top
           },500, ->
             Menu::lock = false
             return
