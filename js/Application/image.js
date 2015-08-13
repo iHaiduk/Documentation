@@ -21,7 +21,7 @@ define(['jquery', 'taggd', 'Application/editor'], function($, taggd) {
       }
 
       ImageTolltip.prototype.init = function() {
-        ImageTolltip.prototype.tag = _docum.find('.taggd');
+        ImageTolltip.prototype.tag = _docum.find('.taggd').taggd(ImageTolltip.prototype.option, ImageTolltip.prototype.data);
         return this;
       };
 

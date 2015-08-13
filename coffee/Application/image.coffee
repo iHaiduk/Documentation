@@ -17,7 +17,7 @@ define [
             click: 'toggle'
 
       ImageTolltip::init = ->
-        ImageTolltip::tag = _docum.find('.taggd')
+        ImageTolltip::tag = _docum.find('.taggd').taggd ImageTolltip::option, ImageTolltip::data
         @
 
       ImageTolltip::edit = ->
