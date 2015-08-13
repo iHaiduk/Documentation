@@ -89,8 +89,9 @@ define(['jquery', 'Application/editor'], function($) {
         Menu.prototype.navigation.find('.nav-item').off('click').on('click', function(e) {
           Menu.prototype.lock = true;
           Menu.prototype.navigation.find(".active").removeClass('active');
+          console.log(_document.find("#" + $(this).data().id).offset().top, _document.find("#" + $(this).data().id).outerHeight(), _document.find(".header").height());
           $("html, body").stop().animate({
-            scrollTop: _document.find("#" + $(this).data().id).offset().top - _document.find(".header").height() - 58
+            scrollTop: _document.find("#" + $(this).data().id).offset().top + _document.find("#" + $(this).data().id).outerHeight() - _document.find("#" + $(this).data().id).height() - _document.find(".main.wrap").offset().top
           }, 500, function() {
             Menu.prototype.lock = false;
           });
