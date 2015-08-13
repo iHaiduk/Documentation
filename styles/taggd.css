@@ -25,11 +25,16 @@
 
 .taggd-wrapper .taggd-item-hover {
 	display: block;
+	max-width: 230px;
+	text-align: center;
+	word-break: break-all;
+	white-space: nowrap;
 	background-image: linear-gradient(to bottom, rgba(49, 49, 47, 0.99), #262625);
 	color: #fff;
 	font-size: 16px;
 	cursor: default;
 	opacity: 0;
+	visibility: hidden;
 	padding: 11px 10px;
 	z-index: 999;
 	border-radius: 5px;
@@ -37,8 +42,6 @@
 	-webkit-transition: opacity .2s ease 50ms;
 	-moz-transition: opacity .2s ease 50ms;
 	transition: opacity .2s ease 50ms;
-
-	white-space: nowrap;
 }
 .taggd-wrapper .taggd-item-hover:after {
 	content: ''; position: absolute;
@@ -53,6 +56,7 @@
 
 .taggd-wrapper .taggd-item-hover.show {
 	opacity: 1;
+	visibility: visible;
 	z-index: 1000;
 }
 
