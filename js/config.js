@@ -8,6 +8,7 @@ app = {
   Editor: null,
   Menu: null,
   Image: null,
+  Video: null,
   path: "../"
 };
 
@@ -16,7 +17,8 @@ require.config({
   paths: {
     "jquery": "Library/jquery.min",
     "redactor": "Library/redactor",
-    "taggd": "Library/jquery.taggd.min"
+    "taggd": "Library/jquery.taggd.min",
+    "video": "Library/lazyYT"
   },
   shim: {
     "jquery": {

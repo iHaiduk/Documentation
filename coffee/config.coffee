@@ -6,6 +6,7 @@ app =
     Editor: null
     Menu: null
     Image: null
+    Video: null
     path: "../"
 
 require.config
@@ -14,6 +15,7 @@ require.config
         "jquery": "Library/jquery.min"
         "redactor": "Library/redactor"
         "taggd": "Library/jquery.taggd.min"
+        "video": "Library/lazyYT"
     shim:
         "jquery": exports: "$"
         "font": exports: "Typekit"

@@ -2,7 +2,7 @@
 /**
  * Created by Igor on 02.08.2015.
  */
-define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'Application/image', 'codemirror/mode/htmlmixed/htmlmixed', 'codemirror/mode/clike/clike', 'codemirror/mode/coffeescript/coffeescript', 'codemirror/mode/css/css', 'codemirror/mode/javascript/javascript', 'codemirror/mode/php/php', 'codemirror/mode/sass/sass', 'codemirror/mode/sql/sql', 'codemirror/mode/xml/xml'], function($, CodeMirror) {
+define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'Application/image', 'Application/video', 'codemirror/mode/htmlmixed/htmlmixed', 'codemirror/mode/clike/clike', 'codemirror/mode/coffeescript/coffeescript', 'codemirror/mode/css/css', 'codemirror/mode/javascript/javascript', 'codemirror/mode/php/php', 'codemirror/mode/sass/sass', 'codemirror/mode/sql/sql', 'codemirror/mode/xml/xml'], function($, CodeMirror) {
   var _docum;
   _docum = $(document);
   _docum.ready(function() {
@@ -115,6 +115,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'Application/ima
           empty: "<div class=\"section\">\n    <div class=\"sub-section\"></div>\n    <div class=\"media-toolbar\">\n        <span class=\"btn btn-toggle icon-plus\"></span>\n        <div class=\"menu-toolbar\">\n            <span class=\"btn icon-image\"></span>\n            <span class=\"btn icon-code\"></span>\n            <span class=\"btn icon-hr\"></span>\n        </div>\n    </div>\n</div>",
           image: "<form id=\"form1\" runat=\"server\">\n<label for='imgInp' id='uploadImage'></label>\n    <input type='file' id=\"imgInp\" />\n</form>\n    <img src=\"\" />",
           code: "<textarea class='code'></textarea><ul class=\"language-list\" >\n<li class=\"language\" data-type=\"htmlmixed\">HTML</li>\n<li class=\"language\" data-type=\"CSS\">CSS</li>\n<li class=\"language\" data-type=\"SASS\">SASS</li>\n<li class=\"language\" data-type=\"JavaScript\">JavaScript</li>\n<li class=\"language\" data-type=\"coffeescript\">CoffeeScript</li>\n<li class=\"language\" data-type=\"PHP\">PHP</li>\n<li class=\"language\" data-type=\"SQL\">SQL</li>\n</ul>",
+          video: "<input class='video' type='text' placeholder='Please insert youtube ID...' />",
           hr: "<hr/>"
         };
       }
@@ -175,7 +176,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'Application/ima
           $(this).toggleClass('open');
         });
         Redactor.prototype.document.find('.icon-image').off('click').on('click', function() {
-          Redactor.prototype.mediaButton("image", Redactor.prototype.template.image, function(element) {
+          Redactor.prototype.mediaButton(Redactor.prototype.template.image, function(element) {
             Redactor.prototype.preUploadImage(element);
             $("#media-toolbar").removeClass("active");
             $("#uploadImage").click();
@@ -198,8 +199,22 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'Application/ima
             reader.readAsDataURL(file);
           });
         };
+        Redactor.prototype.document.find('.icon-video').off('click').on('click', function() {
+          Redactor.prototype.mediaButton(Redactor.prototype.template.video, function(element) {
+            element.focus().on("blur keyup", function(e) {
+              var parent;
+              if ((e.type === "blur" || (e.type === "keyup" && e.which === 13)) && $(this).val().length > 5) {
+                parent = $(this).parent();
+                parent.html("<div class=\"videoView\" data-youtube-id='" + $(this).val() + "' data-ratio=\"16:9\"></div>");
+                parent.after("<span class=\"btn btn-toggle remove\"></span>");
+                app.Video.activate(parent.find(".videoView"));
+                return Redactor.prototype.addListen();
+              }
+            });
+          });
+        });
         Redactor.prototype.document.find('.icon-code').off('click').on('click', function() {
-          Redactor.prototype.mediaButton("code", Redactor.prototype.template.code, function(element) {
+          Redactor.prototype.mediaButton(Redactor.prototype.template.code, function(element) {
             var param_id;
             param_id = "redactor_" + (new Date).getTime();
             $(element[0]).attr("id", param_id);
@@ -217,7 +232,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'Application/ima
           });
         });
         Redactor.prototype.document.find('.icon-hr').off('click').on('click', function() {
-          Redactor.prototype.mediaButton("hr", Redactor.prototype.template.hr);
+          Redactor.prototype.mediaButton(Redactor.prototype.template.hr);
         });
         Redactor.prototype.document.find('.remove').off('click').on('click', function() {
           var _this;
@@ -228,7 +243,7 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'Application/ima
         });
       };
 
-      Redactor.prototype.mediaButton = function(type, code, call) {
+      Redactor.prototype.mediaButton = function(code, call) {
         var element, frstSectionArray, frstSectionArrayHTML, lastSectionArray, lastSectionArrayHTML, noRedactorSection, parentSection, pos;
         frstSectionArray = [];
         lastSectionArray = [];
