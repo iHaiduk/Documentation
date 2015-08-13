@@ -2,7 +2,7 @@
 /**
  * Created by Igor on 02.08.2015.
  */
-define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode/htmlmixed/htmlmixed', 'codemirror/mode/clike/clike', 'codemirror/mode/coffeescript/coffeescript', 'codemirror/mode/css/css', 'codemirror/mode/javascript/javascript', 'codemirror/mode/php/php', 'codemirror/mode/sass/sass', 'codemirror/mode/sql/sql', 'codemirror/mode/xml/xml'], function($, CodeMirror) {
+define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'Application/image', 'codemirror/mode/htmlmixed/htmlmixed', 'codemirror/mode/clike/clike', 'codemirror/mode/coffeescript/coffeescript', 'codemirror/mode/css/css', 'codemirror/mode/javascript/javascript', 'codemirror/mode/php/php', 'codemirror/mode/sass/sass', 'codemirror/mode/sql/sql', 'codemirror/mode/xml/xml'], function($, CodeMirror) {
   var _docum;
   _docum = $(document);
   _docum.ready(function() {
@@ -121,16 +121,19 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
 
       Redactor.prototype.init = function() {
         Redactor.prototype.document.find("#initRedactor").off('click').on('click', function() {
+          console.log(app.Image);
           if ($(this).hasClass("btn-edit")) {
             $(this).removeClass("btn-edit").addClass("btn-save");
             $("body").addClass("editing");
             Redactor.prototype.reset();
             Redactor.prototype.initialize();
             Redactor.prototype.showPlusButton();
+            app.Image.edit();
           } else {
             $(this).removeClass("btn-save").addClass("btn-edit");
             $("body").removeClass("editing");
             Redactor.prototype.save();
+            app.Image.save();
           }
         });
         Redactor.prototype.document.find(".code").each(function() {
@@ -594,6 +597,6 @@ define(['jquery', 'codemirror', 'redactor', 'Application/menu', 'codemirror/mode
 
     })();
     redactor = new Redactor(_docum, '.sub-section');
-    redactor.init();
+    app.Editor = redactor.init();
   });
 });

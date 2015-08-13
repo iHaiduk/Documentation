@@ -7,6 +7,7 @@ define [
   'codemirror'
   'redactor'
   'Application/menu'
+  'Application/image'
   'codemirror/mode/htmlmixed/htmlmixed'
   'codemirror/mode/clike/clike'
   'codemirror/mode/coffeescript/coffeescript'
@@ -141,17 +142,20 @@ define [
       Redactor::init = ->
 
         Redactor::document.find("#initRedactor").off('click').on 'click', ->
+          console.log(app.Image)
           if $(@).hasClass("btn-edit")
             $(@).removeClass("btn-edit").addClass "btn-save"
             $("body").addClass "editing"
             Redactor::reset()
             Redactor::initialize()
             Redactor::showPlusButton()
+            app.Image.edit()
             return
           else
             $(@).removeClass("btn-save").addClass "btn-edit"
             $("body").removeClass "editing"
             Redactor::save()
+            app.Image.save()
             return
 
         Redactor::document.find(".code").each ->
@@ -545,6 +549,7 @@ define [
 
       Redactor
     redactor = new Redactor(_docum, '.sub-section')
-    redactor.init()
+    app.Editor = redactor.init()
+
     return
   return

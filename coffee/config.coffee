@@ -3,8 +3,9 @@
 ###
 
 app =
-    editor: null
+    Editor: null
     Menu: null
+    Image: null
     path: "../"
 
 require.config
@@ -12,6 +13,7 @@ require.config
     paths:
         "jquery": "Library/jquery.min"
         "redactor": "Library/redactor"
+        "taggd": "Library/jquery.taggd.min"
     shim:
         "jquery": exports: "$"
         "font": exports: "Typekit"
