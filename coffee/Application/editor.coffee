@@ -8,6 +8,7 @@ define [
   'redactor'
   'Application/menu'
   'Application/image'
+  'Application/video'
   'codemirror/mode/htmlmixed/htmlmixed'
   'codemirror/mode/clike/clike'
   'codemirror/mode/coffeescript/coffeescript'
@@ -137,6 +138,7 @@ define [
           <li class="language" data-type="PHP">PHP</li>
           <li class="language" data-type="SQL">SQL</li>
 </ul>"""
+          video: """<input class='video' type='text' placeholder='Please insert youtube ID...' />"""
           hr: """<hr/>"""
 
       Redactor::init = ->
@@ -201,7 +203,7 @@ define [
           return
 
         Redactor::document.find('.icon-image').off('click').on 'click', ->
-          Redactor::mediaButton "image", Redactor::template.image, (element)->
+          Redactor::mediaButton Redactor::template.image, (element)->
             Redactor::preUploadImage(element)
             $("#media-toolbar").removeClass("active")
             $("#uploadImage").click()
@@ -224,10 +226,20 @@ define [
             return
           return
 
-
+        Redactor::document.find('.icon-video').off('click').on 'click', ->
+          Redactor::mediaButton Redactor::template.video, (element)->
+            element.focus().on "blur keyup", (e)->
+              if (e.type is "blur" or (e.type is "keyup" and e.which is 13)) and $(@).val().length > 5
+                parent = $(@).parent()
+                parent.html """<div class="videoView" data-youtube-id='"""+$(@).val()+"""' data-ratio="16:9"></div>"""
+                parent.after("""<span class="btn btn-toggle remove"></span>""")
+                app.Video.activate(parent.find(".videoView"))
+                Redactor::addListen()
+            return
+          return
 
         Redactor::document.find('.icon-code').off('click').on 'click', ->
-          Redactor::mediaButton("code", Redactor::template.code, (element)->
+          Redactor::mediaButton Redactor::template.code, (element)->
             param_id = "redactor_"+(new Date).getTime()
             $(element[0]).attr("id", param_id)
             $(element[1]).attr("data-id", param_id)
@@ -241,11 +253,10 @@ define [
             Redactor::changeTypeListen()
             Redactor::loadRedactors()
             return
-          )
           return
 
         Redactor::document.find('.icon-hr').off('click').on 'click', ->
-          Redactor::mediaButton("hr", Redactor::template.hr)
+          Redactor::mediaButton Redactor::template.hr
           return
 
         Redactor::document.find('.remove').off('click').on 'click', ->
@@ -256,7 +267,7 @@ define [
           return
         return
 
-      Redactor::mediaButton = (type, code, call)->
+      Redactor::mediaButton = (code, call)->
         frstSectionArray = []
         lastSectionArray = []
         parentSection = if Redactor::lastSection.hasClass("sub-section") then Redactor::lastSection else Redactor::lastSection.parents(".sub-section")
