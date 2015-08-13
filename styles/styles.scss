@@ -12,11 +12,17 @@
 }
 /*clear fix*/
 
-html * { @include prefix( ( box-sizing: border-box ), webkit moz );}
+html * { margin: 0; padding: 0;
+
+    @include prefix( ( box-sizing: border-box ), webkit moz );
+
+}
 
 html, body { height: 100%; }
 
-body { padding-top: 104px; margin: 0; font-family: "Verdana"; background: $white; -webkit-font-smoothing: antialiased;
+body { padding-top: 104px; margin: 0; font-family: "Verdana"; background: $white; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden;
+
+    @include custom_breakpoint(800) { overflow-x: auto; }
 
     &.noScroll { overflow: hidden; }
 
@@ -108,9 +114,13 @@ img { vertical-align: top; max-width: 100%; }
 
     &.icon-hr { background-image: url("../img/empty.svg"); }
 
-    &.remove { position: absolute; top: 5px; left: -55px; width: 30px; height: 30px; padding: 0; background-size: 100%; background-color: $white; border: none; background-image: url("../img/plus.svg");
+    &.remove { position: absolute; top: 0; left: -55px; width: 30px; height: 30px; padding: 0; background-size: 100%; background-color: $white; border: none; background-image: url("../img/plus.svg");
+
+        opacity: .6;
 
         @include prefix(( transform: rotate(45deg)), webkit );
+
+        &:hover { opacity: 1; }
 
     }
 
@@ -289,7 +299,7 @@ body:not(.editing) {
 
                 }
 
-                sup { margin: 0 0 20px 0; color: fade-out($black, .2); font-size: 40px; position: relative; line-height: 1; vertical-align: top;
+                sup { color: fade-out($black, .2); font-size: 40px; position: relative; line-height: 1; vertical-align: baseline;
 
                     strong { font-weight: normal; }
 
@@ -314,6 +324,12 @@ body:not(.editing) {
                         &:last-child { margin: 0; }
 
                     }
+
+                }
+
+                .video { width: 50%; height: 24px; padding: 0 10px; border: none; outline: none; font-size: 16px; color: #fff; margin-bottom: 20px;
+
+                    background-image: linear-gradient(to bottom, rgba(49, 49, 47, 0.99), #262625);
 
                 }
 
